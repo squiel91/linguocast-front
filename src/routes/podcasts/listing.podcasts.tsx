@@ -31,7 +31,7 @@ const PodcastListing = () => {
 
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search);
-  const { user, openRegisterHandler, openLoginHandler, logoutHandler } = useAuth()
+  const { isLoggedIn, user, openRegisterHandler, openLoginHandler, logoutHandler } = useAuth()
 
   const [targetLanguage, setTargetLanguage] = useState(() => (searchParams.get('t') || null))
   const [name, setName] = useState(() => (searchParams.get('q') ?? null))
@@ -69,7 +69,7 @@ const PodcastListing = () => {
 
   return (
     <div>
-      <div className='container grid lg:grid-cols-4 gap:8 lg:gap-8 min-h-screen'>
+      <div className='container grid lg:grid-cols-4 gap:8 lg:gap-8'>
         <div className='lg:border-r-[1px] lg:pr-8 border-slate-200 border-solid md:pb-4 lg:pb-16'>
           <div className='pt-8 lg:sticky lg:top-0 flex flex-col'>
             <div>
@@ -137,12 +137,14 @@ const PodcastListing = () => {
         <div className='lg:col-span-3 mb-16'>
           <div className='flex justify-between col-span-full my-4 items-center'>
             <div className='hidden md:block text-sm text-stone-400 flex-shrink-0'>
-              {filtedPodcasts.length === 0
-                ? 'Oops! No podcast to show.'
-                : `Showing ${filtedPodcasts.length} podcast${filtedPodcasts.length > 1 ? 's' : ''}`
+              {podcastsIsFetching
+                ? <div></div>
+                : filtedPodcasts.length === 0
+                  ? 'Oops! No podcast to show.'
+                  : `Showing ${filtedPodcasts.length} podcast${filtedPodcasts.length > 1 ? 's' : ''}`
               }
             </div>
-            {user
+            {isLoggedIn
               ? <div className='flex gap-0 md:gap-2 w-full md:w-auto justify-end md:justify-normal items-center text-sm md:text-base'>
                 Hey {user?.name}!
                 <Button variant='discrete' onClick={logoutHandler}>
@@ -174,7 +176,7 @@ const PodcastListing = () => {
               <div className="aspect-square flex items-center justify-center border-dashed border-2 border-primary rounded-lg flex-col">
                 <PlusIcon strokeWidth={1} className="w-16 h-16" />
               </div>
-              <h2 className='font-bold'>Add missing show</h2>
+              <h2 className='font-bold text-lg mt-2'>Add missing show</h2>
             </Link>
           </div>
         </div>

@@ -14,6 +14,7 @@ export interface MinifiedPodcast {
   coverImage?: string
   targetLanguage: string
   levels: Level[]
+  savedCount: number
 }
 
 export interface Podcast extends MinifiedPodcast {
@@ -25,9 +26,11 @@ export interface Podcast extends MinifiedPodcast {
   hasVideo?: boolean
   avarageEpisodeMinutesDuration?: number
   episodesCount?: number
+  savedCount: number
   transcript?: {
     available: boolean
     format?: 'pdf' | 'video'
     paid?: boolean
   }
+  isSavedByUser?: boolean 
 }

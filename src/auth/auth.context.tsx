@@ -44,7 +44,7 @@ export const AuthContextWrapper = ({ children }: Props) => {
   const { data: retrivedUser } = useQuery({
     queryKey: ['user'],
     enabled: token ? true : false,
-    queryFn: () => axios.get<MinifiedUser>('/api/users/profile', { headers: { 'Authorization': token }}).then(res => res.data)
+    queryFn: () => axios.get<MinifiedUser>('/api/users/profile').then(res => res.data)
   })
 
   if(!user && retrivedUser) setUser(retrivedUser)

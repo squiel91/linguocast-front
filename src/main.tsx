@@ -6,8 +6,21 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router.tsx'
 import { AuthContextWrapper } from './auth/auth.context.tsx'
+import axios from 'axios'
 
-const queryClient = new QueryClient()
+const queryClient = new QueryClient({
+  defaultOptions: {
+    queries: {
+      refetchOnWindowFocus: false
+    }
+  }
+})
+
+axios.interceptors.request.use(config => {
+  const authToken = localStorage.getItem('token')
+  if (authToken) config.headers.Authorization =  `Bearer ${authToken}`
+  return config
+})
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -17,5 +30,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
       </AuthContextWrapper>
       <ReactQueryDevtools initialIsOpen={false} buttonPosition="bottom-left" />
     </QueryClientProvider>
-  </React.StrictMode>,
+  </React.StrictMode>
 )

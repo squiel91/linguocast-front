@@ -6,38 +6,46 @@ import PodcastListing from "./routes/podcasts/listing.podcasts";
 import About from "./routes/about/about";
 import ViewPodcast from "./routes/podcasts/view.podcasts";
 import SharePodcast from "./routes/podcasts/edit/edit.podcasts";
+import { RootTheme } from "./themes/root/root.theme";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <PodcastListing />,
-    errorElement: <Error />
-  },
-  {
-    path: "/",
-    element: <MainTheme />,
+    element: <RootTheme />,
+    errorElement: <Error />,
     children: [
+
       {
-        path: '/podcasts/:podcastId/:podcastName?',
-        element: <ViewPodcast />
+        path: "/",
+        element: <PodcastListing />,
       },
       {
-        path: '/podcasts/:podcastId/:podcastName?/edit',
-        element: <SharePodcast />
-      },
-      {
-        path: '/podcasts/share',
-        element: <SharePodcast />
-      },
-      {
-        path: '/about',
-        element: <About />
-      },
-      {
-        path: '/contributions',
-        element: <Contributions />
-      },
-    ],
-    errorElement: <Error />
-  },
+        path: "/",
+        element: <MainTheme />,
+        children: [
+          {
+            path: '/podcasts/:podcastId/:podcastName?',
+            element: <ViewPodcast />
+          },
+          {
+            path: '/podcasts/:podcastId/:podcastName?/edit',
+            element: <SharePodcast />
+          },
+          {
+            path: '/podcasts/share',
+            element: <SharePodcast />
+          },
+          {
+            path: '/about',
+            element: <About />
+          },
+          {
+            path: '/contributions',
+            element: <Contributions />
+          }
+        ],
+        errorElement: <Error />
+      }
+    ]
+  }
 ])
