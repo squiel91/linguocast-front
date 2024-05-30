@@ -8,7 +8,7 @@ import { FollowLink } from "../../ui/follow-link.ui";
 import { Link } from "react-router-dom";
 
 export const Footer = () => (
-  <footer className="bg-slate-100 text-gray-500 pt-20 text-sm">
+  <footer className="bg-slate-100 text-gray-500 pt-20 pb-12 text-sm">
     <div className=" container grid md:grid-cols-2 gap-12">
       <div>
         <p className='mb-4'>

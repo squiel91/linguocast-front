@@ -7,12 +7,13 @@ import { Select } from '@/ui/select.ui'
 import { EditSuccessModal } from './success-modal.edit.podcasts'
 import { Textarea } from '@/ui/textarea.ui'
 import { LEVELS } from '@/constants/levels.constants'
-import { Language, Podcast } from '@/types/types'
+import { AutocompletePodcast, Language, Podcast } from '@/types/types'
 import axios from 'axios'
-import { AlertCircleIcon, FlagIcon, TrashIcon } from 'lucide-react'
+import { AlertCircleIcon, RssIcon, TrashIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
+import { ImageUploader } from './image-uploader.edit.podcasts'
 
 const SharePodcast = () => {
   const { podcastId } = useParams()
@@ -29,15 +30,15 @@ const SharePodcast = () => {
 
   // TODO: if !podcast send to 404
   const isEdit = !!podcast
-  console.log({ podcast })
 
   const [name, setName] = useState<string | null>(null)
   const [targetLanguage, setTargetLanguage] = useState<string | null>(null)
   const [mediumLanguage, setMediumLanguage] = useState('english')
   const [description, setDescription] = useState<string | null>(null)
   const [levels, setLevels] = useState<string[]>([])
+  const [rss, setRss] = useState<string | null>(null)
   const [links, setLinks] = useState([''])
-  const [coverImage, setCoverImage] = useState<File | null>(null)
+  const [coverImage, setCoverImage] = useState<string | File | null>(null)
   const [isLoading, setIsLoading] = useState(false)
   const [hasShared, setHasShared] = useState(false)
   const [errorMessage, setErrorMessage] = useState<string | null>(null)
@@ -76,9 +77,16 @@ const SharePodcast = () => {
         formData.append('targetLanguage', targetLanguage)
         if (mediumLanguage) formData.append('mediumLanguage', mediumLanguage)
         formData.append('description', description)
+        if (rss) formData.append('rss', rss)
         levels.forEach(level => formData.append('levels[]', level))
         links.filter(l => !!l).forEach(link => formData.append('links[]', link))
-        if (coverImage) formData.append('coverImage', coverImage);
+        if (coverImage) {
+          if (typeof coverImage === 'string') {
+            formData.append('coverImageUrl', coverImage);
+          } else {
+            formData.append('coverImageFile', coverImage);
+          }
+        }
       } else {
         if (name !== podcast.name) formData.append('Name', name)
         if (targetLanguage !== podcast.targetLanguage) formData.append('Target language', targetLanguage)
@@ -108,6 +116,25 @@ const SharePodcast = () => {
     }
   }
   
+  const autoompleteHandler = async () => {
+    try {
+      if (!rss) return
+      const { data: { name, description, link, coverImage } } = await axios.post<AutocompletePodcast>('/api/podcasts/rss', { rss })
+      setCoverImage(coverImage)
+      setName(name || null)
+      setDescription(description || null)
+      setLinks(l => {
+        if (link && link) {
+          return [link, ...l.filter(l => l !== link)]
+        } else return l
+      })
+    } catch (error) {
+      console.error(error)
+      alert('There was an error autocompleting the data. Please try again or revise the RSS link.')
+    }
+
+  }
+
   return (
     <>
       <h1 className='text-3xl font-bold mb-8'>Share a Podcast</h1>
@@ -129,7 +156,7 @@ const SharePodcast = () => {
               options={[
                 { value: null, text: '', selectable: false },
                 ...(languages?.map(({ name }) => {
-                  return ({ value: name, text: name, append: <FlagIcon /> })
+                  return ({ value: name, text: name, append: <img src={`/flags/${name}.svg`} /> })
                 }) ?? [])
               ]}
               onChange={languageCode => setTargetLanguage(languageCode)}
@@ -149,7 +176,7 @@ const SharePodcast = () => {
                 ...(languages?.map(({ name }) => ({
                   value: name,
                   text: name === targetLanguage ? `${name} (immersive)` : name,
-                  append: <FlagIcon />
+                  append: <img src={`/flags/${name}.svg`} />
                 })) ?? [])
               ]}
               onChange={languageCode => setMediumLanguage(languageCode!)}
@@ -200,14 +227,24 @@ const SharePodcast = () => {
         <div className='flex flex-col gap-2'>
           <div>
             <div className='mb-6'>
-              <label>
-                <div>Cover image</div>
-                <input
-                  type="file"
-                  onChange={event => setCoverImage(event?.target.files?.item(0) ?? null)}
-                  accept="image/x-png,image/jpeg,application/pdf"
-                />
-              </label>
+              <ImageUploader
+                image={coverImage}
+                onChange={(image) => {
+                  setCoverImage(image)
+                }}
+              />
+            </div>
+            <div>
+              <Input
+                label="RSS Feed"
+                value={rss}
+                onChange={rss => setRss(rss)}
+                placeholder='https://'
+                prepend={<RssIcon size={16} />}
+              />
+              <p className="text-slate-400 text-xs mt-1 italic">
+                Adding the <FollowLink to="https://en.wikipedia.org/wiki/RSS" target="_blank">RSS Feed</FollowLink> will automatically update data and show the latest episodes.</p>
+              <Button onClick={autoompleteHandler} variant='outline'>Autocomplete</Button>
             </div>
             <div className='text-sm'>
               Links
@@ -237,7 +274,7 @@ const SharePodcast = () => {
             </ul>
             <p className='text-xs text-slate-500 italic'>
               Add links where to listen and support the show: Apple, Youtube, Spotify,
-              Patreon, <FollowLink to="https://en.wikipedia.org/wiki/RSS" target="_blank">RSS Feed</FollowLink>, etc.
+              Patreon, etc.
             </p>
             <Button
               onClick={() => setLinks(l => [...l, ''])}

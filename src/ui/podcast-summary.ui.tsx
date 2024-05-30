@@ -13,21 +13,22 @@ export const PodcastSummary = ({ podcast }: { podcast: MinifiedPodcast }) => (
     <article>
       <img
         src={podcast.coverImage ? `/dynamics/podcasts/covers/${podcast.coverImage}` : noImage}
-        className='w-full border-solid border-2 aspect-square border-slate-200 rounded-lg'
+        className='w-full border-solid border-2 object-cover object-center aspect-square border-slate-200 rounded-lg'
       />
+      {
+
+      }
       <div className="flex gap-4 mt-2 text-slate-400">
-        {podcast.savedCount > 0 && (
-          <div className="flex gap-1 items-center">
-            <HeartIcon size={20} />
-            {podcast.savedCount}
-          </div>
-        )}
+        <div className="flex gap-1 items-center">
+          <HeartIcon size={20} />
+          {podcast.savedCount}
+        </div>
         <div className="flex gap-1 items-center">
           <MessageCircleIcon size={20} />
-          2
+          {podcast.commentsCount}
         </div>
       </div>
-      <h2 className='text-lg font-bold mt-2'>{podcast.name}</h2>
+      <h2 className='text-lg font-bold mt-1'>{podcast.name}</h2>
       <div className='text-slate-400 text-sm mt-1 line-clamp-2 break-words w-full'>
         {podcast.description}
       </div>

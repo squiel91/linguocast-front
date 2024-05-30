@@ -2,22 +2,22 @@ import { createBrowserRouter } from "react-router-dom";
 import Error from "./routes/error";
 import Contributions from "./routes/contributions";
 import MainTheme from "./themes/main/main.themes";
-import PodcastListing from "./routes/podcasts/listing.podcasts";
+import ListPodcast from "./routes/podcasts/list.podcasts";
 import About from "./routes/about/about";
-import ViewPodcast from "./routes/podcasts/view.podcasts";
+import ViewPodcast from "./routes/podcasts/view/view.podcasts";
 import SharePodcast from "./routes/podcasts/edit/edit.podcasts";
-import { RootTheme } from "./themes/root/root.theme";
+import { PlayerContextWrapper } from "./themes/player/player";
 
 export const router = createBrowserRouter([
   {
     path: "/",
-    element: <RootTheme />,
+    element: <PlayerContextWrapper />,
     errorElement: <Error />,
     children: [
 
       {
         path: "/",
-        element: <PodcastListing />,
+        element: <ListPodcast />,
       },
       {
         path: "/",

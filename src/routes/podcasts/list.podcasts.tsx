@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { ChevronsUpDownIcon, FlagIcon, GlobeIcon, LogOutIcon, PlusIcon, SearchIcon, UserPlusIcon } from 'lucide-react'
+import { ChevronsUpDownIcon, GlobeIcon, LogOutIcon, PlusIcon, SearchIcon, UserPlusIcon } from 'lucide-react'
 import logo from '@/assets/linguocast-logo.svg'
 import { LEVELS } from '@/constants/levels.constants'
 import { Footer } from '@/themes/main/footer.themes'
@@ -18,7 +18,7 @@ import { useQueries } from '@tanstack/react-query'
 import { PodcastSummary } from '@/ui/podcast-summary.ui'
 import { PodcastSummaryPlaceholder } from '@/ui/podcast-summary-placeholder.ui'
 
-const PodcastListing = () => {
+const ListPodcast = () => {
   const [
     { data: podcasts, isFetching: podcastsIsFetching },
     { data: languages }
@@ -86,7 +86,7 @@ const PodcastListing = () => {
                       { value: null, text: 'All', append: <GlobeIcon size={20} className='text-gray-400' /> },
                       ...(
                         languages?.map(
-                          ({ id, name }) => ({ value: `${id}`, text: name, append: <FlagIcon /> })
+                          ({ id, name }) => ({ value: `${id}`, text: name, append: <img src={`/flags/${name}.svg`} /> })
                       ) ?? [])
                     ]}
                     onChange={languageCode => setTargetLanguage(languageCode)}
@@ -170,7 +170,7 @@ const PodcastListing = () => {
           <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 3xl:grid-cols-4 gap-x-6  md:gap-x-8 lg:gap-x-8 gap-y-12 lg:col-span-3'>
             {podcastsIsFetching && [0, 1, 2, 3].map(i => <PodcastSummaryPlaceholder key={i} />)}
             {filtedPodcasts.map(podcast => (
-              <PodcastSummary podcast={podcast} />
+              <PodcastSummary key={podcast.id} podcast={podcast} />
             ))}
             <Link to="/podcasts/share" className="self-start text-primary">
               <div className="aspect-square flex items-center justify-center border-dashed border-2 border-primary rounded-lg flex-col">
@@ -186,4 +186,4 @@ const PodcastListing = () => {
   )
 }
 
-export default PodcastListing
+export default ListPodcast
