@@ -7,6 +7,7 @@ import About from "./routes/about/about";
 import ViewPodcast from "./routes/podcasts/view/view.podcasts";
 import SharePodcast from "./routes/podcasts/edit/edit.podcasts";
 import { PlayerContextWrapper } from "./themes/player/player";
+import ViewEpisode from "./routes/episodes/view.episodes";
 
 export const router = createBrowserRouter([
   {
@@ -26,6 +27,10 @@ export const router = createBrowserRouter([
           {
             path: '/podcasts/:podcastId/:podcastName?',
             element: <ViewPodcast />
+          },
+          {
+            path: '/episodes/:episodeId/:episodeName?',
+            element: <ViewEpisode />
           },
           {
             path: '/podcasts/:podcastId/:podcastName?/edit',

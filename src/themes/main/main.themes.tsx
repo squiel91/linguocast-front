@@ -16,7 +16,7 @@ const MainTheme = () => {
 
   return (
     <>
-      <nav className="container flex justify-between flex-wrap pt-8 pb-12 gap-4">
+      <nav className="container flex justify-between flex-wrap pt-8 pb-2 gap-4">
         <Link to="/"><img src={linguocastLogo} className='w-56' /></Link>
         {isLoggedIn
           ? <div className="flex items-center gap-2">

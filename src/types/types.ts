@@ -33,6 +33,8 @@ export interface Episode extends MinifiedEpisode {
 
 export interface PopulatedEpisode extends Episode {
   description: string
+  leftOn: number,
+  completedAt: string
   belongsTo: PopulatedPodcast
 }
 

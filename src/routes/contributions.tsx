@@ -1,7 +1,9 @@
+import { Breadcrumb } from "@/ui/breadcrumb.ui"
 import { FollowLink } from "@/ui/follow-link.ui"
 
 const Contributions = () => (
   <>
+    <Breadcrumb current="Contributions terms" />
     <h1 className="text-3xl mb-8 font-bold">Contributions terms</h1>
     <div className='max-w-2xl space-y-4'>      
       <p>

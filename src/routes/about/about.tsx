@@ -1,9 +1,11 @@
 import { FollowLink } from "@/ui/follow-link.ui"
 
 import ezeAvatar from './eze-avatar.jpg'
+import { Breadcrumb } from "@/ui/breadcrumb.ui"
 
 const About = () => (
   <>
+    <Breadcrumb current="About Linguocast" />
     <h1 className="text-3xl mb-8 font-bold">About Linguocast</h1>
     <div className='grid md:grid-cols-3 gap-16'>
       <div className='md:col-span-2 max-w-2xl space-y-4'>
