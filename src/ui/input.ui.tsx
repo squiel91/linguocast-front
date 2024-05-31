@@ -5,7 +5,7 @@ interface Props {
   value: string | null
   type?: 'text' | 'number' | 'password'
   label?: string,
-  onChange: (value: string | null) => void
+  onChange?: (value: string | null) => void
   placeholder?: string
   disabled?: boolean
   prepend?: ReactNode
@@ -40,7 +40,7 @@ export const Input = ({
         type={type}
         value={value ?? ''}
         placeholder={placeholder}
-        onChange={event => changeHandler(event.target.value || null)}
+        onChange={event => changeHandler?.(event.target.value || null)}
         disabled={disabled}
       />
       {append && (

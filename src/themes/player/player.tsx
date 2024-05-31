@@ -65,6 +65,17 @@ export const PlayerContextWrapper = () => {
     return () => clearInterval(intervalId)
   }, []) // TODO optimize it to only run when it is playing
 
+  useEffect(() => {
+    const intervalId = setInterval(() => {
+      const audio = audioElem.current
+      if (audio && currentEpisode) {
+        axios.post(`/api/episodes/${currentEpisode.id}/reproductions`, { on: Math.floor(audio.currentTime) })
+        .catch(error => console.warn('Could not save user\'s listening time', error))
+      }
+    }, 1000 * 5)
+    return () => clearInterval(intervalId)
+  }, [currentEpisode]) // TODO optimize it to only run when it is playing
+
   const changeTime = (newTime: number) => {
     setCurrentTime(newTime)
     if (!audioElem.current) return
@@ -156,7 +167,12 @@ export const PlayerContextWrapper = () => {
               onCanPlay={() => setIsLoading(false)}
               className="hidden"
               onLoadedMetadata={() => {
-                if (audioElem.current) setDuration(audioElem.current.duration)
+                if (!audioElem.current) return
+                setDuration(audioElem.current.duration)
+                if (currentEpisode.leftOn) {
+                  audioElem.current.currentTime = currentEpisode.leftOn
+                }
+                audioElem.current.play()
               }}
             />
             <div className="bg-orange-300 w-full h-1">

@@ -1,7 +1,7 @@
 import { PopulatedEpisode } from "@/types/types"
 import { formatSeconds, readableDate } from "@/utils/date.utils"
 import noImage from '@/assets/no-image.svg'
-import { CheckIcon, DotIcon, PartyPopperIcon, PauseIcon, PlayIcon } from "lucide-react"
+import { CheckIcon, PauseIcon, PlayIcon } from "lucide-react"
 import { usePlayer } from "@/themes/player/player"
 import axios from "axios"
 import { MouseEventHandler, useState } from "react"
@@ -31,7 +31,10 @@ export const EpisodeSummary = ({ episode }: Props) => {
     reproduce(episode)
   }
 
-  const markCompletedHandler = async () => {
+  const markCompletedHandler: MouseEventHandler<HTMLButtonElement> = async (event) => {
+    event.preventDefault()
+    event.stopPropagation()
+
     if (!isLoggedIn) return openRegisterHandler(true)
     try {
       await axios.post(`/api/episodes/${episode.id}/reproductions`, { hasCompleted: true})
@@ -47,7 +50,7 @@ export const EpisodeSummary = ({ episode }: Props) => {
     <li>
       <Link
         to={`/episodes/${episode.id}/${urlSafe(episode.title)}`}
-        className="py-6 flex gap-6 border-b-2 border-slate-200"
+        className="py-6 flex gap-4 border-b-2 border-slate-200"
       >
         <img
           className="w-12 h-12 rounded-md border-2 border-slate-200"
@@ -58,11 +61,27 @@ export const EpisodeSummary = ({ episode }: Props) => {
         <div>
           <div className="font-bold break-all">{episode.title}</div>
           <div className="text-sm text-slate-400 line-clamp-2 break-all w-full">{episode.description.replace(/<[^>]+>/ig, '')}</div>
-          <div className="flex items-center mt-2 text-sm">
-            {readableDate(episode.publishedAt)} <DotIcon /> {formatSeconds(episode.duration)} {episode.completedAt || hasMarkedCompleted
+          <div className="flex items-center mt-2 text-sm gap-2">
+            <span>{readableDate(episode.publishedAt)}</span>
+            <div className="w-1 h-1 rounded-full bg-black"/>
+            {episode.leftOn && (episode.leftOn > 0)
               ? (
                 <>
-                  <PartyPopperIcon size={16} className="ml-2 mr-2" /> Episode completed
+                  <div className="bg-slate-200 w-20 h-1 rounded-full">
+                    <div
+                      className="h-full w-0 bg-primary rounded-full"
+                      style={{ width: `${(episode.leftOn / episode.duration) * 100}%` }}
+                    />
+                  </div>
+                  <span>{formatSeconds(episode.duration - episode.leftOn)} left</span>
+                </>
+              )
+              : <span>{formatSeconds(episode.duration)}</span>
+            }
+            {episode.completedAt || hasMarkedCompleted
+              ? (
+                <>
+                  <CheckIcon size={16} /> Episode completed
                 </>
               )
               : (

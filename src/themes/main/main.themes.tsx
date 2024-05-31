@@ -3,31 +3,27 @@ import { Button } from "../../ui/button.ui"
 import { Footer } from "./footer.themes"
 import linguocastLogo from '@/assets/linguocast-logo.svg' 
 import { useAuth } from "../../auth/auth.context"
-import { LogOut, UserPlusIcon } from "lucide-react"
+import { UserPlusIcon } from "lucide-react"
+import { Avatar } from "@/ui/avatar.ui"
 
 const MainTheme = () => {
   const {
     isLoggedIn,
     user,
     openRegisterHandler,
-    openLoginHandler,
-    logoutHandler
+    openLoginHandler
   } = useAuth()
 
   return (
     <>
-      <nav className="container flex justify-between flex-wrap pt-8 pb-2 gap-4">
-        <Link to="/"><img src={linguocastLogo} className='w-56' /></Link>
+      <nav className="container flex justify-between flex-wrap pt-4 items-center gap-4">
+        <Link to="/"><img src={linguocastLogo} className='w-40 md:w-56' /></Link>
         {isLoggedIn
-          ? <div className="flex items-center gap-2">
-              {user && `Hey ${user.name}!`}
-              <Button
-                variant='discrete'
-                prepend={<LogOut size={16} />}
-                onClick={logoutHandler}
-              >
-                Logout
-              </Button>
+          ? <div className="flex items-center gap-3">
+              <span className="hidden md:inline">{user && `Hey ${user.name}!`}</span>
+              <Link to="/profile">
+                <Avatar className="w-10 md:w-12" />
+              </Link>
             </div>
           : (
             <div className='flex gap-2'>

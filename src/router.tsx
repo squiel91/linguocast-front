@@ -8,6 +8,7 @@ import ViewPodcast from "./routes/podcasts/view/view.podcasts";
 import SharePodcast from "./routes/podcasts/edit/edit.podcasts";
 import { PlayerContextWrapper } from "./themes/player/player";
 import ViewEpisode from "./routes/episodes/view.episodes";
+import Profile from "./routes/profile";
 
 export const router = createBrowserRouter([
   {
@@ -24,6 +25,10 @@ export const router = createBrowserRouter([
         path: "/",
         element: <MainTheme />,
         children: [
+          {
+            path: '/profile',
+            element: <Profile />
+          },
           {
             path: '/podcasts/:podcastId/:podcastName?',
             element: <ViewPodcast />

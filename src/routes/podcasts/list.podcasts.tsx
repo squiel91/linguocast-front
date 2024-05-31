@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react'
 
-import { ChevronsUpDownIcon, GlobeIcon, LogOutIcon, PlusIcon, SearchIcon, UserPlusIcon } from 'lucide-react'
+import { ChevronsUpDownIcon, GlobeIcon, PlusIcon, SearchIcon, UserPlusIcon } from 'lucide-react'
 import logo from '@/assets/linguocast-logo.svg'
 import { LEVELS } from '@/constants/levels.constants'
 import { Footer } from '@/themes/main/footer.themes'
@@ -17,6 +17,7 @@ import { Link, useLocation } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
 import { PodcastSummary } from '@/ui/podcast-summary.ui'
 import { PodcastSummaryPlaceholder } from '@/ui/podcast-summary-placeholder.ui'
+import { Avatar } from '@/ui/avatar.ui'
 
 const ListPodcast = () => {
   const [
@@ -31,7 +32,7 @@ const ListPodcast = () => {
 
   const location = useLocation()
   const searchParams = new URLSearchParams(location.search);
-  const { isLoggedIn, user, openRegisterHandler, openLoginHandler, logoutHandler } = useAuth()
+  const { isLoggedIn, user, openRegisterHandler, openLoginHandler } = useAuth()
 
   const [targetLanguage, setTargetLanguage] = useState(() => (searchParams.get('t') || null))
   const [name, setName] = useState(() => (searchParams.get('q') ?? null))
@@ -135,7 +136,7 @@ const ListPodcast = () => {
           </div>
         </div>
         <div className='lg:col-span-3 mb-16'>
-          <div className='flex justify-between col-span-full my-4 items-center'>
+          <div className='flex justify-end md:justify-between col-span-full my-4 items-center'>
             <div className='hidden md:block text-sm text-stone-400 flex-shrink-0'>
               {podcastsIsFetching
                 ? <div></div>
@@ -145,14 +146,11 @@ const ListPodcast = () => {
               }
             </div>
             {isLoggedIn
-              ? <div className='flex gap-0 md:gap-2 w-full md:w-auto justify-end md:justify-normal items-center text-sm md:text-base'>
-                Hey {user?.name}!
-                <Button variant='discrete' onClick={logoutHandler}>
-                  <div className='flex gap-2 items-center'>
-                    <LogOutIcon size={16} />
-                    Logout
-                  </div>
-                </Button>
+              ? <div className="flex items-center gap-3">
+                {user && `Hey ${user.name}!`}
+                <Link to="/profile">
+                  <Avatar className="w-10 md:w-12" />
+                </Link>
               </div>
               : (
                 <div className='flex w-full lg:w-auto gap-2 justify-end lg:justify-normal'>

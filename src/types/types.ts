@@ -7,11 +7,14 @@ export interface Language {
   name: string
 }
 
-export interface MinifiedPodcast {
+export interface MicroPodcast {
   id: number
   name: string
-  description: string
   coverImage?: string
+}
+
+export interface MinifiedPodcast extends MicroPodcast {
+  description: string
   targetLanguage: string
   levels: Level[]
   savedCount: number
@@ -35,7 +38,7 @@ export interface PopulatedEpisode extends Episode {
   description: string
   leftOn: number,
   completedAt: string
-  belongsTo: PopulatedPodcast
+  belongsTo: MicroPodcast
 }
 
 export interface Podcast extends MinifiedPodcast {
