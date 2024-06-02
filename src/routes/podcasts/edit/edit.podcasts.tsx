@@ -14,6 +14,7 @@ import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
 import { ImageUploader } from './image-uploader.edit.podcasts'
+import { Breadcrumb } from '@/ui/breadcrumb.ui'
 
 const SharePodcast = () => {
   const { podcastId } = useParams()
@@ -137,6 +138,7 @@ const SharePodcast = () => {
 
   return (
     <>
+      <Breadcrumb current="Share podcast" />
       <h1 className='text-3xl font-bold mb-8'>Share a Podcast</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-x-16 gap-y-6 mb-8">
         <p className='mb-8 max-w-3xl md:col-span-2'>

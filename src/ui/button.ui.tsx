@@ -30,19 +30,20 @@ export const Button = ({
     onClick={clickHandler}
     disabled={disabled}
     className={cn(
+      'relative',
       variant === 'primary'
         ? 'bg-primary text-white'
         : variant === 'outline'
-          ?'text-primary border-primary border-[1px] border-solid'
+          ?'text-primary border-primary border-2 border-solid'
           : 'text-primary',
-      compact ? 'px-6 py-3' : 'px-3 py-2',
+      compact ? 'px-6 py-3' : 'px-3 py-1',
       wFullInMobile ? 'w-full md:w-auto' : 'w-auto',
       'rounded-md',
       className
     )}
   >
     <div className='absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2'>
-      {isLoading && <Loader2Icon className='animate-spin'/>}
+      {isLoading && <Loader2Icon strokeWidth={3} className='animate-spin'/>}
     </div>
     <div className={cn('flex gap-2 items-center justify-center', isLoading ? 'opacity-0' : '')}>
       {prepend}<div>{children}</div>{append}

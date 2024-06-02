@@ -59,10 +59,6 @@ export interface Podcast extends MinifiedPodcast {
   episodes: Episode[]
 }
 
-export interface PopulatedPodcast extends Podcast {
-  episodes: PopulatedEpisode[]
-}
-
 export interface Comment {
   id: number
   authorId: number

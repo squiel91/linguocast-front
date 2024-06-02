@@ -1,12 +1,15 @@
 import { PopulatedEpisode } from "@/types/types";
-import { Loader2Icon, PauseIcon, PlayIcon, RotateCcwIcon, RotateCwIcon, SquareIcon } from "lucide-react";
+import { Minimize2Icon, RotateCcwIcon, RotateCwIcon, SquareIcon } from "lucide-react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
-import { Outlet, ScrollRestoration } from "react-router-dom";
+import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import noImage from '@/assets/no-image.svg'
 // import { formatSeconds } from "@/utils/date.utils";
 import { useAuth } from "@/auth/auth.context";
 import axios from "axios";
 import { isAudioPlaying } from "@/utils/player.utils";
+import { PlayButton } from "@/ui/play-button.ui";
+import { formatSeconds } from "@/utils/date.utils";
+import { useNavigate } from 'react-router-dom';
 
 const COMPLETED_THRESHOLD = 30 // seconds
 
@@ -28,6 +31,9 @@ export const AuthContext = createContext<Player>({
 })
 
 export const PlayerContextWrapper = () => {
+  const navigate = useNavigate();
+  const location = useLocation();
+
   const { isLoggedIn } = useAuth()
 
   const [currentEpisode, setCurrentEpisode] = useState<PopulatedEpisode | null>(null)
@@ -37,6 +43,23 @@ export const PlayerContextWrapper = () => {
   const [markedCompleted, setMarkedComplete] = useState(false)
   const audioElem = useRef<HTMLAudioElement>(null)
   const [isLoading, setIsLoading] = useState(true)
+
+  const [isPlayerExpaned, setIsPlayerExpanded] = useState(false)
+
+  useEffect(() => {
+    if (isPlayerExpaned) {
+      navigate(`${location.pathname}#player`);
+      
+      const handleBackButtonClick = () => {
+        setIsPlayerExpanded(false)
+        navigate(location.pathname, { replace: true });
+      }
+      window.addEventListener('popstate', handleBackButtonClick);
+      return () => {
+        window.removeEventListener('popstate', handleBackButtonClick);
+      };
+    }
+  }, [isPlayerExpaned, navigate, location.pathname]);
 
   useEffect(() => {
     const audio = audioElem.current
@@ -98,13 +121,56 @@ export const PlayerContextWrapper = () => {
         pause: () => setIsPlaying(false)
       }}
     >
-      <Outlet />
-      {currentEpisode && (
-        <div className="fixed left-0 bottom-0 right-0 rounded-md px-4">
-          <div className="container flex flex-col p-0 bg-primary  rounded-tr-lg rounded-tl-lg text-white">
-            <div className="p-3 pb-2">
+      <div style={{ display: isPlayerExpaned ? 'none' : 'block' }}>
+        <Outlet />
+      </div>
+      {isPlayerExpaned && (
+        <div className="fixed top-0 left-0 right-0 min-h-screen bg-primary text-white">
+          <button onClick={() => {
+            // setIsPlayerExpanded(false)
+            history.back()
+          }}><Minimize2Icon /></button>
+          <div className="container py-4">
+            <div className="flex gap-8">
+              <img
+                className="w-40 aspect-square rounded-md border-2 border-slate-200"
+                src={currentEpisode?.image ?? (currentEpisode?.belongsTo.coverImage
+                  ? `/dynamics/podcasts/covers/${currentEpisode.belongsTo.coverImage}`
+                  : noImage)}
+              />
+              <div>
+                <h1 className="text-2xl font-bold">{currentEpisode?.title}</h1>
+                <h2 className="text-lg">{currentEpisode?.belongsTo.name}</h2>
+              </div>
+            </div>
+            <PlayButton
+              isLoading={isLoading}
+              isPlaying={isPlaying}
+              onTogglePlay={() => setIsPlaying(v => !v)}
+            />
+            <div className="grow text-sm gap-4 items-center hidden md:flex">
+              <div className="flex-shrink-0 min-w-8">{formatSeconds(currentTime)}</div>
+              <input
+                type="range"
+                value={currentTime}
+                max={duration}
+                className="w-full"
+                onChange={(event) => changeTime(+event.target.value)}
+              />
+              <div className="flex-shrink-0 min-w-8">{formatSeconds(duration)}</div>
+            </div>
+          </div>
+        </div>
+      )}
+      {currentEpisode && !isPlayerExpaned && (
+        <div className="fixed left-0 bottom-0 right-0 rounded-md md:px-4">
+          <button
+            className="container flex flex-col p-0 bg-primary  rounded-tr-lg rounded-tl-lg text-white text-left"
+            onClick={() => setIsPlayerExpanded(true)}
+          >
+            <div className="p-3 pb-2 w-full">
               <div className="flex justify-between gap-8">
-                <div className="flex gap-4">
+                <div className="flex gap-4 flex-grow">
                   <img
                     className="w-12 h-12 rounded-md border-2 border-slate-200"
                     src={currentEpisode.image ?? (currentEpisode.belongsTo.coverImage
@@ -116,36 +182,21 @@ export const PlayerContextWrapper = () => {
                     <div className="text-sm line-clamp-1">{currentEpisode.belongsTo.name}</div>
                   </div>
                 </div>
-                {/* TODO add loading status */}
-                {/* TODO make the player bar responsive, or change it to more basic and create the bar on touch */}
-                {/* <div className="grow text-sm gap-4 items-center hidden md:flex">
-                  <div className="flex-shrink-0 min-w-8">{formatSeconds(currentTime)}</div>
-                  <input
-                    type="range"
-                    value={currentTime}
-                    max={duration}
-                    className="w-full"
-                    onChange={(event) => changeTime(+event.target.value)}
-                  />
-                  <div className="flex-shrink-0 min-w-8">{formatSeconds(duration)}</div>
-                </div> */}
                 <div className="flex gap-2 items-center">
-                  <button className="relative" onClick={() => changeTime(Math.max(currentTime - 10, 0))} disabled={isLoading}>
+                  <button className="relative hidden md:block" onClick={() => changeTime(Math.max(currentTime - 10, 0))} disabled={isLoading}>
                     <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center text-xs">10'</div>
                     <RotateCcwIcon size={40} />
                   </button>
-                  <button
-                    onClick={() => setIsPlaying(v => !v)}
-                    className="w-10 h-10 flex items-center justify-center bg-white text-primary rounded-full self-center"
-                    disabled={isLoading}
-                  >
-                    {isLoading
-                      ? <Loader2Icon className="animate-spin" size={24} />
-                      : isPlaying
-                        ? <PauseIcon size={16} fill="tomato" />
-                        : <PlayIcon size={16} fill="tomato" />}
-                  </button>
-                  <button className="relative" onClick={() => changeTime(Math.max(currentTime + 10, 0))} disabled={isLoading}>
+                  <PlayButton
+                    isLoading={isLoading}
+                    isPlaying={isPlaying}
+                    onTogglePlay={(event) => {
+                      event.preventDefault()
+                      event.stopPropagation()
+                      setIsPlaying(v => !v)
+                    }}
+                  />
+                  <button className="relative hidden md:block" onClick={() => changeTime(Math.max(currentTime + 10, 0))} disabled={isLoading}>
                     <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center text-xs">10'</div>
                     <RotateCwIcon size={40} />
                   </button>
@@ -154,34 +205,35 @@ export const PlayerContextWrapper = () => {
                       setIsPlaying(false)
                       setCurrentEpisode(null)
                     }}
-                    className="block p-3 border-white border-2 rounded-full self-center"
+                    className="w-10 h-10 flex items-center justify-center border-white border-2 rounded-full self-center"
                   >
                     <SquareIcon size={16} fill="white" />
                   </button>
                 </div>
               </div>
             </div>
-            <audio
-              ref={audioElem}
-              src={currentEpisode?.contentUrl}
-              onCanPlay={() => setIsLoading(false)}
-              className="hidden"
-              onLoadedMetadata={() => {
-                if (!audioElem.current) return
-                setDuration(audioElem.current.duration)
-                if (currentEpisode.leftOn) {
-                  audioElem.current.currentTime = currentEpisode.leftOn
-                }
-                audioElem.current.play()
-              }}
-            />
             <div className="bg-orange-300 w-full h-1">
               <div className="h-full w-0 bg-red-600" style={{ width: `${percentageListened}%` }} />
             </div>
-          </div>
+          </button>
         </div>
       )}
-      
+      {currentEpisode && (
+        <audio
+          ref={audioElem}
+          src={currentEpisode?.contentUrl}
+          onCanPlay={() => setIsLoading(false)}
+          className="hidden"
+          onLoadedMetadata={() => {
+            if (!audioElem.current) return
+            setDuration(audioElem.current.duration)
+            if (currentEpisode.leftOn) {
+              audioElem.current.currentTime = currentEpisode.leftOn
+            }
+            audioElem.current.play()
+          }}
+        />
+      )}
       <ScrollRestoration />
     </AuthContext.Provider>
   )

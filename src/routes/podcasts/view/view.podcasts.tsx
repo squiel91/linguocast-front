@@ -1,4 +1,4 @@
-import { PopulatedPodcast } from '@/types/types'
+import { Podcast } from '@/types/types'
 import { getMainDomain, urlSafe } from '@/utils/url.utils'
 import axios from 'axios'
 import { ArrowUpRightIcon, HeartIcon, PenLineIcon, Share2Icon } from 'lucide-react'
@@ -19,12 +19,11 @@ const ViewPodcast = () => {
 
   const { data: podcast } = useQuery({
     queryKey: ['podcasts', podcastId],
-    queryFn: () => axios.get<PopulatedPodcast>(`/api/podcasts/${podcastId!}`)
+    queryFn: () => axios.get<Podcast>(`/api/podcasts/${podcastId!}`)
       .then(res => res.data)
       .then(podcasts => ({
         ...podcasts,
-        episodes: podcasts.episodes.map(e => ({ ...e, belongsTo: podcasts})),
-        savedCount: podcasts.savedCount - (podcasts.isSavedByUser ? 1 : 0)}
+        savedCount: podcasts.savedCount - (podcasts.isSavedByUser ? 1 : 0)} // TODO Dont like it much
       ))
   })
 
@@ -91,7 +90,7 @@ const ViewPodcast = () => {
                 Share show
               </Button>
             </div>
-            {podcast && <ListEpisodes episodes={podcast.episodes} totalEpisodes={podcast.episodesCount} />}
+            {podcast && <ListEpisodes podcastId={podcast.id} totalEpisodes={podcast.episodesCount} />}
             <CommentViewPodcasts podcastId={+podcastId!} />
             <div className='hidden lg:block mt-8'>{suggestEditElement}</div>
           </div>

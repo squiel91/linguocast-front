@@ -10,7 +10,7 @@ interface Props {
 
 export const EditSuccessModal = ({ hasShared, isEdit }: Props) => {
   return (
-    <Dialog isOpen={hasShared} onClose={() => console.log('close dialog')}>
+    <Dialog isOpen={hasShared}>
       <div className='text-xl mb-4 flex gap-2 items-center'>
         <CircleCheckIcon size={40} className='text-primary' />
         Thank for sharing!

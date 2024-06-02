@@ -53,15 +53,15 @@ export const EpisodeSummary = ({ episode }: Props) => {
         className="py-6 flex gap-4 border-b-2 border-slate-200"
       >
         <img
-          className="w-12 h-12 rounded-md border-2 border-slate-200"
+          className="w-12 h-12 flex-shrink-0 rounded-md border-2 border-slate-200"
           src={episode.image ?? (episode.belongsTo.coverImage
             ? `/dynamics/podcasts/covers/${episode.belongsTo.coverImage}`
             : noImage)}
         />
-        <div>
+        <div className="flex-grow">
           <div className="font-bold break-all">{episode.title}</div>
           <div className="text-sm text-slate-400 line-clamp-2 break-all w-full">{episode.description.replace(/<[^>]+>/ig, '')}</div>
-          <div className="flex items-center mt-2 text-sm gap-2">
+          <div className="flex items-center mt-2 text-sm gap-2 flex-wrap">
             <span>{readableDate(episode.publishedAt)}</span>
             <div className="w-1 h-1 rounded-full bg-black"/>
             {episode.leftOn && (episode.leftOn > 0)
