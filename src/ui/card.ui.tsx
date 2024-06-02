@@ -9,7 +9,7 @@ interface Props {
 export const Card = ({ className, children }: Props) => (
   <div
     className={cn(
-      'p-4 rounded-md drop-shadow-md bg-white',
+      'p-4 rounded-lg drop-shadow-sm bg-white border-slate-200 border-[1px]',
       className
     )}
   >

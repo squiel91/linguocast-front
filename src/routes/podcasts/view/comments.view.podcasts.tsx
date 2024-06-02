@@ -1,6 +1,7 @@
 import { useAuth } from "@/auth/auth.context"
 import { Comment } from "@/types/types"
 import { Button } from "@/ui/button.ui"
+import { FollowLink } from "@/ui/follow-link.ui"
 import { Loader } from "@/ui/loader.ui"
 import { Textarea } from "@/ui/textarea.ui"
 import { readableDate } from "@/utils/date.utils"
@@ -19,7 +20,7 @@ export const CommentViewPodcasts = ({ podcastId }: Props) => {
   const [savingComment, isSavingComment] = useState(false)
 
   const { data: serverComments, isFetching, error } = useQuery({
-    queryKey: ['comments', podcastId, 'comments'],
+    queryKey: ['podcasts', podcastId, 'comments'],
     queryFn: () => axios.get<Comment[]>(`/api/podcasts/${podcastId}/comments`).then(res => res.data)
   })
 
@@ -45,12 +46,11 @@ export const CommentViewPodcasts = ({ podcastId }: Props) => {
   const comments = [...justAddedComments, ...(serverComments ?? [])]
   return (
     <div>
-      <div className="pb-2 border-b-2 mt-8 text-slate-400">Comments ({comments.length})</div>
       { isFetching && <Loader /> }
       { !error && comments && (
         <>
           {comments.length === 0
-            ? <p className="mt-4">No comments yet. Be the first one to write!</p>
+            ? <p>No reviews yet. Be the first one to write one!</p>
             : (
               <ul className="flex flex-col">
                 {comments.map(({ id, authorName, message, createdAt }) => (
@@ -66,14 +66,19 @@ export const CommentViewPodcasts = ({ podcastId }: Props) => {
         </>
       )}
       <div className="mt-4">
-        <Textarea value={message} onChange={(message) => setMessage(message)} />
-        <Button
-          onClick={saveCommentHandler}
-          disabled={(message ?? '').length === 0}
-          isLoading={savingComment}
-        >
-          Save comment
-        </Button>
+        <Textarea value={message} onChange={(message) => setMessage(message)} minRows={3} />
+        <div className='rounded-md text-sm flex flex-col md:flex-row gap-4 md:items-center'>
+          <Button
+            onClick={saveCommentHandler}
+            disabled={(message ?? '').length === 0}
+            isLoading={savingComment}
+          >
+            Post review
+          </Button>
+          <p className='text-sm'>
+            Remember to follow the <FollowLink to="/contributions" target='_blank'>contributions guide</FollowLink>
+          </p>
+        </div>
       </div>
     </div>
   )
