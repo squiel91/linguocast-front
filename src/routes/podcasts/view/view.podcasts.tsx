@@ -63,120 +63,118 @@ const ViewPodcast = () => {
           src={`/dynamics/podcasts/covers/${podcast?.coverImage}`}
           className='w-full border-2 border-solid border-slate-300 rounded-md mb-4 aspect-square bg-cover'
         />
-        <div className='col-span-1 lg:col-span-2 self-start flex flex-col justify-between'>
-          <div>
-            <div className='text-4xl mb-4 font-bold'>{podcast?.name}</div>
-            <div className="mt-8">
-              {podcast?.description.split('\n').filter(text => text).map((text, index) => (
-                <p key={index} className='mb-4 break-words'>{text}</p>
-              ))}
-            </div>
-            <div className='flex gap-2 items-end mt-4 mb-12'>
-              <Button
-                onClick={toggleSaveHandler}
-                variant="primary"
-                prepend={hasSaved ? <CheckIcon size={18} /> : <PlusIcon size={18} />}
-              >
-                {hasSaved ? 'Following' : 'Follow'}
-              </Button>
-              <Button
-                variant="discrete"
-                className="flex gap-2 items-center"
-                prepend={<Share2Icon size={16} />}
-              >
-                Share
-              </Button>
-            </div>
-            <TabHeader
-              selectedKey={selectedTabKey}
-              options={[
-                { title: `${podcast?.episodesCount} Episodes`, key:'episodes' },
-                { title: `${podcast?.commentsCount ? `{podcast?.commentsCount} ` : ''}Reviews`, key:'reviews' },
-                { title: 'Info', key:'info' }
-              ]}
-              onChange={(key) => setSelectedTabKey(key)}
-            />
-
-            {selectedTabKey === 'episodes' && (
-              <Card className='mt-4 p-0'>
-                {podcast && <ListEpisodes podcastId={podcast.id} totalEpisodes={podcast.episodesCount} />}
-              </Card>
-            )}
-            {selectedTabKey === 'reviews' && (
-              <Card className='mt-4'>
-                <CommentViewPodcasts podcastId={+podcastId!} />
-              </Card>
-            )}
-            {selectedTabKey === 'info' && (
-              <Card className='mt-4'>
-                <table className='text-sm w-full'>
-                  <tbody>
-                    <tr className='border-b-2 border-solid border-slate-100'>
-                      <th className='uppercase text-xs text-left pr-4 text-slate-500'>Language</th>
-                      <td className='capitalize'>{podcast?.targetLanguage}</td>
-                    </tr>
-                    <tr className='border-b-2 border-solid border-slate-100'>
-                      <th className='uppercase text-xs text-left pr-4 text-slate-500'>Explanations</th>
-                      <td className='capitalize'>{podcast?.mediumLanguage}</td>
-                    </tr>
-                    <tr className='border-b-2 border-solid border-slate-100'>
-                      <th className='uppercase text-xs text-left pr-4 text-slate-500'>Levels</th>
-                      <td className='capitalize'>{podcast?.levels.join(', ')}</td>
-                    </tr>
-                    {podcast?.since && (
-                      <tr className='border-b-2 border-solid border-slate-100'>
-                        <th className='uppercase text-xs text-left pr-4 text-slate-500'>First aired</th>
-                        <td>{new Date(podcast?.since).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
-                      </tr>
-                    )}
-                    {podcast?.episodesCount && (
-                      <tr className='border-b-2 border-solid border-slate-100'>
-                        <th className='uppercase text-xs text-left pr-4 text-slate-500'># Episodes</th>
-                        <td>{podcast?.episodesCount}</td>
-                      </tr>
-                    )}
-                    {(typeof podcast?.hasVideo === 'boolean') && (
-                      <tr className='border-b-2 border-solid border-slate-100'>
-                        <th className='uppercase text-xs text-left pr-4 text-slate-500'>Has video</th>
-                        <td>{podcast?.hasVideo ? 'Yes' : 'No'}</td>
-                      </tr>
-                    )}
-                    {(typeof podcast?.isActive === 'boolean') && (
-                      <tr className='border-b-2 border-solid border-slate-100'>
-                        <th className='uppercase text-xs text-left pr-4 text-slate-500'>Is Active</th>
-                        <td>{podcast.isActive ? 'Yes' : 'No'}</td>
-                      </tr>
-                    )}
-                    {typeof podcast?.transcript && (
-                      <tr className='border-b-2 border-solid border-slate-100'>
-                        <th className='uppercase text-xs text-left pr-4 text-slate-500'>Trasncript</th>
-                        <td>{podcast?.isActive ? 'Yes' : 'No'}</td>
-                      </tr>
-                    )}
-                  </tbody>
-                  <ul className='flex flex-wrap gap-2 items-start my-8'>
-                    {podcast?.links?.map(link => (
-                      <li key={link}>
-                        <a href={link} target='_blank' title={link} className='flex bg-slate-200 font-bold px-3 py-2 rounded-full relative gap-1 items-center capitalize'>
-                          <PlatformIcon link={link} className='w-4 h-4 mr-1'/>
-                          {link.toLowerCase().includes('rss') ? 'RSS Feed' : getMainDomain(link)}
-                          <ArrowUpRightIcon strokeWidth={1} />
-                        </a>
-                      </li>
-                    ))}
-                  </ul>
-                </table>
-              </Card>
-            )}
-            <Link
-              to={`/podcasts/${podcast?.id}/${urlSafe(podcast?.name)}/edit`}
-              className='block mt-4'
-            >
-              <Button variant="discrete" prepend={<PenLineIcon size={16} />}>
-                Suggest an edit
-              </Button>
-            </Link>
+        <div className='col-span-1 lg:col-span-2'>
+          <div className='text-4xl mb-4 font-bold'>{podcast?.name}</div>
+          <div className="mt-8">
+            {podcast?.description.split('\n').filter(text => text).map((text, index) => (
+              <p key={index} className='mb-4 break-words'>{text}</p>
+            ))}
           </div>
+          <div className='flex gap-2 items-end mt-4 mb-12'>
+            <Button
+              onClick={toggleSaveHandler}
+              variant="primary"
+              prepend={hasSaved ? <CheckIcon size={18} /> : <PlusIcon size={18} />}
+            >
+              {hasSaved ? 'Following' : 'Follow'}
+            </Button>
+            <Button
+              variant="discrete"
+              className="flex gap-2 items-center"
+              prepend={<Share2Icon size={16} />}
+            >
+              Share
+            </Button>
+          </div>
+          <TabHeader
+            selectedKey={selectedTabKey}
+            options={[
+              { title: `${podcast?.episodesCount} Episodes`, key:'episodes' },
+              { title: `${podcast?.commentsCount ? `{podcast?.commentsCount} ` : ''}Reviews`, key:'reviews' },
+              { title: 'Info', key:'info' }
+            ]}
+            onChange={(key) => setSelectedTabKey(key)}
+          />
+
+          {selectedTabKey === 'episodes' && (
+            <Card className='mt-4 p-0'>
+              {podcast && <ListEpisodes podcastId={podcast.id} totalEpisodes={podcast.episodesCount} />}
+            </Card>
+          )}
+          {selectedTabKey === 'reviews' && (
+            <Card className='mt-4'>
+              <CommentViewPodcasts podcastId={+podcastId!} />
+            </Card>
+          )}
+          {selectedTabKey === 'info' && (
+            <Card className='mt-4'>
+              <table className='text-sm w-full'>
+                <tbody>
+                  <tr className='border-b-2 border-solid border-slate-100'>
+                    <th className='uppercase text-xs text-left pr-4 text-slate-500'>Language</th>
+                    <td className='capitalize'>{podcast?.targetLanguage}</td>
+                  </tr>
+                  <tr className='border-b-2 border-solid border-slate-100'>
+                    <th className='uppercase text-xs text-left pr-4 text-slate-500'>Explanations</th>
+                    <td className='capitalize'>{podcast?.mediumLanguage}</td>
+                  </tr>
+                  <tr className='border-b-2 border-solid border-slate-100'>
+                    <th className='uppercase text-xs text-left pr-4 text-slate-500'>Levels</th>
+                    <td className='capitalize'>{podcast?.levels.join(', ')}</td>
+                  </tr>
+                  {podcast?.since && (
+                    <tr className='border-b-2 border-solid border-slate-100'>
+                      <th className='uppercase text-xs text-left pr-4 text-slate-500'>First aired</th>
+                      <td>{new Date(podcast?.since).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })}</td>
+                    </tr>
+                  )}
+                  {podcast?.episodesCount && (
+                    <tr className='border-b-2 border-solid border-slate-100'>
+                      <th className='uppercase text-xs text-left pr-4 text-slate-500'># Episodes</th>
+                      <td>{podcast?.episodesCount}</td>
+                    </tr>
+                  )}
+                  {(typeof podcast?.hasVideo === 'boolean') && (
+                    <tr className='border-b-2 border-solid border-slate-100'>
+                      <th className='uppercase text-xs text-left pr-4 text-slate-500'>Has video</th>
+                      <td>{podcast?.hasVideo ? 'Yes' : 'No'}</td>
+                    </tr>
+                  )}
+                  {(typeof podcast?.isActive === 'boolean') && (
+                    <tr className='border-b-2 border-solid border-slate-100'>
+                      <th className='uppercase text-xs text-left pr-4 text-slate-500'>Is Active</th>
+                      <td>{podcast.isActive ? 'Yes' : 'No'}</td>
+                    </tr>
+                  )}
+                  {typeof podcast?.transcript && (
+                    <tr className='border-b-2 border-solid border-slate-100'>
+                      <th className='uppercase text-xs text-left pr-4 text-slate-500'>Trasncript</th>
+                      <td>{podcast?.isActive ? 'Yes' : 'No'}</td>
+                    </tr>
+                  )}
+                </tbody>
+                <ul className='flex flex-wrap gap-2 items-start my-8'>
+                  {podcast?.links?.map(link => (
+                    <li key={link}>
+                      <a href={link} target='_blank' title={link} className='flex bg-slate-200 font-bold px-3 py-2 rounded-full relative gap-1 items-center capitalize'>
+                        <PlatformIcon link={link} className='w-4 h-4 mr-1'/>
+                        {link.toLowerCase().includes('rss') ? 'RSS Feed' : getMainDomain(link)}
+                        <ArrowUpRightIcon strokeWidth={1} />
+                      </a>
+                    </li>
+                  ))}
+                </ul>
+              </table>
+            </Card>
+          )}
+          <Link
+            to={`/podcasts/${podcast?.id}/${urlSafe(podcast?.name)}/edit`}
+            className='block mt-4'
+          >
+            <Button variant="discrete" prepend={<PenLineIcon size={16} />}>
+              Suggest an edit
+            </Button>
+          </Link>
         </div>
       </div>
     </>

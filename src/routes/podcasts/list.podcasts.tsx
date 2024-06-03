@@ -96,7 +96,7 @@ const ListPodcast = () => {
                 <label className={cn(isFiltersExpanded ? 'block' : 'hidden', 'lg:block')}>
                   <div className='text-sm mb-1'>Level</div>
                   <div className='flex flex-col'>
-                    {LEVELS.map(level => (
+                  {LEVELS.map(level => (
                       <label className='flex items-center gap-2 capitalize' key={level}>
                         <Checkbox
                           checked={levels.includes(level)}
