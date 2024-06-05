@@ -40,7 +40,7 @@ const Feed = () => {
       <h1 className="text-3xl font-bold my-8">
         Welcome back {user?.name}!
       </h1>
-      <div className="flex gap-2">
+      <div className="flex gap-2 flex-wrap">
         <Button prepend={<CompassIcon size={16} />}>
           <Link to="/journey">
             Learning Journey
@@ -54,7 +54,7 @@ const Feed = () => {
       </div>
       {newEpisodes.length > 0 && (
         <section>
-          <h2 className="text-2xl font-bold my-8">Up next</h2>
+          <h2 className="text-2xl font-bold mt-8 mb-4">Up next</h2>
           <Carousel
             items={newEpisodes.map(episode => ({
               key: episode.id,
@@ -100,7 +100,7 @@ const Feed = () => {
           />
         </section>
       )}
-      <Button prepend={<CrownIcon size={16} />}>
+      <Button className="mt-8" prepend={<CrownIcon size={16} />}>
         <Link to="/premium">
           Try Premium!
         </Link>

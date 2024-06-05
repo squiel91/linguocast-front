@@ -10,26 +10,23 @@ interface Props {
 
 export const Carousel = ({ items }: Props) => (
   <Swiper
-    slidesPerView={5}
-    spaceBetween={30}
+    slidesPerView={1.8}
+    spaceBetween={20}
     breakpoints={{
-      // when window width is >= 320px
-      320: {
+      640: {
         slidesPerView: 1.8,
         spaceBetween: 20
       },
-      // when window width is >= 480px
-      480: {
-        slidesPerView: 3,
+      768: {
+        slidesPerView: 2.8,
         spaceBetween: 20
       },
-      // when window width is >= 640px
-      640: {
-        slidesPerView: 4,
+      1024: {
+        slidesPerView: 3.8,
         spaceBetween: 30
       },
-      1000: {
-        slidesPerView: 5,
+      1280: {
+        slidesPerView: 5.2,
         spaceBetween: 30
       }
     }}
