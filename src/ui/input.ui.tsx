@@ -2,9 +2,11 @@ import { ReactNode } from 'react'
 import { cn } from '../utils/styles.utils'
 
 interface Props {
+  name?: string
   value: string | null
-  type?: 'text' | 'number' | 'password'
-  label?: string,
+  type?: 'text' | 'number' | 'password' | 'email'
+  label?: string
+  details?: string
   onChange?: (value: string | null) => void
   placeholder?: string
   disabled?: boolean
@@ -14,9 +16,11 @@ interface Props {
 }
 
 export const Input = ({
+  name,
   value,
   type = 'text',
   label,
+  details,
   onChange: changeHandler,
   placeholder,
   disabled = false,
@@ -37,6 +41,8 @@ export const Input = ({
           prepend ? 'pl-9' : '',
           append ? 'pr-9' : ''
         )}
+        name={name}
+        id={name}
         type={type}
         value={value ?? ''}
         placeholder={placeholder}
@@ -52,9 +58,9 @@ export const Input = ({
   )
   if (label) return (
     <label>
-      <div className='text-sm mb-1'>{label}</div>
+      {label && <div className='text-sm mb-1'>{label}</div>}
       {inputElement}
+      {details && <div className='text-sm mt-1 text-gray-400 italic'>{details}</div>}
     </label>
   )
-  return inputElement
 }

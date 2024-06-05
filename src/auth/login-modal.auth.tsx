@@ -3,9 +3,11 @@ import { Input } from "@/ui/input.ui"
 import { isValidEmail } from "@/utils/validations.utils"
 import axios from "axios"
 import { useState } from "react"
-import { MinifiedUser, useAuth } from "./auth.context"
+import { useAuth } from "./auth.context"
 import { EyeIcon, EyeOffIcon, MoveRightIcon } from "lucide-react"
 import Dialog from "../ui/dialog.ui"
+import { SelfUser } from "@/types/types"
+import { useLocation, useNavigate } from "react-router-dom"
 
 interface Props {
   isOpen: boolean
@@ -13,6 +15,9 @@ interface Props {
 }
 
 export const LoginModal = ({ isOpen, onClose: closeHandler }: Props) => {
+  const navigate = useNavigate()
+  const location = useLocation()
+
   const { openLoginHandler, openRegisterHandler, loginHandler: loginAuthHandler } = useAuth()
   const [email, setEmail] = useState<string | null>(null)
   const [password, setPassword] = useState<string | null>(null)
@@ -25,12 +30,13 @@ export const LoginModal = ({ isOpen, onClose: closeHandler }: Props) => {
 
     try {
       setIsLoading(true)
-      const { data: { token, user } } = await axios.post<{ token: string, user: MinifiedUser }>(
-        '/api/users/authenticate',
+      const { data: { token, user } } = await axios.post<{ token: string, user: SelfUser }>(
+        '/api/user/authenticate',
         { email, password }
       )
       loginAuthHandler(user, token)
       openLoginHandler(false)
+      if (location.pathname === '/explore') navigate('/feed')
     } catch (error) {
       console.error(error)
       alert('There was an unexpected error!')
@@ -47,9 +53,10 @@ export const LoginModal = ({ isOpen, onClose: closeHandler }: Props) => {
           Join to start commenting, rating and adding and editing podcasts.
         </p>
         <div className="flex gap-4 flex-col mb-8">
-          <Input label="Email" value={email ?? ''} onChange={(value) => setEmail(value)} disabled={isLoading} />
+          <Input name="email" type="email" label="Email" value={email ?? ''} onChange={(value) => setEmail(value)} disabled={isLoading} />
           <Input
             label="Password"
+            name="password"
             type={passwordVisible ? 'text' : 'password'}
             append={(
               <button

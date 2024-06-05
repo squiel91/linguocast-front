@@ -11,6 +11,7 @@ import { MouseEventHandler, useState } from "react"
 import { TabHeader } from "@/ui/tab-header.ui"
 import { PlayButton } from "@/ui/play-button.ui"
 import { usePlayer } from "@/themes/player/player"
+import { ListeningProgressBar } from "@/ui/listening-progress-bar.ui"
 
 const ViewEpisode = () => {
   const { episodeId: episodeIdRaw } = useParams()
@@ -53,7 +54,7 @@ const ViewEpisode = () => {
       />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-4">
         <img
-          className="'w-full border-2 border-solid border-slate-300 rounded-md mb-4 aspect-square bg-cover"
+          className="'w-full border-[1px] drop-shadow-sm border-solid border-slate-200 rounded-md mb-4 aspect-square bg-cover"
           src={episode.image ?? (episode.belongsTo.coverImage
             ? `/dynamics/podcasts/covers/${episode.belongsTo.coverImage}`
             : noImage)}
@@ -69,17 +70,7 @@ const ViewEpisode = () => {
             <span>{readableDate(episode.publishedAt)}</span>
             <div className="w-1 h-1 rounded-full bg-black"/>
               {episode.leftOn && (episode.leftOn > 0)
-                ? (
-                  <>
-                    <div className="bg-slate-200 w-20 h-1 rounded-full">
-                      <div
-                        className="h-full w-0 bg-primary rounded-full"
-                        style={{ width: `${(episode.leftOn / episode.duration) * 100}%` }}
-                      />
-                    </div>
-                    <span>{formatSeconds(episode.duration - episode.leftOn)} left</span>
-                  </>
-                )
+                ? <ListeningProgressBar duration={episode.duration} leftOn={episode.leftOn} />
                 : <span>{formatSeconds(episode.duration)}</span>
               }
             </div>

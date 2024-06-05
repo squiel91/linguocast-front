@@ -15,6 +15,7 @@ module.exports = {
       { allowConstantExport: true },
     ],
     'no-extra-semi': 'error',
-    'comma-dangle': ['error', 'never']
+    'comma-dangle': ['error', 'never'],
+    '@typescript-eslint/no-extra-non-null-assertion': 'off'
   },
 }

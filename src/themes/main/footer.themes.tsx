@@ -4,7 +4,7 @@ import githubLogo from './assets/github.svg'
 import discordLogo from './assets/discord.svg'
 import mitLogo from './assets/mit.svg'
 import ccLogo from './assets/cc.svg'
-import { FollowLink } from "../../ui/follow-link.ui";
+import { ForwardLink } from "../../ui/forward-link.ui";
 import { Link } from "react-router-dom";
 
 export const Footer = () => (
@@ -19,9 +19,9 @@ export const Footer = () => (
           Got questions, ideas, or just want to say 'hey'? Drop us a line at <Link to='mailto:hey@linguocast.com' className='text-primary'>hey@linguocast.com</Link>!
         </p>
         <ul className='mt-8 flex flex-col gap-1'>
-          <li>Get to know <FollowLink to="about">this project</FollowLink></li>
-          <li>Have a sneak peek of the <FollowLink to="https://docs.google.com/spreadsheets/d/1BYnQQWPUC16IfRmMpgWziL6rMOwVcxzWhaXBHa1rKtY" target='_blank'>coming features</FollowLink></li>
-          <li>Check the <FollowLink to="/contributions">contribution terms</FollowLink></li>
+          <li>Get to know <ForwardLink to="about">this project</ForwardLink></li>
+          <li>Have a sneak peek of the <ForwardLink to="https://docs.google.com/spreadsheets/d/1BYnQQWPUC16IfRmMpgWziL6rMOwVcxzWhaXBHa1rKtY" target='_blank'>coming features</ForwardLink></li>
+          <li>Check the <ForwardLink to="/contributions">contribution terms</ForwardLink></li>
         </ul>
       </div>
       <div>
@@ -69,8 +69,8 @@ export const Footer = () => (
             <img src={mitLogo} width={48} />
           </div>
           <div>
-            The podcast directory data is licensed under <FollowLink to="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons BY-NC-SA 4.0</FollowLink><br />
-            The platform (as the software) is licesed under <FollowLink to="https://opensource.org/license/mit" target="_blank">The MIT License</FollowLink>
+            The podcast directory data is licensed under <ForwardLink to="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons BY-NC-SA 4.0</ForwardLink><br />
+            The platform (as the software) is licesed under <ForwardLink to="https://opensource.org/license/mit" target="_blank">The MIT License</ForwardLink>
           </div>
         </div>
       </div>

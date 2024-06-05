@@ -1,5 +1,5 @@
 import { Breadcrumb } from "@/ui/breadcrumb.ui"
-import { FollowLink } from "@/ui/follow-link.ui"
+import { ForwardLink } from "@/ui/forward-link.ui"
 
 const Contributions = () => (
   <>
@@ -14,7 +14,7 @@ const Contributions = () => (
       <h2 className="text-xl font-bold pt-4 pb-2">Licensing</h2>
       <p>
         The content on Linguocast is licensed under 
-        the <FollowLink to="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY-NC-SA 4.0</FollowLink> license, and the platform software is licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer">MIT license</a>. This means that users can share and adapt the content, provided it's not for commercial purposes, they give appropriate credit, and they distribute any derivative works under the same license. The platform software can be freely used, modified, and distributed, with attribution to the original creators.
+        the <ForwardLink to="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank" rel="noopener noreferrer">Creative Commons BY-NC-SA 4.0</ForwardLink> license, and the platform software is licensed under the <a href="https://opensource.org/licenses/MIT" target="_blank" rel="noopener noreferrer">MIT license</a>. This means that users can share and adapt the content, provided it's not for commercial purposes, they give appropriate credit, and they distribute any derivative works under the same license. The platform software can be freely used, modified, and distributed, with attribution to the original creators.
       </p>
       <p>
         All podcast content and comments on the platform are the sole
@@ -29,7 +29,7 @@ const Contributions = () => (
         content that incites violence, harm, or any form of discrimination based
         on race, gender, sexual orientation, etc. The Linguocast curators will
         determine if the content meets these criteria. To get more involved in
-        the curating process, join our <FollowLink to="https://discord.com/invite/dBNT2BBk" target="_blank" rel="noopener noreferrer">Discord</FollowLink> or write to <FollowLink to="mailto:content@linguocast.com">content@linguocast.com</FollowLink>.
+        the curating process, join our <ForwardLink to="https://discord.com/invite/dBNT2BBk" target="_blank" rel="noopener noreferrer">Discord</ForwardLink> or write to <ForwardLink to="mailto:content@linguocast.com">content@linguocast.com</ForwardLink>.
       </p>
       
       <h2 className="text-xl font-bold pt-4 pb-2">Commenting on Podcasts and Episodes</h2>
@@ -47,7 +47,7 @@ const Contributions = () => (
       <h2 className="text-xl font-bold pt-4 pb-2">Development and Design</h2>
       <p>
         If you are interested in developing or designing new features, please
-        review our planned features. Contact us at <FollowLink to="mailto:platform@linguocast.com">platform@linguocast.com</FollowLink> to
+        review our planned features. Contact us at <ForwardLink to="mailto:platform@linguocast.com">platform@linguocast.com</ForwardLink> to
         align your efforts with our roadmap.
       </p>
     </div>

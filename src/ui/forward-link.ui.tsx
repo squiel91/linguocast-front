@@ -9,7 +9,7 @@ interface Props {
   children: ReactNode
 }
 
-export const FollowLink = ({ to, target, rel, children }: Props) => (
+export const ForwardLink = ({ to, target, rel, children }: Props) => (
   <Link
     to={to}
     target={target}

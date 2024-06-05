@@ -7,6 +7,25 @@ export interface Language {
   name: string
 }
 
+export interface PrivateUser {
+  id: number
+  name: string
+  avatar?: string
+}
+
+export interface PublicUser extends PrivateUser {
+  canOthersContact: boolean
+  learning: string
+  level: typeof LEVELS[number]
+  createdAt: string
+}
+
+export interface SelfUser extends PublicUser {
+  email: string
+  isPremium: boolean
+  isProfilePrivate: boolean
+}
+
 export interface MicroPodcast {
   id: number
   name: string
@@ -21,20 +40,25 @@ export interface MinifiedPodcast extends MicroPodcast {
   commentsCount: number
 }
 
-export interface MinifiedEpisode {
+export interface Episode {
+  id: number
+  title: string
+  image?: string
+  podcastName: string
+  podcastImage?: string
+  publishedAt: string
+  duration: number
+  leftOn?: number
+  completedAt?: string
+}
+
+export interface PopulatedEpisode {
   id: number
   title: string
   duration: number
   contentUrl: string
   image?: string
   publishedAt: string
-}
-
-export interface Episode extends MinifiedEpisode {
-  description: string
-}
-
-export interface PopulatedEpisode extends Episode {
   description: string
   leftOn: number,
   completedAt: string
@@ -63,6 +87,7 @@ export interface Comment {
   id: number
   authorId: number
   authorName: string
+  authorAvatar?: string
   message: string
   createdAt: string
   updatedAt?: string

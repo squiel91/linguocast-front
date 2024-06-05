@@ -1,4 +1,4 @@
-import { FollowLink } from '@/ui/follow-link.ui'
+import { ForwardLink } from '@/ui/forward-link.ui'
 import { Button } from '@/ui/button.ui'
 import { Checkbox } from '@/ui/checkbox.ui'
 import { Input } from '@/ui/input.ui'
@@ -13,7 +13,7 @@ import { AlertCircleIcon, RssIcon, TrashIcon } from 'lucide-react'
 import { useEffect, useState } from 'react'
 import { useParams } from 'react-router-dom'
 import { useQueries } from '@tanstack/react-query'
-import { ImageUploader } from './image-uploader.edit.podcasts'
+import { ImageUploader } from '../../../ui/image-uploader'
 import { Breadcrumb } from '@/ui/breadcrumb.ui'
 
 const SharePodcast = () => {
@@ -245,7 +245,7 @@ const SharePodcast = () => {
                 prepend={<RssIcon size={16} />}
               />
               <p className="text-slate-400 text-xs mt-1 italic">
-                Adding the <FollowLink to="https://en.wikipedia.org/wiki/RSS" target="_blank">RSS Feed</FollowLink> will automatically update data and show the latest episodes.</p>
+                Adding the <ForwardLink to="https://en.wikipedia.org/wiki/RSS" target="_blank">RSS Feed</ForwardLink> will automatically update data and show the latest episodes.</p>
               <Button onClick={autoompleteHandler} variant='outline'>Autocomplete</Button>
             </div>
             <div className='text-sm'>
@@ -305,7 +305,7 @@ const SharePodcast = () => {
           {isEdit ? 'Suggest edits' : 'Submit podcast' }
         </Button>
         <p className='text-sm'>
-          By submitting you agree to the <FollowLink to="/contributions" target='_blank'>contributions terms</FollowLink>
+          By submitting you agree to the <ForwardLink to="/contributions" target='_blank'>contributions terms</ForwardLink>
         </p>
       </div>
       <EditSuccessModal hasShared={hasShared} isEdit={isEdit} />

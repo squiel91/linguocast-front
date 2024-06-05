@@ -17,12 +17,12 @@ const MainTheme = () => {
   return (
     <>
       <nav className="container flex justify-between flex-wrap pt-4 items-center gap-4">
-        <Link to="/"><img src={linguocastLogo} className='w-40 md:w-56' /></Link>
+        <img src={linguocastLogo} className='w-40 md:w-56' />
         {isLoggedIn
           ? <div className="flex items-center gap-3">
               <span className="hidden md:inline">{user && `Hey ${user.name}!`}</span>
               <Link to="/profile">
-                <Avatar className="w-10 md:w-12" />
+                <Avatar className="w-10 md:w-12" avatarUrl={user?.avatar} />
               </Link>
             </div>
           : (

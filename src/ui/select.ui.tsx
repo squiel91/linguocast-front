@@ -9,6 +9,7 @@ export interface Option {
 }
 
 interface Props {
+  label?: string
   value: string | null
   options: Option[]
   onChange: (value: string | null) => void
@@ -17,10 +18,15 @@ interface Props {
 
 const NULL = '_virtual_null'
 
-export const Select = ({ value, options, onChange: changeHandler, disabled }: Props) => {
+export const Select = ({ value,
+  options,
+  onChange: changeHandler,
+  label,
+  disabled
+}: Props) => {
   const appendIcon = options.find(({ value: optionValue }) => optionValue === value)?.append
 
-  return (
+  const selectElement = (
     <div className='relative'>
       <select
         className='px-4 py-2 w-full border-[1px] border-solid border-slate-200 rounded-md appearance-none bg-transparent'
@@ -39,5 +45,14 @@ export const Select = ({ value, options, onChange: changeHandler, disabled }: Pr
       )}
       <ChevronsUpDownIcon strokeWidth={1} className='w-4 h-4 absolute right-3 top-1/2 -translate-y-1/2 pointer-events-none' />
     </div>
+  )
+
+  if (!label) return selectElement
+
+  return (
+    <label>
+      <div className='mb-1 text-sm'>{label}</div>
+      {selectElement}
+    </label>
   )
 }

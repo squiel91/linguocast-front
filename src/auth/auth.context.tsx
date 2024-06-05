@@ -3,18 +3,14 @@ import axios from "axios"
 import { LoginModal } from "./login-modal.auth"
 import { RegisterModal } from "./register-modal.auth"
 import { useQuery } from "@tanstack/react-query"
-
-export interface MinifiedUser {
-  id: number,
-  name: string
-}
+import { SelfUser } from "@/types/types"
 
 interface Auth {
-  user: MinifiedUser | null
+  user: SelfUser | null
   isLoggedIn: boolean
   isLoginOpen: boolean
   isRegisterOpen: boolean
-  loginHandler: (user: MinifiedUser, token: string) => void
+  loginHandler: (user: SelfUser, token: string) => void
   logoutHandler: () => void 
   openLoginHandler: (isOpen: boolean) => void
   openRegisterHandler: (isOpen: boolean) => void
@@ -37,14 +33,14 @@ export const AuthContext = createContext<Auth>({
 
 export const AuthContextWrapper = ({ children }: Props) => {
   const [token, setToken] = useState(() => localStorage.getItem('token') ?? null)
-  const [user, setUser] = useState<MinifiedUser | null>(null)
+  const [user, setUser] = useState<SelfUser | null>(null)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isRegisterOpen, setIsRegisterOpen] = useState(false)
 
   const { data: retrivedUser } = useQuery({
     queryKey: ['user'],
     enabled: token ? true : false,
-    queryFn: () => axios.get<MinifiedUser>('/api/users/profile').then(res => res.data)
+    queryFn: () => axios.get<SelfUser>('/api/user').then(res => res.data)
   })
 
   if(!user && retrivedUser) setUser(retrivedUser)
@@ -55,7 +51,7 @@ export const AuthContextWrapper = ({ children }: Props) => {
       isLoggedIn: !!token,
       isLoginOpen: isLoginOpen,
       isRegisterOpen: isRegisterOpen,
-      loginHandler: (user: MinifiedUser, token: string) => {
+      loginHandler: (user: SelfUser, token: string) => {
         setUser(user)
         setToken(token)
         localStorage.setItem('token', token)
@@ -70,7 +66,10 @@ export const AuthContextWrapper = ({ children }: Props) => {
     }}>
       {children}
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
-      <RegisterModal isOpen={isRegisterOpen} onClose={() => setIsRegisterOpen(false)} />
+      <RegisterModal
+        isOpen={isRegisterOpen}
+        onClose={() => setIsRegisterOpen(false)}
+      />
     </AuthContext.Provider>
   )
 }

@@ -1,13 +1,16 @@
 import { useAuth } from "@/auth/auth.context"
 import { Comment } from "@/types/types"
+import { Avatar } from "@/ui/avatar.ui"
 import { Button } from "@/ui/button.ui"
-import { FollowLink } from "@/ui/follow-link.ui"
+import { ForwardLink } from "@/ui/forward-link.ui"
 import { Loader } from "@/ui/loader.ui"
 import { Textarea } from "@/ui/textarea.ui"
 import { readableDate } from "@/utils/date.utils"
+import { urlSafe } from "@/utils/url.utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { useState } from "react"
+import { Link } from "react-router-dom"
 
 interface Props {
   podcastId: number,
@@ -53,11 +56,14 @@ export const CommentViewPodcasts = ({ podcastId }: Props) => {
             ? <p>No reviews yet. Be the first one to write one!</p>
             : (
               <ul className="flex flex-col">
-                {comments.map(({ id, authorName, message, createdAt }) => (
+                {comments.map(({ id, authorId, authorAvatar, authorName, message, createdAt }) => (
                   <li key={id}>
                     <div className="py-4 border-b-2">
                       {message}
-                      <div className="mt-3 text-sm">By <b>{authorName}</b> on {readableDate(createdAt)}</div>
+                      <div className="flex gap-3 items-center mt-4">
+                        <Avatar avatarUrl={authorAvatar} className="w-10 h-10" />
+                        <div className="text-sm">By <Link to={`/users/${authorId}/${urlSafe(authorName)}`} className="font-bold text-primary">{authorName}</Link> on {readableDate(createdAt)}</div>
+                      </div>
                     </div>
                   </li>
                 ))}
@@ -76,7 +82,7 @@ export const CommentViewPodcasts = ({ podcastId }: Props) => {
             Post review
           </Button>
           <p className='text-sm'>
-            Remember to follow the <FollowLink to="/contributions" target='_blank'>contributions guide</FollowLink>
+            Remember to follow the <ForwardLink to="/contributions" target='_blank'>contributions guide</ForwardLink>
           </p>
         </div>
       </div>

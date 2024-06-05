@@ -36,7 +36,7 @@ export const Button = ({
         : variant === 'outline'
           ?'text-primary border-primary border-2 border-solid'
           : 'text-primary',
-      compact ? 'px-6 py-3' : 'px-3 py-1',
+      compact ? 'px-3 py-1' : 'px-5 py-2',
       wFullInMobile ? 'w-full md:w-auto' : 'w-auto',
       'rounded-md',
       className

@@ -9,22 +9,46 @@ import SharePodcast from "./routes/podcasts/edit/edit.podcasts";
 import { PlayerContextWrapper } from "./themes/player/player";
 import ViewEpisode from "./routes/episodes/view.episodes";
 import Profile from "./routes/profile";
+import Feed from "./routes/feed/feed";
+import EntryPoint from "./routes/entry-point";
+import ViewUser from "./routes/view.users";
+import Premium from "./routes/premium";
+import LearningJourney from "./routes/learning-journey";
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <PlayerContextWrapper />,
     errorElement: <Error />,
-    children: [
-
+    children: [      
       {
         path: "/",
-        element: <ListPodcast />,
+        element: <EntryPoint />
+      },
+      {
+        path: "/explore",
+        element: <ListPodcast />
       },
       {
         path: "/",
         element: <MainTheme />,
         children: [
+          {
+            path: '/journey',
+            element: <LearningJourney />
+          },
+          {
+            path: '/premium',
+            element: <Premium />
+          },
+          {
+            path: '/users/:userId/:userName?',
+            element: <ViewUser />
+          },
+          {
+            path: '/feed',
+            element: <Feed />
+          },
           {
             path: '/profile',
             element: <Profile />

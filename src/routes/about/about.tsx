@@ -1,4 +1,4 @@
-import { FollowLink } from "@/ui/follow-link.ui"
+import { ForwardLink } from "@/ui/forward-link.ui"
 
 import ezeAvatar from './eze-avatar.jpg'
 import { Breadcrumb } from "@/ui/breadcrumb.ui"
@@ -28,15 +28,15 @@ const About = () => (
           develop/design new features.
         </p>
         <p>
-          Our content is licensed under <FollowLink to="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons</FollowLink>, and our platform software is under
-          the <FollowLink to="https://opensource.org/license/mit" target="_blank">MIT License</FollowLink>. Yes, Linguocast is truly open-source and
+          Our content is licensed under <ForwardLink to="https://creativecommons.org/licenses/by-nc-sa/4.0/" target="_blank">Creative Commons</ForwardLink>, and our platform software is under
+          the <ForwardLink to="https://opensource.org/license/mit" target="_blank">MIT License</ForwardLink>. Yes, Linguocast is truly open-source and
           community-powered.
         </p>
         <p>
           As you dive into new podcasts and practice with them, get ready for
           exciting updates! You can track all the planned features and their
-          status <FollowLink to="https://docs.google.com/spreadsheets/d/1BYnQQWPUC16IfRmMpgWziL6rMOwVcxzWhaXBHa1rKtY/edit" target="_blank">here</FollowLink>.
-          If you're a developer or designer eager to speed things up, drop us a line at <FollowLink to="mailto:platform@linguocast.com">platform@linguocast.com</FollowLink>!
+          status <ForwardLink to="https://docs.google.com/spreadsheets/d/1BYnQQWPUC16IfRmMpgWziL6rMOwVcxzWhaXBHa1rKtY/edit" target="_blank">here</ForwardLink>.
+          If you're a developer or designer eager to speed things up, drop us a line at <ForwardLink to="mailto:platform@linguocast.com">platform@linguocast.com</ForwardLink>!
         </p>
         <p>
           Our long-term vision? To be the go-to platform where language learners
@@ -79,8 +79,8 @@ const About = () => (
         </p>
         <p>
           While I'm not super active on social media, you can always reach me
-          via email at <FollowLink to="mailto:ezequiel@linguocast.com">
-            ezequiel@linguocast.com</FollowLink>.
+          via email at <ForwardLink to="mailto:ezequiel@linguocast.com">
+            ezequiel@linguocast.com</ForwardLink>.
         </p>
         <p>
           Best of the lucks in your learning journey!

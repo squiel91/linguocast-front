@@ -5,7 +5,7 @@ import logo from '@/assets/linguocast-logo.svg'
 import { LEVELS } from '@/constants/levels.constants'
 import { Footer } from '@/themes/main/footer.themes'
 import { Language, Level, MinifiedPodcast } from '@/types/types'
-import { FollowLink } from '@/ui/follow-link.ui'
+import { ForwardLink } from '@/ui/forward-link.ui'
 import { Input } from '@/ui/input.ui'
 import { Select } from '@/ui/select.ui'
 import { cn } from '@/utils/styles.utils'
@@ -18,6 +18,7 @@ import { useQueries } from '@tanstack/react-query'
 import { PodcastSummary } from '@/ui/podcast-summary.ui'
 import { PodcastSummaryPlaceholder } from '@/ui/podcast-summary-placeholder.ui'
 import { Avatar } from '@/ui/avatar.ui'
+import { capitalize } from '@/utils/text.utils'
 
 const ListPodcast = () => {
   const [
@@ -76,7 +77,7 @@ const ListPodcast = () => {
             <div>
               <img src={logo} alt="Linguocast logo" className='w-56 mb-4' />
               <div className='mb-8'>
-                The community-powered language learning podcast directory. <FollowLink to='/about'>Read more</FollowLink>
+                The language learning podcast community. <ForwardLink to='/about'>Read more</ForwardLink>
               </div>
               <div className='flex flex-col gap-4'>
                 <label>
@@ -87,7 +88,7 @@ const ListPodcast = () => {
                       { value: null, text: 'All', append: <GlobeIcon size={20} className='text-gray-400' /> },
                       ...(
                         languages?.map(
-                          ({ id, name }) => ({ value: `${id}`, text: name, append: <img src={`/flags/${name}.svg`} /> })
+                          ({ name }) => ({ value: name, text: capitalize(name), append: <img src={`/flags/${name}.svg`} /> })
                       ) ?? [])
                     ]}
                     onChange={languageCode => setTargetLanguage(languageCode)}
@@ -149,7 +150,7 @@ const ListPodcast = () => {
               ? <div className="flex items-center gap-3">
                 {user && `Hey ${user.name}!`}
                 <Link to="/profile">
-                  <Avatar className="w-10 md:w-12" />
+                  <Avatar className="w-10 md:w-12" avatarUrl={user?.avatar} />
                 </Link>
               </div>
               : (
