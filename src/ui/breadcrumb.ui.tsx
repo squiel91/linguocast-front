@@ -12,9 +12,9 @@ export const Breadcrumb = ({ current, crumbs = [] }: Props) => {
   const { isLoggedIn } = useAuth()
 
   return (
-    <div className='flex flex-wrap gap-2 mb-6 items-center text-gray-400'>
+    <div className='flex gap-2 md:gap-2 mb-6 items-center text-gray-400'>
       <Link className='text-primary' to={isLoggedIn ? '/feed' : '/explore'}>
-        Home
+      {isLoggedIn ? 'Feed' : 'Explore'}
       </Link>
       {crumbs.map(({ name, to }) => (
         <Fragment key={to}>

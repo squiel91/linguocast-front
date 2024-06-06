@@ -13,6 +13,7 @@ import { ListEpisodes } from './episodes.view.podcsats'
 import { Breadcrumb } from '@/ui/breadcrumb.ui'
 import { Card } from '@/ui/card.ui'
 import { TabHeader } from '@/ui/tab-header.ui'
+import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
 
 const ViewPodcast = () => {
   const { podcastId } = useParams()
@@ -65,11 +66,11 @@ const ViewPodcast = () => {
         />
         <div className='col-span-1 lg:col-span-2'>
           <div className='text-4xl mb-4 font-bold'>{podcast?.name}</div>
-          <div className="mt-8">
-            {podcast?.description.split('\n').filter(text => text).map((text, index) => (
-              <p key={index} className='mb-4 break-words'>{text}</p>
-            ))}
-          </div>
+          <SafeHtmlRenderer
+            htmlContent={podcast?.description}
+            maxHeight={100}
+            className="mt-4"
+          />
           <div className='flex gap-2 items-end mt-4 mb-12'>
             <Button
               onClick={toggleSaveHandler}

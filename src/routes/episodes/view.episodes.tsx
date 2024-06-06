@@ -1,17 +1,18 @@
-import { PopulatedEpisode } from "@/types/types"
-import { Breadcrumb } from "@/ui/breadcrumb.ui"
-import { Loader } from "@/ui/loader.ui"
-import { urlSafe } from "@/utils/url.utils"
-import { useQuery } from "@tanstack/react-query"
-import axios from "axios"
-import { useParams } from "react-router-dom"
+import { PopulatedEpisode } from '@/types/types'
+import { Breadcrumb } from '@/ui/breadcrumb.ui'
+import { Loader } from '@/ui/loader.ui'
+import { urlSafe } from '@/utils/url.utils'
+import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
+import { useParams } from 'react-router-dom'
 import noImage from '@/assets/no-image.svg'
-import { formatSeconds, readableDate } from "@/utils/date.utils"
-import { MouseEventHandler, useState } from "react"
-import { TabHeader } from "@/ui/tab-header.ui"
-import { PlayButton } from "@/ui/play-button.ui"
-import { usePlayer } from "@/themes/player/player"
-import { ListeningProgressBar } from "@/ui/listening-progress-bar.ui"
+import { formatSeconds, readableDate } from '@/utils/date.utils'
+import { MouseEventHandler, useState } from 'react'
+import { TabHeader } from '@/ui/tab-header.ui'
+import { PlayButton } from '@/ui/play-button.ui'
+import { usePlayer } from '@/themes/player/player'
+import { ListeningProgressBar } from '@/ui/listening-progress-bar.ui'
+import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
 
 const ViewEpisode = () => {
   const { episodeId: episodeIdRaw } = useParams()
@@ -54,13 +55,15 @@ const ViewEpisode = () => {
       />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-4">
         <img
-          className="'w-full border-[1px] drop-shadow-sm border-solid border-slate-200 rounded-md mb-4 aspect-square bg-cover"
+          className="'w-full border-[1px] drop-shadow-sm border-solid border-slate-200 rounded-md aspect-square bg-cover"
           src={episode.image ?? (episode.belongsTo.coverImage
             ? `/dynamics/podcasts/covers/${episode.belongsTo.coverImage}`
             : noImage)}
         />
         <div className='col-span-1 lg:col-span-2'>
-          <h1 className="text-4xl mb-4 font-bold">{episode.title}</h1>
+          <h1 className="text-xl md:text-2xl lg:text-4xl mb-4 mt-2 md:mt-4 lg:mt-0 font-bold">
+            {episode.title}
+          </h1>
           <div className="flex items-center mt-2 text-sm gap-2">
             <PlayButton
               isPlaying={isPlaying}
@@ -69,22 +72,22 @@ const ViewEpisode = () => {
             />
             <span>{readableDate(episode.publishedAt)}</span>
             <div className="w-1 h-1 rounded-full bg-black"/>
-              {episode.leftOn && (episode.leftOn > 0)
-                ? <ListeningProgressBar duration={episode.duration} leftOn={episode.leftOn} />
-                : <span>{formatSeconds(episode.duration)}</span>
-              }
-            </div>
-            <div className="mt-8">
-            {episode?.description.split('\n').filter(text => text).map((text, index) => (
-              <p key={index} className='mb-4 break-words'>{text}</p>
-            ))}
+            {episode.leftOn && (episode.leftOn > 0)
+              ? <ListeningProgressBar duration={episode.duration} leftOn={episode.leftOn} />
+              : <span>{formatSeconds(episode.duration)}</span>
+            }
           </div>
+          <SafeHtmlRenderer
+            htmlContent={episode?.description}
+            maxHeight={100}
+            className="mt-4 mb-8"
+          />
           <TabHeader
             selectedKey={selectedTabKey}
             options={[
-              { title: 'Transcript', key:'episodes' },
-              { title: 'Exercises', key:'exercises' },
-              { title: 'Comments', key:'comments' }
+              { title: 'Transcript', key: 'episodes' },
+              { title: 'Exercises', key: 'exercises' },
+              { title: 'Comments', key: 'comments' }
             ]}
             onChange={(key) => setSelectedTabKey(key)}
           />
