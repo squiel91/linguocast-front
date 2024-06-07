@@ -14,6 +14,7 @@ import { Breadcrumb } from '@/ui/breadcrumb.ui'
 import { Card } from '@/ui/card.ui'
 import { TabHeader } from '@/ui/tab-header.ui'
 import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
+import { usePageTitle } from '@/utils/document.utils'
 
 const ViewPodcast = () => {
   const { podcastId } = useParams()
@@ -31,6 +32,8 @@ const ViewPodcast = () => {
         savedCount: podcasts.savedCount - (podcasts.isSavedByUser ? 1 : 0)} // TODO Dont like it much
       ))
   })
+
+  usePageTitle(podcast?.name)
 
   const { mutate: mutateSavePodcast } = useMutation({
     mutationFn: () => axios.post(`/api/podcasts/${podcastId!}/saves`),

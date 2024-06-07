@@ -94,6 +94,15 @@ export interface Comment {
   updatedAt?: string
 }
 
+export interface PoplulatedComment extends Comment {
+  episodeId: number
+  episodeTitle: string
+  episodeImage: string
+  podcastId: number
+  podcastName: string
+  podcastImage: string
+}
+
 export interface AutocompletePodcast {
   name: string | null
   description: string | null

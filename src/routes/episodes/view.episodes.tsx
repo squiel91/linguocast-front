@@ -14,6 +14,7 @@ import { usePlayer } from '@/themes/player/player'
 import { ListeningProgressBar } from '@/ui/listening-progress-bar.ui'
 import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
 import { ListComments } from '@/ui/list.comments'
+import { usePageTitle } from '@/utils/document.utils'
 
 const ViewEpisode = () => {
   const { episodeId: episodeIdRaw } = useParams()
@@ -30,6 +31,9 @@ const ViewEpisode = () => {
   })
 
   const [selectedTabKey, setSelectedTabKey] = useState('episodes')
+
+  usePageTitle(episode?.title)
+
   if (isLoading || !episode) return <Loader />
 
   const episodeIsSelected = currentEpisode === episode
@@ -42,6 +46,7 @@ const ViewEpisode = () => {
     if (episodeIsSelected) return play()
     reproduce(episode)
   }
+
 
   return (
     <>
