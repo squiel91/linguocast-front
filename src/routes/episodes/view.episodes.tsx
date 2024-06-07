@@ -13,6 +13,7 @@ import { PlayButton } from '@/ui/play-button.ui'
 import { usePlayer } from '@/themes/player/player'
 import { ListeningProgressBar } from '@/ui/listening-progress-bar.ui'
 import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
+import { ListComments } from '@/ui/list.comments'
 
 const ViewEpisode = () => {
   const { episodeId: episodeIdRaw } = useParams()
@@ -79,7 +80,7 @@ const ViewEpisode = () => {
           </div>
           <SafeHtmlRenderer
             htmlContent={episode?.description}
-            maxHeight={100}
+            maxHeight={150}
             className="mt-4 mb-8"
           />
           <TabHeader
@@ -87,10 +88,14 @@ const ViewEpisode = () => {
             options={[
               { title: 'Transcript', key: 'episodes' },
               { title: 'Exercises', key: 'exercises' },
-              { title: 'Comments', key: 'comments' }
+              { title: `${episode?.commentsCount ? `${episode?.commentsCount} ` : ''}Comments`, key:'comments' }
             ]}
             onChange={(key) => setSelectedTabKey(key)}
+            className="mb-4"
           />
+          {selectedTabKey === 'comments' && (
+            <ListComments resourceType='episodes' resourceId={episodeId} />
+          )}
         </div>
       </div>
     </>

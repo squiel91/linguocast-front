@@ -5,6 +5,7 @@ import axios from "axios"
 import { Loader } from "@/ui/loader.ui"
 import { useInView } from 'react-intersection-observer'
 import { useEffect } from "react"
+import { Card } from "@/ui/card.ui"
 
 interface Props {
   podcastId: number
@@ -41,7 +42,7 @@ export const ListEpisodes = ({ podcastId, totalEpisodes }: Props) => {
   }, [fetchNextPage, isFetchingNextPage, loadMoreInView])
 
   return (
-    <div>
+    <Card className='p-0'>
       <ul>
         {totalEpisodes === 0
           ? <li className="mt-4">Add an RSS Feed to show the episodes</li>
@@ -57,6 +58,6 @@ export const ListEpisodes = ({ podcastId, totalEpisodes }: Props) => {
       )}
       {/* <Button variant="outline" className="mt-4" onClick={fetchNextPage} isLoading={isFetchingNextPage}>Load more</Button> */}
       
-    </div>
+    </Card>
   )
 }

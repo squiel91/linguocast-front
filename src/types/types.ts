@@ -61,6 +61,7 @@ export interface PopulatedEpisode {
   publishedAt: string
   description: string
   leftOn: number,
+  commentsCount: number,
   completedAt: string
   belongsTo: MicroPodcast
 }
@@ -88,7 +89,7 @@ export interface Comment {
   authorId: number
   authorName: string
   authorAvatar?: string
-  message: string
+  content: string
   createdAt: string
   updatedAt?: string
 }

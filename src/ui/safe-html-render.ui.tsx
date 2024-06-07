@@ -51,7 +51,14 @@ const SafeHtmlRenderer = ({ htmlContent = '', className, maxHeight }: Props) => 
       {needsCollapse && (
         <Button
           variant="discrete"
-          onClick={() => setIsExpanded(!isExpanded)}
+          onClick={() => {
+            if (isExpanded) {
+              window.scrollBy({
+                top: maxHeight - contentRef.current!.scrollHeight
+              })
+            }
+            setIsExpanded(!isExpanded)
+          }}
           prepend={isExpanded ? <ChevronUpIcon size={16} /> : <ChevronDownIcon size={16}   />}
           compact
         >

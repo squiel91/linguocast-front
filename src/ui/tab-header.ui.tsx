@@ -4,10 +4,16 @@ interface Props<T> {
   selectedKey: string
   options: { title: string, key: T }[]
   onChange: (key: T) => void
+  className?: string
 }
 
-export const TabHeader = <T extends string>({ selectedKey, options, onChange: changeHandler }: Props<T>) => (
-  <div className="bg-slate-100 p-1 rounded-lg inline-flex text-slate-600">
+export const TabHeader = <T extends string>({ selectedKey, options, className, onChange: changeHandler }: Props<T>) => (
+  <div
+    className={cn(
+      'bg-slate-100 p-1 rounded-lg inline-flex text-slate-600',
+      className
+    )}
+  >
     {options.map(({ title, key }) => (
       <button
         key={key}

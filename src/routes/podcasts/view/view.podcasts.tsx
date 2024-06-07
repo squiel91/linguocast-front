@@ -8,7 +8,7 @@ import { useEffect, useState } from 'react'
 import { PlatformIcon } from '@/ui/platform-icon/platform-icon.ui'
 import { useAuth } from '@/auth/auth.context'
 import { Button } from '@/ui/button.ui'
-import { CommentViewPodcasts } from './comments.view.podcasts'
+import { ListComments } from '../../../ui/list.comments'
 import { ListEpisodes } from './episodes.view.podcsats'
 import { Breadcrumb } from '@/ui/breadcrumb.ui'
 import { Card } from '@/ui/card.ui'
@@ -68,7 +68,7 @@ const ViewPodcast = () => {
           <div className='text-4xl mb-4 font-bold'>{podcast?.name}</div>
           <SafeHtmlRenderer
             htmlContent={podcast?.description}
-            maxHeight={100}
+            maxHeight={150}
             className="mt-4"
           />
           <div className='flex gap-2 items-end mt-4 mb-12'>
@@ -91,21 +91,18 @@ const ViewPodcast = () => {
             selectedKey={selectedTabKey}
             options={[
               { title: `${podcast?.episodesCount} Episodes`, key:'episodes' },
-              { title: `${podcast?.commentsCount ? `{podcast?.commentsCount} ` : ''}Reviews`, key:'reviews' },
+              { title: `${podcast?.commentsCount ? `${podcast?.commentsCount} ` : ''}Reviews`, key:'reviews' },
               { title: 'Info', key:'info' }
             ]}
             onChange={(key) => setSelectedTabKey(key)}
+            className="mb-4"
           />
 
-          {selectedTabKey === 'episodes' && (
-            <Card className='mt-4 p-0'>
-              {podcast && <ListEpisodes podcastId={podcast.id} totalEpisodes={podcast.episodesCount} />}
-            </Card>
+          {selectedTabKey === 'episodes' && podcast && (
+            <ListEpisodes podcastId={podcast.id} totalEpisodes={podcast.episodesCount} />
           )}
           {selectedTabKey === 'reviews' && (
-            <Card className='mt-4'>
-              <CommentViewPodcasts podcastId={+podcastId!} />
-            </Card>
+            <ListComments resourceType='podcasts' resourceId={+podcastId!} />
           )}
           {selectedTabKey === 'info' && (
             <Card className='mt-4'>
