@@ -1,3 +1,4 @@
+import { resizeAndCropSquareImage } from "@/utils/files.utils";
 import { cn } from "@/utils/styles.utils";
 import { XIcon } from "lucide-react";
 import { MouseEventHandler, DragEvent, ChangeEvent } from "react";
@@ -21,19 +22,24 @@ export const ImageUploader = ({
     event.preventDefault();
   };
 
-  const handleDrop = (event: DragEvent<HTMLLabelElement>) => {
-    event.preventDefault();
-    const file = event.dataTransfer.files.item(0);
-    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
-      changeHandler(file)
+  const handleFile = async (file: File | null) => {
+    if (file && file.type.startsWith("image/")) {
+      try {
+        changeHandler(await resizeAndCropSquareImage(file))
+      } catch (error) {
+        console.warn('Error resizing the image. Defaulted to the original.', error)
+        changeHandler(file)
+      }
     }
+  }
+
+  const handleDrop = async (event: DragEvent<HTMLLabelElement>) => {
+    event.preventDefault();
+    handleFile(event.dataTransfer.files.item(0))
   };
 
   const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.item(0) ?? null;
-    if (file && (file.type === "image/png" || file.type === "image/jpeg")) {
-      changeHandler(file);
-    }
+    handleFile(event.target.files?.item(0) ?? null)
   };
 
   const handleDelete: MouseEventHandler<HTMLButtonElement>  = event => {
@@ -49,7 +55,6 @@ export const ImageUploader = ({
         rounded ? 'rounded-full' : 'rounded-md',
         className
       )}
-      htmlFor="image-uploader"
       onDragOver={handleDragOver}
       onDrop={handleDrop}
     >
@@ -79,7 +84,6 @@ export const ImageUploader = ({
         </span>
       )}
       <input
-        id="image-uploader"
         type="file"
         onChange={handleFileChange}
         accept="image/x-png,image/jpeg"

@@ -64,7 +64,7 @@ const ViewPodcast = () => {
       <Breadcrumb current={podcast?.name ?? ''} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-4">
         <img
-          src={`/dynamics/podcasts/covers/${podcast?.coverImage}`}
+          src={podcast?.coverImage}
           className='w-full border-[1px] drop-shadow-sm border-solid border-slate-200 rounded-md mb-4 aspect-square bg-cover'
         />
         <div className='col-span-1 lg:col-span-2'>

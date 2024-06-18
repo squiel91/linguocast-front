@@ -12,7 +12,7 @@ export const PodcastSummary = ({ podcast }: { podcast: MinifiedPodcast | MicroPo
   >
     <article>
       <img
-        src={podcast.coverImage ? `/dynamics/podcasts/covers/${podcast.coverImage}` : noImage}
+        src={podcast.coverImage ?? noImage}
         className='w-full border-solid border-2 object-cover object-center aspect-square border-slate-200 rounded-lg'
       />
       {'savedCount' in podcast && (

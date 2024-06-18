@@ -23,6 +23,7 @@ export interface PublicUser extends PrivateUser {
 export interface SelfUser extends PublicUser {
   email: string
   isPremium: boolean
+  isAdmin: boolean
   isProfilePrivate: boolean
 }
 
@@ -30,6 +31,7 @@ export interface MicroPodcast {
   id: number
   name: string
   coverImage?: string
+  targetLanguage: string
 }
 
 export interface MinifiedPodcast extends MicroPodcast {
@@ -38,6 +40,12 @@ export interface MinifiedPodcast extends MicroPodcast {
   levels: Level[]
   savedCount: number
   commentsCount: number
+}
+
+export interface EpisodeSuccint {
+  title: string
+  podcastName: string
+  image: string | null
 }
 
 export interface Episode {
@@ -60,6 +68,7 @@ export interface PopulatedEpisode {
   image?: string
   publishedAt: string
   description: string
+  transcript?: string
   leftOn: number,
   commentsCount: number,
   completedAt: string
@@ -109,4 +118,24 @@ export interface AutocompletePodcast {
   link: string | null
   coverImage: string | null
   targetLanguage: string | null
+}
+
+
+export interface MeasureWord {
+  id: number
+  word: string
+  pronunciation: string
+}
+
+export interface Word {
+  id: number
+  language: string
+  image: string
+  word: string
+  pronunciation: string
+  translations: string[][]
+  reviewScheduledFor: number
+  lastReviewInterval: number
+  saved: boolean
+  measureWords: MeasureWord[]
 }

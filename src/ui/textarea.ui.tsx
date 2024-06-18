@@ -20,7 +20,7 @@ export const Textarea = ({
 }: Props) => (
   <TextareaAutosize
     className={cn(
-      'p-4 w-full border-[1px] border-solid border-slate-200 rounded-md',
+      'p-4 w-full max-h-96 border-[1px] border-solid border-slate-200 rounded-md',
       className
     )}
     value={value ?? ''}

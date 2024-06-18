@@ -3,7 +3,7 @@ import { Loader } from "@/ui/loader.ui"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom"
-import { CompassIcon, CrownIcon, TelescopeIcon } from "lucide-react"
+import { BookmarkIcon, CompassIcon, CrownIcon, TelescopeIcon } from "lucide-react"
 import { Button } from "@/ui/button.ui"
 import { Carousel } from "./carousel.feed"
 import { Episode, MicroPodcast, PoplulatedComment } from "@/types/types"
@@ -50,6 +50,11 @@ const Feed = () => {
         Welcome back {user?.name}!
       </h1>
       <div className="flex gap-2 flex-wrap">
+        <Button prepend={<BookmarkIcon size={16} />}>
+          <Link to="/vocabulary-corner">
+            Vocabulary Corner
+          </Link>
+        </Button>
         <Button prepend={<CompassIcon size={16} />}>
           <Link to="/journey">
             Learning Journey

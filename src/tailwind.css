@@ -2,13 +2,63 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer utilities {
+  .scrollbar::-webkit-scrollbar {
+    width: 8px;
+    height: 24px;
+  }
+
+  .scrollbar::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb {
+    background: rgb(255, 64, 31);
+    border-radius: 100vh;
+  }
+
+  .scrollbar::-webkit-scrollbar-thumb:hover {
+    background: gray;
+  }
+}
+
+section {
+  margin: 40px 0;
+}
+
 .gradient-overlay {
   position: absolute;
+  bottom: 0;
+  left: 0;  
+  width: 100%;
+  height: 75px;
+  background: linear-gradient(to top, white, transparent);
+}
+
+.read-transcript-along {
+  position: relative;
+  font-size: xxx-large;
+  line-height: 1.6;
+}
+
+.read-transcript-along::after {
+  position: absolute;
+  content: '';
+  top: 0;
+  left: 0;  
+  width: 100%;
+  height: 75px;
+  background: linear-gradient(to bottom, tomato, transparent);
+}
+
+.read-transcript-along::before {
+  position: absolute;
+  content: '';
   bottom: 0;
   left: 0;
   width: 100%;
   height: 75px;
-  background: linear-gradient(to top, white, transparent);
+  background: linear-gradient(to top, tomato, transparent);
 }
 
 input[type="range"] {

@@ -27,9 +27,10 @@ export const Dialog = ({ isOpen, onClose: closeHandler, children }: Props) => {
         event.stopPropagation()
         closeHandler?.()
       }}
-      className="relative p-8 rounded-lg max-w-xl"
-      
+      className="relative p-4 md:p-8 rounded-lg"
+      style={{'width': '500px'}}
     >
+      {children}
       {closeHandler && (
         <button
           onClick={closeHandler}
@@ -38,7 +39,6 @@ export const Dialog = ({ isOpen, onClose: closeHandler, children }: Props) => {
           <XIcon />
         </button>
       )}
-      {children}
     </dialog>,
     document.getElementById('modal-container') as HTMLDivElement
   )

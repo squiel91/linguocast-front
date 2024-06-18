@@ -1,10 +1,11 @@
-import { Link, Outlet } from "react-router-dom"
+import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 import { Button } from "../../ui/button.ui"
 import { Footer } from "./footer.themes"
 import linguocastLogo from '@/assets/linguocast-logo.svg' 
 import { useAuth } from "../../auth/auth.context"
-import { UserPlusIcon } from "lucide-react"
+import { PencilIcon, UserPlusIcon } from "lucide-react"
 import { Avatar } from "@/ui/avatar.ui"
+import { useEffect, useState } from "react"
 
 const MainTheme = () => {
   const {
@@ -14,8 +15,29 @@ const MainTheme = () => {
     openLoginHandler
   } = useAuth()
 
+  const location = useLocation()
+  const { episodeId } = useParams()
+
+  const [isVistingViewEpisode, setIsVistingViewEpisode] = useState(false)
+
+  useEffect(() => {
+    setIsVistingViewEpisode(location.pathname.startsWith('/episodes/'))
+  }, [location.pathname])
+
   return (
     <>
+      {user?.isAdmin && isVistingViewEpisode && (
+        <div className="bg-slate-900 py-2">
+          <div className="container text-slate-100">
+            <Link to={`/episodes/${episodeId}/edit`}>
+              <button className="bg-slate-800 rounded-lg py-1 px-4 flex gap-2 items-center">
+                <PencilIcon size={14} />
+                Edit episode
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
       <nav className="container flex justify-between flex-wrap pt-4 items-center gap-4">
         <img src={linguocastLogo} className='w-40 md:w-56' />
         {isLoggedIn

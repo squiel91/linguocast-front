@@ -14,6 +14,8 @@ import EntryPoint from "./routes/entry-point";
 import ViewUser from "./routes/view.users";
 import Premium from "./routes/premium";
 import LearningJourney from "./routes/learning-journey";
+import { EditEpisode } from "./routes/episodes/edit.episodes";
+import VocabularyCorner from "./routes/vocabulary-corner";
 
 export const router = createBrowserRouter([
   {
@@ -38,6 +40,10 @@ export const router = createBrowserRouter([
             element: <LearningJourney />
           },
           {
+            path: '/vocabulary-corner',
+            element: <VocabularyCorner />
+          },
+          {
             path: '/premium',
             element: <Premium />
           },
@@ -56,6 +62,10 @@ export const router = createBrowserRouter([
           {
             path: '/podcasts/:podcastId/:podcastName?',
             element: <ViewPodcast />
+          },
+          {
+            path: '/episodes/:episodeId/edit',
+            element: <EditEpisode />
           },
           {
             path: '/episodes/:episodeId/:episodeName?',

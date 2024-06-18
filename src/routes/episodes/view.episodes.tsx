@@ -15,6 +15,8 @@ import { ListeningProgressBar } from '@/ui/listening-progress-bar.ui'
 import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
 import { ListComments } from '@/ui/list.comments'
 import { usePageTitle } from '@/utils/document.utils'
+import { Card } from '@/ui/card.ui'
+import { ListExercises } from './list.exercises.view.episode'
 
 const ViewEpisode = () => {
   const { episodeId: episodeIdRaw } = useParams()
@@ -30,7 +32,7 @@ const ViewEpisode = () => {
     queryFn: () => axios.get<PopulatedEpisode>(`/api/episodes/${episodeId}`).then(res => res.data)
   })
 
-  const [selectedTabKey, setSelectedTabKey] = useState('episodes')
+  const [selectedTabKey, setSelectedTabKey] = useState('transcript')
 
   usePageTitle(episode?.title)
 
@@ -51,7 +53,7 @@ const ViewEpisode = () => {
   return (
     <>
       <Breadcrumb
-        current="Google’s AI Gives Weird Answers & Worst Box Office Weekend in 29 Yrs"
+        current={episode.title}
         crumbs={[
           {
             name: episode.belongsTo.name,
@@ -62,9 +64,7 @@ const ViewEpisode = () => {
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-4">
         <img
           className="'w-full border-[1px] drop-shadow-sm border-solid border-slate-200 rounded-md aspect-square bg-cover"
-          src={episode.image ?? (episode.belongsTo.coverImage
-            ? `/dynamics/podcasts/covers/${episode.belongsTo.coverImage}`
-            : noImage)}
+          src={episode.image || episode.belongsTo.coverImage || noImage}
         />
         <div className='col-span-1 lg:col-span-2'>
           <h1 className="text-xl md:text-2xl lg:text-4xl mb-4 mt-2 md:mt-4 lg:mt-0 font-bold">
@@ -91,13 +91,21 @@ const ViewEpisode = () => {
           <TabHeader
             selectedKey={selectedTabKey}
             options={[
-              { title: 'Transcript', key: 'episodes' },
+              { title: 'Transcript', key: 'transcript' },
               { title: 'Exercises', key: 'exercises' },
               { title: `${episode?.commentsCount ? `${episode?.commentsCount} ` : ''}Comments`, key:'comments' }
             ]}
             onChange={(key) => setSelectedTabKey(key)}
             className="mb-4"
           />
+          {selectedTabKey === 'transcript' && (
+            <Card>{episode.transcript?.split('\n').map(paragraphText => (
+              <p className="mb-2">{paragraphText}</p>
+            ))}</Card>
+          )}
+          {selectedTabKey === 'exercises' && (
+            <ListExercises episodeId={episodeId} />
+          )}
           {selectedTabKey === 'comments' && (
             <ListComments resourceType='episodes' resourceId={episodeId} />
           )}

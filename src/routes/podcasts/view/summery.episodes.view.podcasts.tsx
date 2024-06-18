@@ -53,9 +53,7 @@ export const EpisodeSummary = ({ episode }: Props) => {
       >
         <img
           className="w-14 h-14 flex-shrink-0 rounded-md border-2 border-slate-200"
-          src={episode.image ?? (episode.belongsTo.coverImage
-            ? `/dynamics/podcasts/covers/${episode.belongsTo.coverImage}`
-            : noImage)}
+          src={episode.image || episode.belongsTo.coverImage || noImage}
         />
         <div className="flex-grow break-words overflow-hidden">
           <div className="font-bold line-clamp-2">{episode.title}</div>

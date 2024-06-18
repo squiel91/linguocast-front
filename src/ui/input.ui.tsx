@@ -6,6 +6,8 @@ interface Props {
   value: string | null
   type?: 'text' | 'number' | 'password' | 'email'
   label?: string
+  max?: number,
+  min?: number
   details?: string
   onChange?: (value: string | null) => void
   placeholder?: string
@@ -13,6 +15,7 @@ interface Props {
   prepend?: ReactNode
   append?: ReactNode
   className?: string
+  noAutocoplete?: boolean
 }
 
 export const Input = ({
@@ -20,28 +23,34 @@ export const Input = ({
   value,
   type = 'text',
   label,
+  max,
+  min,
   details,
   onChange: changeHandler,
   placeholder,
   disabled = false,
   prepend,
   append,
+  noAutocoplete = false,
   className
 }: Props) => {
   const inputElement = (
-    <div className={cn('relative', className)}>
+    <div className={cn('relative', label ? '' : className)}>
       {prepend && (
         <div className='absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 pointer-events-none text-gray-500 appearance-none bg-transparent'>
           {prepend}
         </div>
       )}
       <input
+        autoComplete={noAutocoplete ? 'off' : 'on'}
         className={cn(
           'p-4 py-2 w-full border-[1px] border-solid border-slate-200 rounded-md',
           prepend ? 'pl-9' : '',
           append ? 'pr-9' : ''
         )}
         name={name}
+        max={max}
+        min={min}
         id={name}
         type={type}
         value={value ?? ''}
@@ -57,10 +66,11 @@ export const Input = ({
     </div>
   )
   if (label) return (
-    <label>
+    <label className={className}>
       {label && <div className='text-sm mb-1'>{label}</div>}
       {inputElement}
       {details && <div className='text-sm mt-1 text-gray-400 italic'>{details}</div>}
     </label>
   )
+  return inputElement
 }
