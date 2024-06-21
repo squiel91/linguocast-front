@@ -1,17 +1,17 @@
 import { Button } from "@/ui/button.ui"
 import { Textarea } from "@/ui/textarea.ui"
 import { Trash2Icon } from "lucide-react"
-import { FreeResponseExercise } from "../types.exercises"
+import { IEditFreeResponseExercise } from "../types.exercises"
 
 export interface Props {
-  exercise: FreeResponseExercise
-  onChange: (exercise: (exercise: FreeResponseExercise) => FreeResponseExercise) => void
+  exercise: IEditFreeResponseExercise
+  onChange: (exercise: (exercise: IEditFreeResponseExercise) => IEditFreeResponseExercise) => void
   onRemove: () => void
 }
 
 export const FreeResponse = ({ exercise, onChange: changeDispatch, onRemove }: Props) => {
 
-  const { question, response } = exercise
+  const { question, response: responseModel } = exercise
 
   return (
     <>
@@ -30,7 +30,7 @@ export const FreeResponse = ({ exercise, onChange: changeDispatch, onRemove }: P
       <div>
         <div className="text-sm mb-1">Answer model</div>
         <Textarea
-          value={response}
+          value={responseModel}
           onChange={(value) => changeDispatch(exercise => ({ ...exercise, response: value ?? '' }))}
         />
       </div>

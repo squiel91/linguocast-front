@@ -2,11 +2,11 @@ import { Button } from "@/ui/button.ui"
 import { Input } from "@/ui/input.ui"
 import { Textarea } from "@/ui/textarea.ui"
 import { CheckIcon, PlusIcon, Trash2Icon, XIcon } from "lucide-react"
-import { SelectMultipleExercise } from "../types.exercises"
+import { IEditSelectMultipleExercise } from "../types.exercises"
 
 export interface Props {
-  exercise: SelectMultipleExercise
-  onChange: (exercise: (exercise: SelectMultipleExercise) => SelectMultipleExercise) => void
+  exercise: IEditSelectMultipleExercise
+  onChange: (exercise: (exercise: IEditSelectMultipleExercise) => IEditSelectMultipleExercise) => void
   onRemove: () => void
 }
 

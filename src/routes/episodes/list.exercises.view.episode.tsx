@@ -1,10 +1,9 @@
 import { useQuery } from "@tanstack/react-query"
-import { MultipleChoiceExercise } from "./exercises/edit.exercises.edit.episode"
 import axios from "axios"
-import { useState } from "react"
 import { Loader } from "@/ui/loader.ui"
-import { ViewExercise } from "./view.exercises.view.episode"
+import { ViewExercise } from "./exercises/view.exercises.view.episode"
 import { Card } from "@/ui/card.ui"
+import { IViewExercise } from "./exercises/types.exercises"
 
 interface Props {
   episodeId?: number
@@ -14,7 +13,7 @@ export const ListExercises = ({ episodeId }: Props) => {
   const { data: exercises, isPending: isLoadingExercises } = useQuery({
     enabled: !!episodeId,
     queryKey: ['episodes', episodeId, 'exercises'],
-    queryFn: () => axios.get<MultipleChoiceExercise[]>(
+    queryFn: () => axios.get<IViewExercise[]>(
       '/api/exercises',
       { params: { episodeId } }
     ).then(res => res.data)

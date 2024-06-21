@@ -2,11 +2,12 @@ import { Button } from "@/ui/button.ui"
 import { Input } from "@/ui/input.ui"
 import { Textarea } from "@/ui/textarea.ui"
 import { CheckIcon, PlusIcon, Trash2Icon, XIcon } from "lucide-react"
-import { MultipleChoiceExercise } from "../types.exercises"
+import { IEditMultipleChoiceExercise } from "../types.exercises"
 
 export interface Props {
-  exercise: MultipleChoiceExercise
-  onChange: (exercise: (exercise: MultipleChoiceExercise) => MultipleChoiceExercise) => void
+  exercise: IEditMultipleChoiceExercise
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onChange: (exercise: (exercise: any) => any) => void
   onRemove: () => void
 }
 
@@ -43,11 +44,11 @@ export const MultipleChoice = ({ exercise, onChange: changeDispatch, onRemove }:
               <Input
                 value={incorrectChoice}
                 onChange={(value) => changeDispatch(
-                  exercise => ({
+                  (exercise) => ({
                     ...exercise,
                     incorrectChoices: exercise
                       .incorrectChoices
-                      .map((_, i) => i === index ? value ?? '' : _)
+                      .map((_: unknown, i: number) => i === index ? value ?? '' : _)
                   })
                 )}
                 className="flex-grow"
@@ -60,7 +61,7 @@ export const MultipleChoice = ({ exercise, onChange: changeDispatch, onRemove }:
                     ...exercise,
                     incorrectChoices: exercise
                       .incorrectChoices
-                      .filter((_, i) => i !== index)
+                      .filter((_: unknown, i: unknown) => i !== index)
                   })
                 )}
                 disabled={incorrectChoices.length === 1}

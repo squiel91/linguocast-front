@@ -37,8 +37,8 @@ section {
 
 .read-transcript-along {
   position: relative;
-  font-size: xxx-large;
-  line-height: 1.6;
+  /* font-size: xxx-large; */
+  line-height: 1.6 !important;
 }
 
 .read-transcript-along::after {

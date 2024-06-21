@@ -1,16 +1,15 @@
 import { PopulatedEpisode } from "@/types/types";
-import { Minimize2Icon, PlayIcon, RotateCcwIcon, RotateCwIcon, SquareIcon } from "lucide-react";
+import { RotateCcwIcon, RotateCwIcon, SquareIcon } from "lucide-react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
 import noImage from '@/assets/no-image.svg'
-// import { formatSeconds } from "@/utils/date.utils";
 import { AuthContextWrapper, useAuth } from "@/auth/auth.context";
 import axios from "axios";
 import { isAudioPlaying } from "@/utils/player.utils";
 import { PlayButton } from "@/ui/play-button.ui";
 import { formatSeconds } from "@/utils/date.utils";
 import { useNavigate } from 'react-router-dom';
-import { BaseEmbedded, Embedded } from "@/routes/episodes/embeddeds/types.embededs";
+import { Embedded } from "@/routes/episodes/embeddeds/types.embededs";
 import { useQuery } from "@tanstack/react-query";
 import { ViewEmbeddedMinimized } from "./minimized/view.embedded.minimized.player";
 import { ReadAlong } from "./read-along.player";

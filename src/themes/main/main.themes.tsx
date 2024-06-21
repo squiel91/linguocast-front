@@ -1,4 +1,4 @@
-import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
+import { Link, Outlet, useLocation, useParams } from "react-router-dom"
 import { Button } from "../../ui/button.ui"
 import { Footer } from "./footer.themes"
 import linguocastLogo from '@/assets/linguocast-logo.svg' 
@@ -29,7 +29,7 @@ const MainTheme = () => {
       {user?.isAdmin && isVistingViewEpisode && (
         <div className="bg-slate-900 py-2">
           <div className="container text-slate-100">
-            <Link to={`/episodes/${episodeId}/edit`}>
+            <Link to={`/creators/episodes/${episodeId}`}>
               <button className="bg-slate-800 rounded-lg py-1 px-4 flex gap-2 items-center">
                 <PencilIcon size={14} />
                 Edit episode

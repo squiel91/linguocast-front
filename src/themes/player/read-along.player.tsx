@@ -1,4 +1,3 @@
-import { WordViewer } from '@/components/word-viewer'
 import { useQuery } from '@tanstack/react-query'
 import { AudioWaveformIcon } from 'lucide-react'
 import { ReactNode, useEffect, useRef, useState } from 'react'
@@ -33,7 +32,7 @@ export const ReadAlong = ({
   const isAutomaticScroll = useRef(false)
 
   useQuery
-  const [selectedWord, setSelectedWord] = useState<string | null>(null)
+  // const [selectedWord, setSelectedWord] = useState<string | null>(null)
 
   const transcriptContainerElem = useRef<HTMLDivElement>(null)
 
@@ -109,7 +108,7 @@ export const ReadAlong = ({
   }, [transcriptContainerElem, isOutOfSync])
 
   return (
-    <div className="read-transcript-along overflow-y-hidden relative">
+    <div className="read-transcript-along text-4xl md:text-5xl lg:text-6xl overflow-y-hidden relative">
       <div className="scrollbar font-bold overflow-y-auto py-16 h-full" ref={transcriptContainerElem}>
         {timedTranscript.current.map((timedToken, index) => {
           if (!timedToken) return <br key={index} />

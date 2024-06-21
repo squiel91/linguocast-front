@@ -21,8 +21,8 @@ export const ExpandedPlayerControls = ({
   onForward: forwardHandler,
   onSpeedChange: speedChangeHandler
 }: Props) => (
-  <div className="flex justify-center items-center gap-4">
-    <div className="flex-grow flex items-center">
+  <div className="grid grid-cols-3 items-center gap-4">
+    <div className="flex items-center">
       {/* 0.5 0.75 1 1.25 1.5 */}
       <button
         className="flex gap-2 items-center"
@@ -35,29 +35,31 @@ export const ExpandedPlayerControls = ({
         X {speed}
       </button>
     </div>
-    <button
-      className="relative"
-      onClick={rewindHandler}
-      disabled={isLoading}
-    >
-      <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center text-xs">10</div>
-      <RotateCcwIcon size={40} />
-    </button>
-    <PlayButton
-      isLoading={isLoading}
-      isPlaying={isPlaying}
-      onTogglePlay={playToggleHandler}
-      hero
-    />
-    <button
-      className="relative"
-      onClick={forwardHandler}
-      disabled={isLoading}
-    >
-      <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center text-xs">10</div>
-      <RotateCwIcon size={40} />
-    </button>
-    <div className="flex-grow flex justify-end items-center">
+    <div className="flex justify-center items-center gap-5">
+      <button
+        className="relative"
+        onClick={rewindHandler}
+        disabled={isLoading}
+      >
+        <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center text-xs">10</div>
+        <RotateCcwIcon size={40} />
+      </button>
+      <PlayButton
+        isLoading={isLoading}
+        isPlaying={isPlaying}
+        onTogglePlay={playToggleHandler}
+        hero
+      />
+      <button
+        className="relative"
+        onClick={forwardHandler}
+        disabled={isLoading}
+      >
+        <div className="absolute top-0 left-0 right-0 bottom-0 flex justify-center items-center text-xs">10</div>
+        <RotateCwIcon size={40} />
+      </button>
+    </div>
+    <div className="flex justify-end items-center">
       <button onClick={() => history.back()}>
         <Minimize2Icon />
       </button>

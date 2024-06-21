@@ -6,10 +6,11 @@ import { useMutation, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { useEffect, useState } from "react"
 import { Link, useParams } from "react-router-dom"
-import { EditExercise, Exercise } from "./exercises/edit.exercises.edit.episode"
+import { EditExercise } from "./exercises/edit.exercises.edit.episode"
 import { BookmarkIcon, ExternalLink, ImageIcon, Link2Icon, PlusIcon, SaveIcon, SparklesIcon, SquarePenIcon, SquarePlayIcon } from "lucide-react"
 import { Embedded } from "./embeddeds/types.embededs"
 import { EditEmbedded } from "./embeddeds/edit.embeddeds.edit.episodes"
+import { IEditExercise } from "./exercises/types.exercises"
 
 interface TranscriptMutateData {
   transcript?: string
@@ -18,7 +19,7 @@ interface TranscriptMutateData {
 
 export const EditEpisode = () => {
   const { episodeId } = useParams()
-  const [exercises, setExercises] = useState<Exercise[]>([])
+  const [exercises, setExercises] = useState<IEditExercise[]>([])
   const [embeddeds, setEmbeddeds] = useState<Embedded[]>([])
 
   const { data: episode, isPending } = useQuery({
@@ -29,9 +30,9 @@ export const EditEpisode = () => {
   })
 
   const { data: prevExercises, isPending: isLoadingExercises } = useQuery({
-    queryKey: ['episodes', episodeId, 'exercises'],
-    queryFn: () => axios.get<Exercise[]>(
-      '/api/exercises',
+    queryKey: ['creators', 'episodes', episodeId, 'exercises'],
+    queryFn: () => axios.get<IEditExercise[]>(
+      '/api/creators/exercises',
       { params: { episodeId } }
     ).then(res => res.data)
   })
@@ -84,7 +85,7 @@ export const EditEpisode = () => {
     mutateTranscript({ autogenerate: true })
   }
 
-  const handleExerciseChange = (index: number) => (exerciseUpdater: (exercise: Exercise) => Exercise) => {
+  const handleExerciseChange = (index: number) => (exerciseUpdater: (exercise: IEditExercise) => IEditExercise) => {
     setExercises((prevExercises) => 
       prevExercises.map((exercise, i) => 
         i === index ? exerciseUpdater(exercise) : exercise
@@ -103,7 +104,7 @@ export const EditEpisode = () => {
   const generateExercisesHandler = async () => {
     try {
       setIsGeneratingExercises(true)
-      const { data: generatedExercises } = await axios.post<Exercise[]>(`/api/episodes/${episodeId}/generate-exercises`)
+      const { data: generatedExercises } = await axios.post<IEditExercise[]>(`/api/episodes/${episodeId}/generate-exercises`)
       setExercises(exercises => [...exercises, ...generatedExercises])
     } catch (error) {
       console.error(error)
@@ -219,7 +220,7 @@ export const EditEpisode = () => {
                     className="text-primary"
                     onClick={() => setExercises(exercises => [
                       ...exercises,
-                      { type: 'free-response', question: '', responseModel: '' }
+                      { type: 'free-response', question: '', response: '' }
                     ])}
                   >
                     Free respone
@@ -238,7 +239,7 @@ export const EditEpisode = () => {
                   isLoading={isGeneratingExercises}
                   prepend={<SparklesIcon size={16} />}
                 >
-                    Auto-generate 4 exercises
+                    Auto-generate 6 exercises
                 </Button>
               </div>
             </>

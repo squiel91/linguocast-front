@@ -49,7 +49,6 @@ const ViewEpisode = () => {
     reproduce(episode)
   }
 
-
   return (
     <>
       <Breadcrumb
@@ -99,9 +98,20 @@ const ViewEpisode = () => {
             className="mb-4"
           />
           {selectedTabKey === 'transcript' && (
-            <Card>{episode.transcript?.split('\n').map(paragraphText => (
-              <p className="mb-2">{paragraphText}</p>
-            ))}</Card>
+            <Card>
+              {episode.transcript
+                ?.split('\n')
+                  .map((rawTimeAnnotatedWord) => {
+                    if (rawTimeAnnotatedWord.trim() === '') return '\n'
+                    const text = rawTimeAnnotatedWord.split('\t')[2]
+                    return text
+                  })
+                  .join('')
+                  .split('\n')
+                  .map(paragraphText => (
+                    <p className="mb-2">{paragraphText}</p>
+                  ))}
+            </Card>
           )}
           {selectedTabKey === 'exercises' && (
             <ListExercises episodeId={episodeId} />

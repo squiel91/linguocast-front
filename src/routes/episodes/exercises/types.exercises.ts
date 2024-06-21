@@ -1,27 +1,69 @@
-interface BaseExercise {
-  id?: number,
+interface QuestionAndTiming {
+  question: string
   start?: number
   duration?: number
 }
 
-export interface MultipleChoiceExercise  extends BaseExercise {
+// Editions
+interface OptionalId {
+  // Creations does not have an Id yet
+  id?: number
+}
+
+export interface IEditMultipleChoiceExercise  extends OptionalId, QuestionAndTiming {
   type: 'multiple-choice'
-  question: string
   correctChoice: string
   incorrectChoices: string[]
 }
 
-export interface SelectMultipleExercise extends BaseExercise {
+export interface IEditSelectMultipleExercise  extends OptionalId, QuestionAndTiming {
   type: 'select-multiple'
-  question: string
   correctChoices: string[]
   incorrectChoices: string[]
 }
 
-export interface FreeResponseExercise extends BaseExercise {
+export interface IEditFreeResponseExercise extends OptionalId, QuestionAndTiming {
   type: 'free-response'
-  question: string
   response: string
 }
 
-export type Exercise = MultipleChoiceExercise | SelectMultipleExercise | FreeResponseExercise
+export type IEditExercise = 
+  | IEditMultipleChoiceExercise
+  | IEditSelectMultipleExercise
+  | IEditFreeResponseExercise
+
+// Views
+interface IdAndPartialResponse extends QuestionAndTiming {
+  id: number
+  score?: number,
+  respondedAt?: string,
+}
+
+interface ViewChoicesBaseExercise extends IdAndPartialResponse {
+  choices: string[]
+}
+
+export interface IViewMultipleChoiceExercise extends ViewChoicesBaseExercise {
+  type: 'multiple-choice'
+  choices: string[]
+  response?: number
+  feedback?: number
+}
+
+export interface IViewSelectMultipleExercise extends ViewChoicesBaseExercise {
+  type: 'select-multiple'
+  choices: string[]
+  response?: number[]
+  feedback?: number[]
+}
+
+export interface IViewFreeResponseExercise extends IdAndPartialResponse {
+  type: 'free-response'
+  response: string
+  feedback?: string
+}
+
+export type IViewExercise =
+  | IViewMultipleChoiceExercise
+  | IViewSelectMultipleExercise
+  | IViewFreeResponseExercise

@@ -64,7 +64,7 @@ export const router = createBrowserRouter([
             element: <ViewPodcast />
           },
           {
-            path: '/episodes/:episodeId/edit',
+            path: '/creators/episodes/:episodeId',
             element: <EditEpisode />
           },
           {

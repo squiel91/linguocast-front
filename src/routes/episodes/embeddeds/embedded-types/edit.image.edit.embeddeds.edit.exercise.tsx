@@ -1,13 +1,14 @@
 import { Button } from "@/ui/button.ui"
 import { ImageIcon, Trash2Icon } from "lucide-react"
-import { Embedded, ImageEmbedded } from "../types.embededs"
+import { ImageEmbedded } from "../types.embededs"
 import { ImageUploader } from "@/ui/image-uploader"
 import { useState } from "react"
 import axios from "axios"
 
 export interface Props {
   image: ImageEmbedded
-  onChange: (embedded: (embedded: Embedded) => Embedded) => void
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onChange: (embedded: (embedded: any) => any) => void
   onRemove: () => void
 }
 
@@ -18,7 +19,10 @@ export const EditImage = ({ image: { image }, onChange: changeDispatch, onRemove
     if (image) {
       try {
         setUploadStatus('uploading')
-        changeDispatch(prevImage => ({ ...prevImage, image } as ImageEmbedded))
+        changeDispatch(embedded => {
+          const prevImageEmbedded = embedded as ImageEmbedded
+          return { ...prevImageEmbedded, image }
+        })
         const formData = new FormData()
         formData.append('image', image)
         const { data: tempImageUrl } = await axios.post('/api/embeddeds/images', formData)

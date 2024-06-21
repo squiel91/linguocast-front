@@ -3,12 +3,14 @@ import { EpisodeSuccint, Word } from "@/types/types"
 import { Card } from "@/ui/card.ui"
 import { ForwardLink } from "@/ui/forward-link.ui"
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query"
-import axios, { AxiosError, isAxiosError } from "axios"
+import axios from "axios"
 import { GrabIcon, HandIcon, InfoIcon, Link2Icon } from "lucide-react"
 import noImage from '@/assets/no-image.svg'
 import { Link } from "react-router-dom"
 import { urlSafe } from "@/utils/url.utils"
 import { useEffect, useState } from "react"
+import { ViewExercise } from "@/routes/episodes/exercises/view.exercises.view.episode"
+import { IViewExercise } from "@/routes/episodes/exercises/types.exercises"
 
 interface Props {
   embedded: Embedded | null
@@ -32,6 +34,15 @@ export const ViewEmbeddedMinimized = ({ embedded }: Props) => {
     queryFn: () => {
       if (embedded?.type !== 'word') return null
       return axios.get<Word>(`/api/words/${embedded.wordId}`).then(res => res.data)
+    }
+  })
+
+  const { data: exercise } = useQuery({
+    enabled: !!embedded && embedded.type === 'exercise',
+    queryKey: ['exercise', (embedded?.type === 'exercise' && embedded.exerciseId) ?? null ],
+    queryFn: () => {
+      if (embedded?.type !== 'exercise') return null
+      return axios.get<IViewExercise>(`/api/exercises/${embedded.exerciseId}`).then(res => res.data)
     }
   })
 
@@ -84,7 +95,7 @@ export const ViewEmbeddedMinimized = ({ embedded }: Props) => {
   if (!embedded) return <></>
   return (
     <div className="container flex justify-end">
-      <Card className={embedded.type === 'image' ? 'p-0' : embedded.type === 'word' ? 'p-4' : 'px-3 py-2'}>
+      <Card className={embedded.type === 'image' ? 'p-0' : embedded.type === 'word' || embedded.type === 'exercise' ? 'p-4' : 'px-3 py-2'}>
         {embedded.type === 'note' && (
           <div className="flex gap-2">
             <InfoIcon size={16} className="text-slate-400 mt-[2px]" />
@@ -109,6 +120,9 @@ export const ViewEmbeddedMinimized = ({ embedded }: Props) => {
               {episode.title}
             </div>
           </Link>
+        )}
+        {embedded.type === 'exercise' && exercise && (
+          <ViewExercise exercise={exercise} />
         )}
         {embedded.type === 'word' && word && (
           <div className="min-w-60 max-w-md ">

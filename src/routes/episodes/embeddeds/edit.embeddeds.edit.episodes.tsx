@@ -1,10 +1,9 @@
 import { Card } from "@/ui/card.ui"
 import { EditNote } from "./embedded-types/edit.note.edit.embeddeds.edit.exercise"
-import { Embedded, EpisodeEmbedded, ImageEmbedded, LinkEmbedded, NoteEmbedded } from "./types.embededs"
+import { Embedded } from "./types.embededs"
 import { EditLink } from "./embedded-types/edit.link.edit.embeddeds.edit.exercise"
 import { EditEpisode } from "./embedded-types/edit.episode.edit.embeddeds.edit.exercise"
 import { EditImage } from "./embedded-types/edit.image.edit.embeddeds.edit.exercise"
-import { Input } from "@/ui/input.ui"
 import { EditWord } from "./embedded-types/edit.word.edit.embeddeds.edit.episodes"
 import { EmbeddedTimeSelector } from "@/components/embedded-time-selector"
 

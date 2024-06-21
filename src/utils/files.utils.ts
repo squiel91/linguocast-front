@@ -35,12 +35,14 @@ export const resizeAndCropSquareImage = (file: File, size = 600, quality = .9): 
         }, 'image/jpeg', quality);
       };
       img.onerror = (error) => {
+        console.error(error)
         reject(new Error('Image loading error'));
       };
       img.src = event.target?.result as string;
     };
 
     reader.onerror = (error) => {
+      console.error(error)
       reject(new Error('File reading error'));
     };
 

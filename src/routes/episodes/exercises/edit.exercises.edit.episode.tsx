@@ -1,15 +1,15 @@
 import { Card } from "@/ui/card.ui"
-import { Exercise } from "./types.exercises"
-import { MultipleChoice } from "./exercise-types/multiple-choice.exercises.edit.episode"
-import { FreeResponse } from "./exercise-types/free-response.exercises.edit.episode"
-import { SelectMultiple } from "./exercise-types/select-multiple.exercises.edit.episode"
+import { IEditExercise } from "./types.exercises"
+import { MultipleChoice } from "./edits/multiple-choice.exercises.edit.episode"
+import { FreeResponse } from "./edits/free-response.exercises.edit.episode"
+import { SelectMultiple } from "./edits/select-multiple.exercises.edit.episode"
 import { EmbeddedTimeSelector } from "@/components/embedded-time-selector"
 import { Checkbox } from "@/ui/checkbox.ui"
-import { useState } from "react"
 
 export interface Props {
-  exercise: Exercise
-  onChange: (exercise: (exercise: Exercise) => Exercise) => void
+  exercise: IEditExercise
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  onChange: (exercise: (exercise: any) => any) => void
   onRemove: () => void
 }
 
