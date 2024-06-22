@@ -1,20 +1,26 @@
+import { Word } from '@/types/types'
+import { Card } from '@/ui/card.ui'
 import { useQuery } from '@tanstack/react-query'
+import axios from 'axios'
 import { AudioWaveformIcon } from 'lucide-react'
 import { ReactNode, useEffect, useRef, useState } from 'react'
 import useRefsCollection from 'react-refs-collection'
+import { ViewEmbeddedMinimized } from './minimized/view.embedded.minimized.player'
+import { removePunctuation } from '@/utils/text.utils'
+import { ProgressBar } from '@/ui/progress-bar.ui'
 
 interface Props {
   transcript: string
   currentTime: number
   embedded: ReactNode
+  language: string
   onTimeChangeRequest: (time: number) => void
 }
-
-
 
 export const ReadAlong = ({
   transcript: rawTimeAnnotatedTranscript,
   currentTime,
+  language,
   embedded,
   onTimeChangeRequest: timeChangeRequestHandler
 }: Props) => {
@@ -31,13 +37,20 @@ export const ReadAlong = ({
   const [isOutOfSync,setIsOutOfSync] = useState(false)
   const isAutomaticScroll = useRef(false)
 
-  useQuery
-  // const [selectedWord, setSelectedWord] = useState<string | null>(null)
+  const [selectedWord, setSelectedWord] = useState<string | null>(null)
 
   const transcriptContainerElem = useRef<HTMLDivElement>(null)
 
+  const { data: wordResults, isPending: isFetchingWord, isError: wordLookupFailed } = useQuery({
+    enabled: !!selectedWord,
+    queryKey: ['word', selectedWord ?? null ],
+    queryFn: () => {
+      if (!selectedWord) return null
+      return axios.get<Word[]>(`/api/words`, { params: { q: selectedWord, language } }).then(res => res.data)
+    }
+  })
+
   const scrollToCenterChild = (child: HTMLElement) => {
-    console.log('scrollToCenterChild called')
     if (!child) return
   
     const parent = child.parentElement
@@ -58,8 +71,6 @@ export const ReadAlong = ({
     const currentScrollTop = parent.scrollTop;
     const scrollTopDifference = Math.abs(currentScrollTop - scrollTop);
   
-    console.log({scrollTopDifference})
-  
     if (scrollTopDifference < 50) return false; // No scroll needed, already centered
   
     isAutomaticScroll.current = true
@@ -69,6 +80,14 @@ export const ReadAlong = ({
         behavior: 'smooth'
     })  
   }
+
+  // clear the word after 10 seconds
+  useEffect(() => {
+    const timeoutId = setTimeout(() => {
+      setSelectedWord(null)
+    }, 10 * 1000)
+    return () => clearTimeout(timeoutId)
+  }, [selectedWord])
 
   useEffect(() => {
     timedTranscript.current = rawTimeAnnotatedTranscript
@@ -122,7 +141,10 @@ export const ReadAlong = ({
               }}
               className="cursor-pointer"
               ref={getTokenRefHandler(index)}
-              onClick={() => timeChangeRequestHandler(start)}
+              onClick={() => {
+                setSelectedWord(removePunctuation(text))
+                timeChangeRequestHandler(start)
+              }}
             >
               {text}
             </span>
@@ -139,7 +161,29 @@ export const ReadAlong = ({
         </button>
       )}
       <div className='absolute right-0 bottom-0 z-10 text-black text-base'>
-        {embedded}
+        {selectedWord
+          ? isFetchingWord || wordLookupFailed || (wordResults && wordResults.length === 0)
+            ? (
+              <Card className="relative">
+                <ProgressBar duration={10} className="absolute left-0 right-0 top-0" />
+                {isFetchingWord && 'Loading word'}
+                {wordLookupFailed && 'There was an error looking for the word'}
+                {wordResults && wordResults.length === 0 && `Sorry! ${selectedWord} not found.`}
+              </Card>
+            )
+            : (
+              <ViewEmbeddedMinimized
+                embedded={{
+                  start: 0,
+                  duration: 10,
+                  type: 'word',
+                  wordId: null,
+                  word: wordResults![0]
+                }}
+                showCountdown
+              />
+            )
+          : embedded}
       </div>
     </div>  
   )

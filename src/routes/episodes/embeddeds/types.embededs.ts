@@ -1,3 +1,5 @@
+import { Word } from "@/types/types"
+
 export interface BaseEmbedded {
   id?: number,
   start: number,
@@ -27,6 +29,7 @@ export interface EpisodeEmbedded extends BaseEmbedded {
 export interface WordEmbedded extends BaseEmbedded {
   type: 'word'
   wordId: number | null
+  word?: Word
 }
 
 export interface ExerciseEmbedded extends BaseEmbedded {

@@ -145,6 +145,17 @@ export const PlayerContextWrapper = () => {
 
   const percentageListened = (currentTime / duration) * 100 
 
+  const [currentEmbedded, setCurrentEmbedded] = useState<Embedded | null>(null)
+  
+  useEffect(() => {
+    setCurrentEmbedded(currentEmbedded => {
+      const embedded = findMatchingEmbedded(embeddeds ?? [], currentTime)
+      if (!embedded) return null
+      if (currentEmbedded && embedded!.id === currentEmbedded.id) return currentEmbedded
+      return embedded
+    })
+  }, [embeddeds, currentTime])
+
   return (
     <AuthContextWrapper>
       <PlayerContext.Provider
@@ -184,7 +195,8 @@ export const PlayerContextWrapper = () => {
                   transcript={currentEpisode.transcript}
                   currentTime={currentTime}
                   onTimeChangeRequest={changeTime}
-                  embedded={<ViewEmbeddedMinimized embedded={findMatchingEmbedded(embeddeds ?? [], currentTime)} />}
+                  language={currentEpisode.belongsTo.targetLanguage}
+                  embedded={<ViewEmbeddedMinimized onExpectedNavigation={() => setIsPlayerExpanded(false)} embedded={currentEmbedded} />}
                 />
               )}
               <div>
@@ -216,7 +228,7 @@ export const PlayerContextWrapper = () => {
         {currentEpisode && !isPlayerExpaned && (
           <>
             <div className="fixed left-0 bottom-0 right-0 rounded-md md:px-4 z-10 flex gap-2 flex-col">
-              <ViewEmbeddedMinimized embedded={findMatchingEmbedded(embeddeds ?? [], currentTime)} />
+              <ViewEmbeddedMinimized embedded={currentEmbedded} />
               <div
                 className="container flex flex-col p-0 bg-primary  rounded-tr-lg rounded-tl-lg text-white text-left"
                 onClick={() => setIsPlayerExpanded(true)}
