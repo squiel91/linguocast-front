@@ -4,6 +4,9 @@ import { Loader } from "@/ui/loader.ui"
 import { ViewExercise } from "./exercises/view.exercises.view.episode"
 import { Card } from "@/ui/card.ui"
 import { IViewExercise } from "./exercises/types.exercises"
+import { Link } from "react-router-dom"
+import { CrownIcon } from "lucide-react"
+import { Button } from "@/ui/button.ui"
 
 interface Props {
   episodeId?: number
@@ -20,8 +23,22 @@ export const ListExercises = ({ episodeId }: Props) => {
   })
 
   if (isLoadingExercises) return <Loader />
+  if (exercises?.length === 0) return (
+    <Card className='p-10'>
+      <p className="mb-4">
+        This episode does not have exercises yet.
+      </p>
+      <h1 className="text-4xl mb-4">Request it now with Linguocast Premium</h1>
+      <p className="text-lg mb-8">
+        With Lingucast Premium you can request the transcription + exercises and it will be ready for you in less than 24 hours.
+      </p>
+      <Link to="/premium">
+        <Button prepend={<CrownIcon size={18} />}>Start Your 7-Day Free Trial</Button>
+      </Link>
+    </Card>
+  )
   return (
-    <Card className="p-0">
+    <Card>
       <ul>
         {exercises!.map(exercise => (
           <li className="p-4 border-b-[1px]">

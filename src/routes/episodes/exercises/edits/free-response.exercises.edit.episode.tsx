@@ -1,24 +1,17 @@
-import { Button } from "@/ui/button.ui"
 import { Textarea } from "@/ui/textarea.ui"
-import { Trash2Icon } from "lucide-react"
 import { IEditFreeResponseExercise } from "../types.exercises"
 
 export interface Props {
   exercise: IEditFreeResponseExercise
   onChange: (exercise: (exercise: IEditFreeResponseExercise) => IEditFreeResponseExercise) => void
-  onRemove: () => void
 }
 
-export const FreeResponse = ({ exercise, onChange: changeDispatch, onRemove }: Props) => {
+export const FreeResponse = ({ exercise, onChange: changeDispatch }: Props) => {
 
   const { question, response: responseModel } = exercise
 
   return (
     <>
-      <div className="flex justify-between items-center">
-        <div className="font-bold">Free Response</div>
-        <Button variant="discrete" onClick={onRemove} prepend={<Trash2Icon size={14} />} className="self-start" compact>Remove</Button>
-      </div>
       <div>
         <div className="text-sm mb-1">Question</div>
         <Textarea

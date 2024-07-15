@@ -3,7 +3,7 @@ import { Button } from "@/ui/button.ui"
 import Dialog from "@/ui/dialog.ui"
 import { getRandomWholeNumber } from "@/utils/random.utils"
 import axios from "axios"
-import { EyeIcon, PartyPopperIcon } from "lucide-react"
+import { EyeIcon, Maximize2Icon, PartyPopperIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 
 interface Props {
@@ -61,7 +61,7 @@ export const ReviewWordsModal = ({
 
   const canRate = isReveled || (isWordShown && isPronunciationShown && isTranslationsShown)
   return (
-    <Dialog isOpen={isOpen} onClose={closeHandler}>
+    <Dialog isOpen={isOpen} onClose={closeHandler} className="w-[480px]">
       {currentWord
         ? (
           <div className="flex flex-col gap-4">
@@ -101,7 +101,7 @@ export const ReviewWordsModal = ({
             </div>
             {!canRate && (
               <Button
-                prepend={<EyeIcon size={18} />}
+                prepend={<Maximize2Icon size={18} />}
                 onClick={() => setIsReveled(true)}
               >
                 Revele

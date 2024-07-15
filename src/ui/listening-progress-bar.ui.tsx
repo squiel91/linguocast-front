@@ -17,8 +17,8 @@ export const ListeningProgressBar = ({
     <div className={cn('flex gap-4 items-center', className)}>
       <div className="bg-slate-200 flex-grow h-1 rounded-full">
         <div
-          className="h-full w-0 bg-primary rounded-full"
-          style={{ width: `${(leftOn / duration) * 100}%` }}
+          className="h-full bg-primary rounded-full"
+          style={{ width: `${Math.min((leftOn / duration) * 100, 100)}%` }}
         />
       </div>
       {!onlyBar && <span>{formatSeconds(duration - leftOn)} left</span>}

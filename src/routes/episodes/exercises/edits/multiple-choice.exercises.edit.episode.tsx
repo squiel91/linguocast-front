@@ -8,19 +8,15 @@ export interface Props {
   exercise: IEditMultipleChoiceExercise
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   onChange: (exercise: (exercise: any) => any) => void
-  onRemove: () => void
 }
 
-export const MultipleChoice = ({ exercise, onChange: changeDispatch, onRemove }: Props) => {
+export const MultipleChoice = ({ exercise, onChange: changeDispatch }: Props) => {
 
   const { question, correctChoice, incorrectChoices } = exercise
 
+  const hasResponses = (exercise.responsesCount ?? 0) > 0
   return (
     <>
-      <div className="flex justify-between items-center">
-        <div className="font-bold">Multiple Choice</div>
-        <Button variant="discrete" onClick={onRemove} prepend={<Trash2Icon size={14} />} className="self-start" compact>Remove</Button>
-      </div>
       <div>
         <div className="text-sm mb-1">Incorrect answers</div>
         <Textarea
@@ -54,35 +50,39 @@ export const MultipleChoice = ({ exercise, onChange: changeDispatch, onRemove }:
                 className="flex-grow"
                 prepend={<XIcon size={16} />}
               />
-              <button
-                className="text-primary p-2 disabled:opacity-40"
-                onClick={() => changeDispatch(
-                  exercise => ({
-                    ...exercise,
-                    incorrectChoices: exercise
-                      .incorrectChoices
-                      .filter((_: unknown, i: unknown) => i !== index)
-                  })
-                )}
-                disabled={incorrectChoices.length === 1}
-              >
-                <Trash2Icon size={20} />
-              </button>
+              {!hasResponses && (
+                <button
+                  className="text-primary p-2 disabled:opacity-40"
+                  onClick={() => changeDispatch(
+                    exercise => ({
+                      ...exercise,
+                      incorrectChoices: exercise
+                        .incorrectChoices
+                        .filter((_: unknown, i: unknown) => i !== index)
+                    })
+                  )}
+                  disabled={incorrectChoices.length === 1}
+                >
+                  <Trash2Icon size={20} />
+                </button>
+              )}
             </li>
           ))}
-          <Button
-            onClick={() => changeDispatch(
-              exercise => ({
-                ...exercise,
-                incorrectChoices: exercise.incorrectChoices.concat('')
-              })
-            )}
-            prepend={<PlusIcon size={16} />}
-            className="self-start"
-            compact
-          >
-            Add incorrect choice
-          </Button>
+          {!hasResponses && (
+            <Button
+              onClick={() => changeDispatch(
+                exercise => ({
+                  ...exercise,
+                  incorrectChoices: exercise.incorrectChoices.concat('')
+                })
+              )}
+              prepend={<PlusIcon size={16} />}
+              className="self-start"
+              compact
+            >
+              Add incorrect choice
+            </Button>
+          )}
         </ul>
       </div>
     </>

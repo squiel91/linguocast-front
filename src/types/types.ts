@@ -23,6 +23,7 @@ export interface PublicUser extends PrivateUser {
 export interface SelfUser extends PublicUser {
   email: string
   isPremium: boolean
+  isCreator: boolean
   isAdmin: boolean
   isProfilePrivate: boolean
 }
@@ -32,6 +33,7 @@ export interface MicroPodcast {
   name: string
   coverImage?: string
   targetLanguage: string
+  creatorId: number
 }
 
 export interface MinifiedPodcast extends MicroPodcast {
@@ -60,6 +62,24 @@ export interface Episode {
   completedAt?: string
 }
 
+export interface CreatorsEpisodeDto {
+  id: number
+  title: string
+  audio: string
+  description: string
+  transcript: string | null
+  image: string | null
+  duration: number
+  isListed: boolean
+  isPremium: boolean
+  isFromRss: boolean
+  podcast: {
+    id: number
+    name: string
+    image: string
+  }
+}
+
 export interface PopulatedEpisode {
   id: number
   title: string
@@ -69,10 +89,18 @@ export interface PopulatedEpisode {
   publishedAt: string
   description: string
   transcript?: string
-  leftOn: number,
+  leftOn: number
+  isListed: boolean
+  isPremium: boolean
   commentsCount: number,
   completedAt: string
-  belongsTo: MicroPodcast
+  podcast: MicroPodcast
+}
+
+export interface RawReproduction {
+  leftOn: number
+  completedAt: string | null
+  updatedAt: string
 }
 
 export interface Podcast extends MinifiedPodcast {
@@ -90,7 +118,49 @@ export interface Podcast extends MinifiedPodcast {
     paid?: boolean
   }
   isSavedByUser?: boolean
+  creatorId: number
   episodes: Episode[]
+}
+
+export interface ICompleteEpisode {
+  id: number
+  podcastId: number
+  podcastName: string
+  podcastImage: string | null
+  title: string
+  reproductionsCount: number
+  commentsCount: number
+  embeddedCount: number
+  exercisesCount: number
+  image: string | null
+  duration: number
+  publishedAt: string
+  description: string
+  transcript: string | null
+  contentUrl: string
+  isListed: number
+  createdAt: string
+  updatedAt: string
+}
+
+export interface ICompletePodcast {
+  id: number
+  name: string
+  image: string | null
+  description: string
+  targetLanguage: string
+  mediumLanguage: string
+  levels: Level[]
+  rss: string | null
+  links: string[]
+  episodesCount: number
+  followersCount: number
+  reviewsCount: number
+  commentsCount: number
+  uniqueReproductions: number
+  isListed: boolean
+  updatedAt: string
+  createdAt: string
 }
 
 export interface Comment {
@@ -110,6 +180,24 @@ export interface PoplulatedComment extends Comment {
   podcastId: number
   podcastName: string
   podcastImage: string
+}
+
+export interface ICreatorsComment {
+  id: number,
+  content: string
+  createdAt: string
+  updatedAt: string
+  responseTo: number | null
+  episode: {
+    id: number,
+    title: string,
+    image: string | null
+  },
+  author: {
+    id: number
+    name: string
+    avatar: string
+  }
 }
 
 export interface AutocompletePodcast {

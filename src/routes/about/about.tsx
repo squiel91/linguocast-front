@@ -7,7 +7,7 @@ import { usePageTitle } from "@/utils/document.utils"
 const About = () => {
   usePageTitle('About')
   return (
-    <>
+    <div className="container">
       <Breadcrumb current="About Linguocast" />
       <h1 className="text-3xl mb-8 font-bold">About Linguocast</h1>
       <div className='grid md:grid-cols-3 gap-16'>
@@ -90,7 +90,7 @@ const About = () => {
           </p>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

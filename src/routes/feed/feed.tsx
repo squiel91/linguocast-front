@@ -3,8 +3,6 @@ import { Loader } from "@/ui/loader.ui"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { Link, useNavigate } from "react-router-dom"
-import { BookmarkIcon, CompassIcon, CrownIcon, TelescopeIcon } from "lucide-react"
-import { Button } from "@/ui/button.ui"
 import { Carousel } from "./carousel.feed"
 import { Episode, MicroPodcast, PoplulatedComment } from "@/types/types"
 import { EpisodeSummary } from "@/ui/episode-summary.ui"
@@ -16,7 +14,7 @@ import { Card } from "@/ui/card.ui"
 import { usePageTitle } from "@/utils/document.utils"
 
 const Feed = () => {
-  const { isLoggedIn, user } = useAuth()
+  const { isLoggedIn } = useAuth()
   const navigate = useNavigate()
 
   usePageTitle('Feed')
@@ -45,30 +43,10 @@ const Feed = () => {
   } = feedData
 
   return (
-    <>
-      <h1 className="text-3xl font-bold my-8">
-        Welcome back {user?.name}!
-      </h1>
-      <div className="flex gap-2 flex-wrap">
-        <Button prepend={<BookmarkIcon size={16} />}>
-          <Link to="/vocabulary-corner">
-            Vocabulary Corner
-          </Link>
-        </Button>
-        <Button prepend={<CompassIcon size={16} />}>
-          <Link to="/journey">
-            Learning Journey
-          </Link>
-        </Button>
-        <Button prepend={<TelescopeIcon size={16} />}>
-          <Link to="/explore">
-            Explore shows
-          </Link>
-        </Button>
-      </div>
+    <div className="px-4 lg:px-8">
       {newEpisodes.length > 0 && (
-        <section>
-          <h2 className="text-2xl font-bold mt-8 mb-4">Up next</h2>
+        <section className="mt-8">
+          <h2 className="text-3xl mb-4">Up next</h2>
           <Carousel
             items={newEpisodes.map(episode => ({
               key: episode.id,
@@ -79,7 +57,7 @@ const Feed = () => {
       )}
       {listeningEpisodes.length > 0 && (
         <section>
-        <h2 className="text-2xl font-bold mt-8 mb-4">Continue listening</h2>
+        <h2 className="text-3xl mb-4 mt-8">Continue listening</h2>
         <Carousel
           items={listeningEpisodes!.map(episode => ({
             key: episode.id,
@@ -90,7 +68,7 @@ const Feed = () => {
       )}
       {subscribedPodcasts.length > 0 && (
         <section>
-          <h2 className="text-2xl font-bold mt-8 mb-4">Subscribed podcasts</h2>
+          <h2 className="text-3xl mb-4 mt-8 mb-4">Subscribed podcasts</h2>
             <Carousel
               items={subscribedPodcasts!.map(podcast => ({
                 key: podcast.id,
@@ -101,7 +79,7 @@ const Feed = () => {
       )}
       {latestEpisodeComments.length > 0 && (
         <section>
-          <h2 className="text-2xl font-bold mt-8 mb-4">Latest comments</h2>
+          <h2 className="text-3xl mb-4 mt-8 mb-4">Latest comments</h2>
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
             {latestEpisodeComments.map(populatedComment => (
               <Link
@@ -131,7 +109,7 @@ const Feed = () => {
       )}
       {recommendedPodcasts.length > 0 && (
         <section>
-          <h2 className="text-2xl font-bold mt-8 mb-4">Recommended podcasts</h2>
+          <h2 className="text-3xl mb-4 mt-8 mb-4">Recommended podcasts</h2>
           <Carousel
             items={recommendedPodcasts.map(podcast => ({
               key: podcast.id,
@@ -140,12 +118,7 @@ const Feed = () => {
           />
         </section>
       )}
-      <Button className="mt-8" prepend={<CrownIcon size={16} />}>
-        <Link to="/premium">
-          Try Premium!
-        </Link>
-      </Button>
-    </>
+    </div>
   )
 }
 

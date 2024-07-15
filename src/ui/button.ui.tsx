@@ -12,7 +12,7 @@ interface Props {
   wFullInMobile?: boolean
   prepend?: ReactNode
   append?: ReactNode
-  children: ReactNode
+  children?: ReactNode
 }
 export const Button = ({
   onClick: clickHandler,
@@ -30,15 +30,16 @@ export const Button = ({
     onClick={clickHandler}
     disabled={disabled}
     className={cn(
-      'relative',
+      'relative font-[600]',
       variant === 'primary'
-        ? 'bg-primary text-white'
+        ? 'bg-red-300 border-2 border-slate-800'
         : variant === 'outline'
-          ?'text-primary border-primary border-2 border-solid'
-          : 'text-primary',
-      compact ? 'px-3 py-1' : 'px-5 py-2',
+          ?'text-slate-800 border-slate-800 border-2 border-solid'
+          : 'text-slate-800',
+      compact ? 'px-3 py-1' : 'text-lg px-5 py-2',
       wFullInMobile ? 'w-full md:w-auto' : 'w-auto',
       'rounded-md',
+      disabled? 'opacity-50' : '',
       className
     )}
   >

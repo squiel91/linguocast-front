@@ -1,45 +1,49 @@
+import { cn } from "@/utils/styles.utils";
+import { ClassValue } from "clsx";
 import { XIcon } from "lucide-react";
-import { ReactNode, useEffect, useRef } from "react"
+import { ReactNode, useEffect } from "react"
 import ReactDOM from "react-dom";
+import { Card } from "./card.ui";
 
 interface Props {
   isOpen: boolean,
   children: ReactNode
+  className?: ClassValue
   onClose?: () => void
 }
 
-export const Dialog = ({ isOpen, onClose: closeHandler, children }: Props) => {
-  const dialog = useRef<HTMLDialogElement>(null);
-
+export const Dialog = ({ isOpen, onClose: closeHandler, className, children }: Props) => {
   useEffect(() => {
     if (isOpen) {
-      dialog.current?.showModal();
+      document.body.style.overflowY = 'hidden'
     } else {
-      dialog.current?.close();
+      document.body.style.overflowY = 'auto'
     }
-  }, [isOpen]);
+    return () => { document.body.style.overflowY = 'auto' }
+  }, [isOpen])
 
+  if (!isOpen) return <></>
   return ReactDOM.createPortal(
-    <dialog
-      ref={dialog}
-      onCancel={(event) => {
-        event.preventDefault()
-        event.stopPropagation()
-        closeHandler?.()
-      }}
-      className="relative p-4 md:p-8 rounded-lg"
-      style={{'width': '500px'}}
-    >
-      {children}
-      {closeHandler && (
-        <button
-          onClick={closeHandler}
-          className="absolute top-4 right-4 p-2 text-primary"
-        >
-          <XIcon />
-        </button>
-      )}
-    </dialog>,
+    (
+      <>
+        <div className="fixed left-0 right-0 top-0 bottom-0 bg-black opacity-25" />
+        <div className="flex justify-center items-center fixed left-0 right-0 top-0 bottom-0">
+          <Card
+            className={cn('m-4 md:p-8 lg:p-12 max-h-screen overflow-y-auto', className)}
+          >
+            {children}
+            {closeHandler && (
+              <button
+                onClick={closeHandler}
+                className="absolute top-4 right-4 p-2 text-primary"
+              >
+                <XIcon />
+              </button>
+            )}
+          </Card>
+        </div>
+      </>
+    ),
     document.getElementById('modal-container') as HTMLDivElement
   )
 }

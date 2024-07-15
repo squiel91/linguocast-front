@@ -8,9 +8,9 @@ interface Props {
 
 export const Avatar = ({ avatarUrl, className }: Props) => (
   <img
-    src={avatarUrl ? `/dynamics/users/avatars/${avatarUrl}` : noAvatar}
+    src={avatarUrl || noAvatar}
     className={cn(
-      'aspect-square w-12 object-center object-cover rounded-full',
+      'aspect-square w-10 object-center object-cover rounded-md',
       className
     )}
   />

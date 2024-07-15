@@ -5,7 +5,6 @@ import axios from "axios"
 import { Loader } from "@/ui/loader.ui"
 import { useInView } from 'react-intersection-observer'
 import { useEffect } from "react"
-import { Card } from "@/ui/card.ui"
 
 interface Props {
   podcastId: number
@@ -17,7 +16,7 @@ export const ListEpisodes = ({ podcastId, totalEpisodes }: Props) => {
     data: fetchedPages,
     fetchNextPage,
     hasNextPage,
-    isFetchingNextPage,
+    isFetchingNextPage
   } = useInfiniteQuery({
     queryKey: ['podcasts', podcastId, 'episodes'],
     queryFn: ({ pageParam }: { pageParam?: number | null }) => axios.get<PopulatedEpisode[]>(
@@ -42,8 +41,8 @@ export const ListEpisodes = ({ podcastId, totalEpisodes }: Props) => {
   }, [fetchNextPage, isFetchingNextPage, loadMoreInView])
 
   return (
-    <Card className='p-0'>
-      <ul>
+    <>
+      <ul className="flex flex-col gap-4 mt-4">
         {totalEpisodes === 0
           ? <li className="mt-4">Add an RSS Feed to show the episodes</li>
           : (fetchedPages?.pages.map(page => page.data).flat() ?? []).map(episode => (
@@ -56,8 +55,7 @@ export const ListEpisodes = ({ podcastId, totalEpisodes }: Props) => {
           <Loader />
         </div>
       )}
-      {/* <Button variant="outline" className="mt-4" onClick={fetchNextPage} isLoading={isFetchingNextPage}>Load more</Button> */}
-      
-    </Card>
+      {/* <Button variant="outline" className="mt-4" onClick={fetchNextPage} isLoading={isFetchingNextPage}>Load more</Button> */}      
+    </>
   )
 }

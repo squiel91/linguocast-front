@@ -10,7 +10,7 @@ export const Checkbox = ({ checked, onChange: changeHandler, disabled = false }:
   <>
     <div
       className={cn(
-        'w-4 h-4 border-[1px] border-solid border-slate-200 rounded-sm text-primary flex items-center justify-center not-sr-only',
+        'w-4 h-4 border-2 border-solid border-slate-200 rounded-sm text-primary flex items-center justify-center not-sr-only',
         disabled ? 'opacity-50' : '')
       }
     >

@@ -1,7 +1,7 @@
 import { Podcast } from '@/types/types'
 import { getMainDomain, urlSafe } from '@/utils/url.utils'
 import axios from 'axios'
-import { ArrowUpRightIcon, CheckIcon, PenLineIcon, PlusIcon, Share2Icon } from 'lucide-react'
+import { ArrowUpRightIcon, CheckIcon, InfoIcon, LibraryIcon, MessageSquareTextIcon, PenLineIcon, PlusIcon, Share2Icon } from 'lucide-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
@@ -12,9 +12,9 @@ import { ListComments } from '../../../ui/list.comments'
 import { ListEpisodes } from './episodes.view.podcsats'
 import { Breadcrumb } from '@/ui/breadcrumb.ui'
 import { Card } from '@/ui/card.ui'
-import { TabHeader } from '@/ui/tab-header.ui'
 import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
 import { usePageTitle } from '@/utils/document.utils'
+import { Menu } from '@/components/menu'
 
 const ViewPodcast = () => {
   const { podcastId } = useParams()
@@ -60,21 +60,21 @@ const ViewPodcast = () => {
 
   // const updatedSaveCount = (podcast?.savedCount ?? 0) + (hasSaved ? 1 : 0)
   return (
-    <>
-      <Breadcrumb current={podcast?.name ?? ''} />
+    <div className='px-4 lg:px-8'>
+      <Breadcrumb crumbs={[ { to: '/explore', name: 'Explore shows'} ]} current={podcast?.name ?? ''} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-4">
         <img
           src={podcast?.coverImage}
           className='w-full border-[1px] drop-shadow-sm border-solid border-slate-200 rounded-md mb-4 aspect-square bg-cover'
         />
         <div className='col-span-1 lg:col-span-2'>
-          <div className='text-4xl mb-4 font-bold'>{podcast?.name}</div>
+          <h2 className='text-4xl mb-4'>{podcast?.name}</h2>
           <SafeHtmlRenderer
             htmlContent={podcast?.description}
             maxHeight={150}
             className="mt-4"
           />
-          <div className='flex gap-2 items-end mt-4 mb-12'>
+          <div className='flex gap-2 items-end mt-8 mb-4'>
             <Button
               onClick={toggleSaveHandler}
               variant="primary"
@@ -83,24 +83,21 @@ const ViewPodcast = () => {
               {hasSaved ? 'Following' : 'Follow'}
             </Button>
             <Button
-              variant="discrete"
-              className="flex gap-2 items-center"
-              prepend={<Share2Icon size={16} />}
+              variant="outline"
+              prepend={<Share2Icon size={18} />}
             >
               Share
             </Button>
           </div>
-          <TabHeader
-            selectedKey={selectedTabKey}
-            options={[
-              { title: `${podcast?.episodesCount} Episodes`, key:'episodes' },
-              { title: `${podcast?.commentsCount ? `${podcast?.commentsCount} ` : ''}Reviews`, key:'reviews' },
-              { title: 'Info', key:'info' }
+          <Menu
+            underline
+            className='mb-4'
+            items={[
+              { text: 'Episodes', icon: <LibraryIcon size={14} />, onClick: () => setSelectedTabKey('episodes'), selected: selectedTabKey === 'episodes' },
+              { text: 'Reviews', icon: <MessageSquareTextIcon size={14} /> , onClick: () => setSelectedTabKey('reviews'), selected: selectedTabKey === 'reviews' },
+              { text: 'Info', icon: <InfoIcon size={14} />, onClick: () => setSelectedTabKey('info'), selected: selectedTabKey === 'info' }
             ]}
-            onChange={(key) => setSelectedTabKey(key)}
-            className="mb-4"
           />
-
           {selectedTabKey === 'episodes' && podcast && (
             <ListEpisodes podcastId={podcast.id} totalEpisodes={podcast.episodesCount} />
           )}
@@ -108,7 +105,7 @@ const ViewPodcast = () => {
             <ListComments resourceType='podcasts' resourceId={+podcastId!} />
           )}
           {selectedTabKey === 'info' && (
-            <Card className='mt-4'>
+            <Card>
               <table className='text-sm w-full'>
                 <tbody>
                   <tr className='border-b-2 border-solid border-slate-100'>
@@ -154,7 +151,7 @@ const ViewPodcast = () => {
                     </tr>
                   )}
                 </tbody>
-                <ul className='flex flex-wrap gap-2 items-start my-8'>
+                <ul className='flex flex-wrap gap-2 items-start mt-4'>
                   {podcast?.links?.map(link => (
                     <li key={link}>
                       <a href={link} target='_blank' title={link} className='flex bg-slate-200 font-bold px-3 py-2 rounded-full relative gap-1 items-center capitalize'>
@@ -178,7 +175,7 @@ const ViewPodcast = () => {
           </Link>
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

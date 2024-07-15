@@ -1,7 +1,6 @@
 import { ReviewWordsModal } from "@/components/review-words-modal"
 import { WordViewer } from "@/components/word-viewer"
 import { Word } from "@/types/types"
-import { Breadcrumb } from "@/ui/breadcrumb.ui"
 import { Button } from "@/ui/button.ui"
 import { Card } from "@/ui/card.ui"
 import { Input } from "@/ui/input.ui"
@@ -9,7 +8,7 @@ import { Loader } from "@/ui/loader.ui"
 import { daySinceEpoche } from "@/utils/date.utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import { BrainIcon, PartyPopperIcon, SearchIcon } from "lucide-react"
+import { BookOpenCheckIcon, PartyPopperIcon, SearchIcon } from "lucide-react"
 import { useState } from "react"
 
 const WordCorner = () => {
@@ -32,18 +31,19 @@ const WordCorner = () => {
     : savedWords
 
   return (
-    <>
-      <Breadcrumb current="Vocabulary Corner" />
-      <div className="flex justify-between items-center mb-4">
-        <h1 className="text-3xl font-bold">Vocabulary Corner</h1>
+    <div className='mt-8 px-4 lg:px-8'>
+      <div className='flex justify-between items-center mb-8 flex-wrap gap-4'>
+        <h2 className='text-3xl'>
+          Vocabulary Corner
+        </h2>
         {reviewDue.length > 0
           ? (
-          <Button
-            onClick={() => setIsReviewModalOpen(true)}
-            prepend={<BrainIcon size={16} />}
-          >
-            Review words ({reviewDue.length} due)
-          </Button>
+            <Button
+              prepend={<BookOpenCheckIcon size={18} />}
+              onClick={() => setIsReviewModalOpen(true)}
+            >
+              Review ({reviewDue.length} due)
+            </Button>
           )
           : (
             <div className="flex items-center gap-4">
@@ -52,40 +52,46 @@ const WordCorner = () => {
             </div>
           )
         }
-        
       </div>
-      <Input
-        name="vocabulary-corner-search"
-        value={q}
-        onChange={setQ}
-        placeholder="Search a word in your corner"
-        prepend={<SearchIcon size={16} />}
-        className="mb-8"
-        noAutocoplete
-      />
-      {isPending
-        ? <Loader />
-        : filteredSavedWords!.length === 0
-          ? 'No words yet. Go listen and catch some challenging words.'
-          : (
-            <ul className="grid grid-cols-4 gap-8">
-              {filteredSavedWords!.map(word => (
-                <li>
-                  <Card>
-                    <WordViewer word={word} />
-                  </Card>
-                </li>
-              ))}
-            </ul>
-          )
-      }
+      <div className='grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-8 '>
+        <div>
+          <div className='flex flex-col gap-4 sticky top-4'>
+            <Input
+              name="vocabulary-search"
+              value={q}
+              onChange={setQ}
+              placeholder="Search..."
+              prepend={<SearchIcon size={16} />}
+              noAutocoplete
+            />
+          </div>
+        </div>
+        <div className='lg:col-span-3'>
+          {isPending
+            ? <Loader />
+            : filteredSavedWords!.length === 0
+              ? 'No words yet. Go listen and catch some challenging words.'
+              : (
+                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                  {filteredSavedWords!.map(word => (
+                    <li>
+                      <Card>
+                        <WordViewer word={word} />
+                      </Card>
+                    </li>
+                  ))}
+                </ul>
+              )
+          }
+        </div>
+      </div>
       <ReviewWordsModal
         words={reviewDue}
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
         onWordRevied={reviewedId => setReviewedWordIds(ids => [...ids, reviewedId])}
       />
-    </>
+    </div>
   )
 }
 

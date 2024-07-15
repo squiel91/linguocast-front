@@ -2,6 +2,52 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Table Styles */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+}
+
+/* Header Styles */
+thead {
+  background-color: #f2f2f2;
+}
+
+th {
+  padding: 16px;
+  text-align: left;
+  font-weight: bold;
+  border-bottom: 2px solid #ddd;
+}
+
+/* Cell Styles */
+td {
+  padding: 16px;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Alternate Row Background */
+tr:nth-child(even) {
+  background-color: #f9f9f9;
+}
+
+/* Hover Effect */
+tbody tr:hover {
+  background-color: #f5f5f5;
+}
+
+/* Responsive Design */
+@media screen and (max-width: 600px) {
+  table {
+      font-size: 14px;
+  }
+  
+  th, td {
+      padding: 8px;
+  }
+}
+
 @layer utilities {
   .scrollbar::-webkit-scrollbar {
     width: 8px;
@@ -20,10 +66,6 @@
   .scrollbar::-webkit-scrollbar-thumb:hover {
     background: gray;
   }
-}
-
-section {
-  margin: 40px 0;
 }
 
 .gradient-overlay {
@@ -84,7 +126,6 @@ input[type="range"]::-webkit-slider-thumb {
   cursor: pointer;
   transition: scale .2s ease-in;
 }
-
 
 input[type="range"]::-webkit-slider-thumb:hover {
   scale: 1.5;

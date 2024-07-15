@@ -82,7 +82,7 @@ export const EditWord = ({
             </ul>
           </div>
         )}
-        {!selectedWordSearchResult && 'No word selected'}
+        {!selectedWordSearchResult && <div className="italic mt-4 text-sm">No word selected</div>}
         {selectedWordSearchResult && (
           <div className="mt-4">
             <div className="text-sm mb-2">Preview</div>
@@ -91,7 +91,7 @@ export const EditWord = ({
                 <div className="text-2xl font-bold">{selectedWordSearchResult.word}</div>
                 <div className="flex-grow">{selectedWordSearchResult.pronunciation}</div>
                 <button className="bg-orange-200 rounded-full px-4 py-2 text-sm font-bold opacity-50 " disabled
-                >Save</button>
+                >Save emeddeds</button>
               </div>
               <ul className="mt-2 flex gap-2 flex-wrap text-sm">
                 {selectedWordSearchResult.translations.map((sameMeaning, index) => (

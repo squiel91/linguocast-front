@@ -1,6 +1,5 @@
 import { PrivateUser, PublicUser } from "@/types/types"
 import { Avatar } from "@/ui/avatar.ui"
-import { Breadcrumb } from "@/ui/breadcrumb.ui"
 import { Button } from "@/ui/button.ui"
 import { Loader } from "@/ui/loader.ui"
 import { readableDate } from "@/utils/date.utils"
@@ -21,12 +20,11 @@ const ViewUser = () => {
   if (!user) return <Loader />
   
   return (
-    <>
-      <Breadcrumb current={user.name ?? 'User'} />
-      <div className="flex gap-8 items-center">
-        <Avatar avatarUrl={user.avatar} className="w-36" />
+    <div className="container">
+      <div className="grid grid-cols-3 gap-8 py-8">
+        <Avatar avatarUrl={user.avatar} className="w-full" />
         <div>
-          <h1 className="text-4xl font-bold">{user.name}</h1>
+          <h1 className="text-4xl pb-8">{user.name}</h1>
           {!('createdAt' in user)
             ? (
               <div className="flex items-center gap-2 mt-2 text-gray-400">
@@ -48,7 +46,7 @@ const ViewUser = () => {
           }
         </div>
       </div>
-    </>
+    </div>
   )
 }
 

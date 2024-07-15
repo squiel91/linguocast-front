@@ -14,6 +14,7 @@ interface Auth {
   logoutHandler: () => void 
   openLoginHandler: (isOpen: boolean) => void
   openRegisterHandler: (isOpen: boolean) => void
+  modifyUser: (newUser: SelfUser) => void
 }
 
 interface Props {
@@ -28,7 +29,8 @@ export const AuthContext = createContext<Auth>({
   loginHandler: () => console.info('loginHandler'),
   logoutHandler: () => console.info('Token set'),
   openLoginHandler: () => console.info('openLoginHandler'),
-  openRegisterHandler: () => console.info('openRegisterHandler')
+  openRegisterHandler: () => console.info('openRegisterHandler'),
+  modifyUser: () => console.info('modifyUser')
 })
 
 export const AuthContextWrapper = ({ children }: Props) => {
@@ -39,7 +41,7 @@ export const AuthContextWrapper = ({ children }: Props) => {
 
   const { data: retrivedUser } = useQuery({
     queryKey: ['user'],
-    enabled: token ? true : false,
+    enabled: !user && !!token,
     queryFn: () => axios.get<SelfUser>('/api/user').then(res => res.data)
   })
 
@@ -63,6 +65,7 @@ export const AuthContextWrapper = ({ children }: Props) => {
       },
       openLoginHandler: (isOpen) => setIsLoginOpen(isOpen),
       openRegisterHandler: (isOpen) => setIsRegisterOpen(isOpen),
+      modifyUser: (newUser) => setUser(newUser)
     }}>
       {children}
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />

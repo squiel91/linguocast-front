@@ -12,7 +12,6 @@ import axios from "axios"
 import { useState } from "react"
 import { Link } from "react-router-dom"
 import { Card } from "./card.ui"
-import { SendHorizonalIcon } from "lucide-react"
 
 interface Props {
   resourceType: 'podcasts' | 'episodes',
@@ -56,43 +55,44 @@ export const ListComments = ({ resourceType, resourceId }: Props) => {
 
   const comments = [...justAddedComments, ...(serverComments ?? [])]
   return (
-    <Card className='p-0'>
+    <>
       { isFetching && <div className="p-4  pb-0"><Loader /> Loading {resource}...</div> }
       { !error && comments && (
         <>
-          {comments.length === 0
-            ? <p className="p-4 pb-0">No {resourceType} yet. Be the first one to write one!</p>
-            : (
-              <ul className="flex flex-col">
+          {comments.length > 0 &&
+            (
+              <ul className="flex flex-col gap-4">
                 {comments.map(({ id, authorId, authorAvatar, authorName, content, createdAt }) => (
-                  <li className="p-4 border-b-[1px]" key={id}>
-                    {content}
-                    <div className="flex gap-3 items-center mt-4">
-                      <Avatar avatarUrl={authorAvatar} className="w-10 h-10" />
-                      <div className="text-sm">By <Link to={`/users/${authorId}/${urlSafe(authorName)}`} className="font-bold text-primary">{authorName}</Link> on {readableDate(createdAt)}</div>
-                    </div>
+                  <li key={id}>
+                    <Card>
+                      {content}
+                      <div className="flex gap-3 items-center mt-4">
+                        <Avatar avatarUrl={authorAvatar} className="w-10 h-10" />
+                        <div className="text-sm">By <Link to={`/users/${authorId}/${urlSafe(authorName)}`} className="font-bold text-primary">{authorName}</Link> on {readableDate(createdAt)}</div>
+                      </div>
+                    </Card>
                   </li>
                 ))}
               </ul>
             )}
         </>
       )}
-      <div className="p-4">
+      <Card className="mt-4 border-slate-800 border-[3px]">
+        <div className="mb-2">{comments.length === 0 ? `No ${resource} yet. Be the first one to write one!` : 'Add your own review!'}</div>
         <Textarea value={content} onChange={(content) => setContent(content)} minRows={3} />
         <div className='rounded-md text-sm flex flex-col md:flex-row gap-4 md:items-center'>
           <Button
             onClick={saveCommentHandler}
             disabled={(content ?? '').length === 0}
             isLoading={savingComment}
-            append={<SendHorizonalIcon size={16} />}
           >
-            Send
+            Submit
           </Button>
           <p className='text-sm'>
-            Remember to follow the <ForwardLink to="/contributions" target='_blank'>contributions guide</ForwardLink>
+            Remember to follow the <ForwardLink to="/contributions" target='_blank'>code of conduct</ForwardLink>
           </p>
         </div>
-      </div>
-    </Card>
+      </Card>
+    </>
   )
 }

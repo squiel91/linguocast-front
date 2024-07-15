@@ -15,7 +15,7 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Aleo:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Figtree:ital,wght@0,300..900;1,300..900&display=swap" rel="stylesheet">
     <script>
       // if ('serviceWorker' in navigator) {
       //   navigator.serviceWorker.register('/service-worker.js')
@@ -26,18 +26,36 @@
       //       console.log('Service Worker registration failed:', error);
       //     });
       // }
+
+      // Microsoft Clarity
+      (function(c,l,a,r,i,t,y){
+          c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+          t=l.createElement(r);t.async=1;t.src='https://www.clarity.ms/tag/'+i;
+          y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+      })(window, document, 'clarity', 'script', 'n56mepnk8b');
     </script>
     <style>
+      @font-face {
+        font-family: 'Platform';
+        src: url('/fonts/platform-medium.ttf') format('truetype');
+        font-weight: normal;
+        font-style: normal;
+      }
+
       body {
-        font-family: "Aleo", serif;
+        font-family: "Figtree", sans-serif;
         max-width: 100vw;
         overflow-x: hidden;
       }
+      
+      h1, h2 {
+        font-family: "Platform", sans-serif;
+      }
 
       
-      .swiper-horizontal {
+      /* .swiper-horizontal {
         overflow: visible !important;
-      }
+      } */
     </style>
   </head>
   <body>

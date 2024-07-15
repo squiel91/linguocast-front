@@ -1,5 +1,9 @@
 import { Loader2Icon } from "lucide-react";
 
-export const Loader = () => (
-  <Loader2Icon className="animate-spin text-slate-400" />
+interface Props {
+  big?: boolean
+}
+
+export const Loader = ({ big = false }: Props) => (
+  <Loader2Icon size={big ? 48 : 24} className="animate-spin text-slate-400" />
 )

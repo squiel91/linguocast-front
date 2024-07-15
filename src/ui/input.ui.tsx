@@ -5,11 +5,12 @@ interface Props {
   name?: string
   value: string | null
   type?: 'text' | 'number' | 'password' | 'email'
-  label?: string
+  label?: ReactNode
   max?: number,
   min?: number
   details?: string
   onChange?: (value: string | null) => void
+  onEnter?: () => void
   placeholder?: string
   disabled?: boolean
   prepend?: ReactNode
@@ -27,6 +28,7 @@ export const Input = ({
   min,
   details,
   onChange: changeHandler,
+  onEnter: enterHandler,
   placeholder,
   disabled = false,
   prepend,
@@ -44,10 +46,14 @@ export const Input = ({
       <input
         autoComplete={noAutocoplete ? 'off' : 'on'}
         className={cn(
-          'p-4 py-2 w-full border-[1px] border-solid border-slate-200 rounded-md',
+          'p-4 py-2 w-full border-2 border-solid border-slate-200 rounded-md',
           prepend ? 'pl-9' : '',
-          append ? 'pr-9' : ''
+          append ? 'pr-9' : '',
+          disabled ? 'opacity-60' : ''
         )}
+        onKeyDown={(event) => {
+          if (event.key === 'Enter') enterHandler?.()
+        }}
         name={name}
         max={max}
         min={min}

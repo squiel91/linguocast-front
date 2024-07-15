@@ -182,11 +182,11 @@ export const PlayerContextWrapper = () => {
                 <div className="flex gap-8 items-center">
                   <img
                     className="w-14 h-14 aspect-square rounded-md border-2 border-slate-200"
-                    src={currentEpisode?.image || currentEpisode?.belongsTo.coverImage || noImage}
+                    src={currentEpisode?.image || currentEpisode?.podcast.coverImage || noImage}
                   />
                   <div>
                     <h1 className="text-xl font-bold line-clamp-1">{currentEpisode?.title}</h1>
-                    <h2 className="text-lg">{currentEpisode?.belongsTo.name}</h2>
+                    <h2 className="text-lg">{currentEpisode?.podcast.name}</h2>
                   </div>
                 </div>
               </div>
@@ -195,7 +195,7 @@ export const PlayerContextWrapper = () => {
                   transcript={currentEpisode.transcript}
                   currentTime={currentTime}
                   onTimeChangeRequest={changeTime}
-                  language={currentEpisode.belongsTo.targetLanguage}
+                  language={currentEpisode.podcast.targetLanguage}
                   embedded={<ViewEmbeddedMinimized onExpectedNavigation={() => setIsPlayerExpanded(false)} embedded={currentEmbedded} />}
                 />
               )}
@@ -238,11 +238,11 @@ export const PlayerContextWrapper = () => {
                     <div className="flex gap-4 flex-grow">
                       <img
                         className="w-12 h-12 rounded-md border-2 border-slate-200"
-                        src={currentEpisode.image|| currentEpisode.belongsTo.coverImage || noImage}
+                        src={currentEpisode.image|| currentEpisode.podcast.coverImage || noImage}
                       />
                       <div>
                         <div className="font-bold line-clamp-1">{currentEpisode?.title}</div>
-                        <div className="text-sm line-clamp-1">{currentEpisode.belongsTo.name}</div>
+                        <div className="text-sm line-clamp-1">{currentEpisode.podcast.name}</div>
                       </div>
                     </div>
                     <div className="flex gap-2 items-center">

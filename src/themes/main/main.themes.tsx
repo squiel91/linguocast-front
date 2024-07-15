@@ -1,72 +1,159 @@
-import { Link, Outlet, useLocation, useParams } from "react-router-dom"
+import { Link, Outlet, useLocation, useNavigate, useParams } from "react-router-dom"
 import { Button } from "../../ui/button.ui"
-import { Footer } from "./footer.themes"
 import linguocastLogo from '@/assets/linguocast-logo.svg' 
+import linguocastCreatorsLogo from '@/assets/linguocast--creators-logo.svg' 
 import { useAuth } from "../../auth/auth.context"
-import { PencilIcon, UserPlusIcon } from "lucide-react"
+import { BellIcon, CrownIcon, DoorOpenIcon, GraduationCapIcon, HelpCircleIcon, MicIcon, PencilIcon } from "lucide-react"
 import { Avatar } from "@/ui/avatar.ui"
-import { useEffect, useState } from "react"
+import { Menu } from "@/components/menu"
+import { cn } from "@/utils/styles.utils"
+import { useQueries } from "@tanstack/react-query"
+import axios from "axios"
+import { Podcast, PopulatedEpisode } from "@/types/types"
 
 const MainTheme = () => {
   const {
     isLoggedIn,
     user,
-    openRegisterHandler,
-    openLoginHandler
+    openRegisterHandler
   } = useAuth()
 
   const location = useLocation()
-  const { episodeId } = useParams()
+  const navigate = useNavigate()
 
-  const [isVistingViewEpisode, setIsVistingViewEpisode] = useState(false)
+  const { episodeId, podcastId } = useParams()
 
-  useEffect(() => {
-    setIsVistingViewEpisode(location.pathname.startsWith('/episodes/'))
-  }, [location.pathname])
+  const [
+    { data: podcast },
+    { data: episode }
+  ] = useQueries({
+    queries: [
+      {
+        enabled: !!podcastId,
+        queryKey: ['podcasts', podcastId ? +podcastId : null],
+        queryFn: () => axios.get<Podcast>(`/api/podcasts/${podcastId!}`)
+          .then(res => res.data)
+      },
+      {
+        enabled: !!episodeId,
+        queryKey: ['episodes', episodeId ? +episodeId : null],
+        queryFn: () => axios.get<PopulatedEpisode>(`/api/episodes/${episodeId}`)
+          .then(res => res.data)
+      }
+    ]
+  })
+
+  const mainMenuItems = [
+    { text: 'Feed', link: '/feed', selected: location.pathname.startsWith('/feed')},
+    { text: 'Vocabulary Corner', link: '/vocabulary', selected: location.pathname.startsWith('/vocabulary') },
+    { text: 'Learning Journey', link: '/journey', selected: location.pathname.startsWith('/journey') },
+    { text: 'Explore Shows', link: '/explore', selected: location.pathname.startsWith('/explore') }
+  ]
+
+  const creatorMenuItems = [
+    { text: 'Podcasts', link: '/creators/podcasts', selected: location.pathname.startsWith('/creators/podcasts')},
+    { text: 'Earnings', link: '/creators/earnings', selected: location.pathname.startsWith('/creators/earnings') }
+  ]
+
+  const isCreatorsMode = location.pathname.startsWith('/creators')
+  const isCreatorsLanding = location.pathname === '/creators'
+
+  if (!isCreatorsLanding  && isCreatorsMode && (!isLoggedIn || (user && !user.isCreator))) navigate('/creators')
 
   return (
     <>
-      {user?.isAdmin && isVistingViewEpisode && (
-        <div className="bg-slate-900 py-2">
-          <div className="container text-slate-100">
-            <Link to={`/creators/episodes/${episodeId}`}>
-              <button className="bg-slate-800 rounded-lg py-1 px-4 flex gap-2 items-center">
-                <PencilIcon size={14} />
-                Edit episode
-              </button>
-            </Link>
-          </div>
+      {(!!user?.isAdmin || user?.isCreator) && !isCreatorsMode && (
+        <div className="bg-slate-900 px-4 flex justify-between text-white">
+          <Menu forCreators items={[
+            ...((podcast && podcast.creatorId === user.id)
+              ? [{
+                text: 'Manage podcast',
+                link: `/creators/podcasts/${podcastId}/overview`,
+                icon: <PencilIcon size={18} />
+              }]
+              : []
+            ),
+            ...((episode && episode.podcast.creatorId === user.id)
+              ? [{
+                text: 'Manage episode',
+                link: `/creators/podcasts/${episode.podcast.id}/episodes/${episodeId}/overview`,
+                icon: <PencilIcon size={18} />
+              }]
+              : []
+            )
+          ]} />
+          <Menu forCreators items={[
+            {
+              text: 'Creators mode',
+              link: '/creators/podcasts',
+              icon: <MicIcon size={18} />
+            }
+          ]} />
         </div>
       )}
-      <nav className="container flex justify-between flex-wrap pt-4 items-center gap-4">
-        <img src={linguocastLogo} className='w-40 md:w-56' />
-        {isLoggedIn
-          ? <div className="flex items-center gap-3">
-              <span className="hidden md:inline">{user && `Hey ${user.name}!`}</span>
-              <Link to="/profile">
-                <Avatar className="w-10 md:w-12" avatarUrl={user?.avatar} />
-              </Link>
-            </div>
-          : (
-            <div className='flex gap-2'>
+      <div className={cn('border-b-[1px]', isCreatorsMode ? 'border-b-slate-600' : 'border-b-slate-300')}>
+        <nav className={cn('px-6 flex justify-between flex-wrap py-4 items-center gap-4', isCreatorsMode ? 'bg-slate-900 text-white' : 'text-slate-800')}>
+          {isCreatorsMode
+            ? <img src={linguocastCreatorsLogo} className='w-40 md:w-40' />
+            : <img src={linguocastLogo} className='w-40 md:w-40' />}
+          {isLoggedIn
+            ? <div className="flex items-center gap-5">
+                <BellIcon strokeWidth={2.5} className="text-slate-400" />
+                <Link to={isCreatorsMode ? '/creators/help' : '/about'}>
+                  <HelpCircleIcon strokeWidth={2.5} />
+                </Link>
+                <Link to={isCreatorsMode ? '/creators/profile' : '/profile'}>
+                  <Avatar className="w-10" avatarUrl={user?.avatar} />
+                </Link>
+              </div>
+            : (
               <Button
-                variant='discrete'
-                onClick={() => openLoginHandler(true)}
+                compact
+                variant="outline"
+                prepend={<DoorOpenIcon size={18} />}
+                onClick={() => openRegisterHandler(true)}
               >
-                Login
+                Access
               </Button>
-              <Button onClick={() => openRegisterHandler(true)}>
-                <div className='flex gap-2 items-center px-2'>
-                  <UserPlusIcon size={18} />Join</div>
-                </Button>
-            </div>
+            )
+          }
+        </nav>
+      </div>
+      <div className={cn('border-b-2 px-6 border-b-slate-200 flex justify-between items-center w-full flex-wrap', isCreatorsMode ? 'bg-slate-900' : '')}>
+        {isCreatorsMode
+          ? (
+            <>
+              <Menu forCreators items={creatorMenuItems} />
+              <Menu forCreators
+                items={[
+                  {
+                    text: 'Learner mode',
+                    link: '/feed',
+                    icon: <GraduationCapIcon size={20} />
+                  }
+                ]}
+              />
+            </>
           )
-        }
-      </nav>
-      <main className='container mb-24'>
+          : (
+            <>
+              <Menu items={mainMenuItems} />
+              <Menu
+                items={[
+                  {
+                    text: 'Try Premium',
+                    link: '/premium',
+                    icon: <CrownIcon size={20} />,
+                    selected: location.pathname.startsWith('/premium')
+                  }
+                ]}
+              />
+            </>
+          )}
+      </div>
+      <main className='mb-24'>
         <Outlet />
       </main>
-      <Footer />
     </>
   )
 }

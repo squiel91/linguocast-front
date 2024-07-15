@@ -4,25 +4,30 @@ interface QuestionAndTiming {
   duration?: number
 }
 
+interface ResponsesCount {
+  responsesCount?: number
+  correctCount?: number
+}
+
 // Editions
 interface OptionalId {
   // Creations does not have an Id yet
   id?: number
 }
 
-export interface IEditMultipleChoiceExercise  extends OptionalId, QuestionAndTiming {
+export interface IEditMultipleChoiceExercise  extends OptionalId, QuestionAndTiming, ResponsesCount {
   type: 'multiple-choice'
   correctChoice: string
   incorrectChoices: string[]
 }
 
-export interface IEditSelectMultipleExercise  extends OptionalId, QuestionAndTiming {
+export interface IEditSelectMultipleExercise  extends OptionalId, QuestionAndTiming, ResponsesCount {
   type: 'select-multiple'
   correctChoices: string[]
   incorrectChoices: string[]
 }
 
-export interface IEditFreeResponseExercise extends OptionalId, QuestionAndTiming {
+export interface IEditFreeResponseExercise extends OptionalId, QuestionAndTiming, ResponsesCount {
   type: 'free-response'
   response: string
 }
@@ -32,6 +37,15 @@ export type IEditExercise =
   | IEditSelectMultipleExercise
   | IEditFreeResponseExercise
 
+export interface ExerciseResponse {
+  score: number
+  response: string | number[] | number
+  feedback?: string
+  createdAt: string
+  userId: number
+  userName: string
+  userAvatar: string | null
+}
 // Views
 interface IdAndPartialResponse extends QuestionAndTiming {
   id: number
