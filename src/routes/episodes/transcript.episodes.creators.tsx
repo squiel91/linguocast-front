@@ -7,11 +7,6 @@ import { InfoIcon, RotateCcw, SaveIcon, SparklesIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { useParams } from "react-router-dom"
 
-interface TranscriptMutateData {
-  transcript?: string
-  autogenerate?: true
-}
-
 export const EpisodeTranscript = () => {
   const { episodeId: rawEpisodeId } = useParams()
   const episodeId = +(rawEpisodeId!)
@@ -25,15 +20,16 @@ export const EpisodeTranscript = () => {
 
   const { mutate: mutateTranscript, isPending: isMutating } = useMutation({
     mutationKey: ['episodes', episodeId, 'transcript'],
-    mutationFn: (data: TranscriptMutateData) => axios.patch(`/api/episodes/${episodeId}/transcript`, data),
+    mutationFn: () => axios.patch(`/api/episodes/${episodeId}`, { transcript }),
     onSuccess: () => alert('Transcript saved!'),
     onError: (error) => {
       console.error(error)
-      alert('There was an error saving the transcript! Please try aagain.')
+      alert('There was an error saving the transcript! Please try again.')
     }
   })
 
   const [transcript, setTranscript] = useState<string | null>(null)
+  const [isAutogenerating, setIsAutogenerating] = useState(false)
 
   useEffect(() => {
     if (!episode) return
@@ -41,11 +37,22 @@ export const EpisodeTranscript = () => {
   }, [episode])
 
   const saveTranscriptHandler = () => {
-    if (transcript) mutateTranscript({ transcript })
+    if (transcript) mutateTranscript()
   }
 
-  const autogenerateTranscriptHandler = () => {
-    mutateTranscript({ autogenerate: true })
+  const autogenerateTranscriptHandler = async () => {
+    try {
+      setIsAutogenerating(true)
+      const { data: { transcript } } = await axios.patch<{ transcript: string }>(
+        `/api/creators/episodes/${episodeId}/transcript/autogenerate`
+      )
+      setTranscript(transcript)
+    } catch (error) {
+      console.error(error)
+      alert('There was an error generating the transcript. Please try again or contact support.')
+    } finally {
+      setIsAutogenerating(false)
+    }
   }
 
   return (
@@ -54,7 +61,7 @@ export const EpisodeTranscript = () => {
         <h2 className="text-3xl">Transcript</h2>
         <Button
           variant="outline"
-          isLoading={isMutating}
+          isLoading={isAutogenerating}
           onClick={autogenerateTranscriptHandler}
           prepend={<SparklesIcon size={16} />}
         >
@@ -69,12 +76,12 @@ export const EpisodeTranscript = () => {
       </p>
         <Textarea
           value={transcript}
-          disabled={isMutating}
+          disabled={isMutating || isAutogenerating}
           onChange={setTranscript}
         />
         <div className="mt-8 flex gap-2">
           <Button
-            isLoading={isMutating}
+            isLoading={isMutating || isAutogenerating}
             disabled={!transcript}
             prepend={<SaveIcon size={16} />}
             onClick={saveTranscriptHandler}
@@ -85,6 +92,7 @@ export const EpisodeTranscript = () => {
             onClick={() => setTranscript(episode?.transcript ?? null)}
             prepend={<RotateCcw />}
             variant="discrete"
+            disabled={isMutating || isAutogenerating}
           >
             Discard changes
           </Button>
