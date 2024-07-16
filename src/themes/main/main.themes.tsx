@@ -3,7 +3,7 @@ import { Button } from "../../ui/button.ui"
 import linguocastLogo from '@/assets/linguocast-logo.svg' 
 import linguocastCreatorsLogo from '@/assets/linguocast--creators-logo.svg' 
 import { useAuth } from "../../auth/auth.context"
-import { BellIcon, CrownIcon, DoorOpenIcon, GraduationCapIcon, HelpCircleIcon, MicIcon, PencilIcon } from "lucide-react"
+import { BellIcon, BookMarkedIcon, CrownIcon, DoorOpenIcon, GraduationCapIcon, HelpCircleIcon, MicIcon, NewspaperIcon, PencilIcon, PieChartIcon, TelescopeIcon } from "lucide-react"
 import { Avatar } from "@/ui/avatar.ui"
 import { Menu } from "@/components/menu"
 import { cn } from "@/utils/styles.utils"
@@ -44,16 +44,17 @@ const MainTheme = () => {
   })
 
   const mainMenuItems = [
-    { text: 'Feed', link: '/feed', selected: location.pathname.startsWith('/feed')},
-    { text: 'Vocabulary Corner', link: '/vocabulary', selected: location.pathname.startsWith('/vocabulary') },
-    { text: 'Learning Journey', link: '/journey', selected: location.pathname.startsWith('/journey') },
-    { text: 'Explore Shows', link: '/explore', selected: location.pathname.startsWith('/explore') }
+    { smText: <NewspaperIcon />, text: 'Feed', link: '/feed', selected: location.pathname.startsWith('/feed')},
+    { smText: <BookMarkedIcon />, text: 'Vocabulary Corner', link: '/vocabulary', selected: location.pathname.startsWith('/vocabulary') },
+    { smText: <PieChartIcon />, text: 'Learning Journey', link: '/journey', selected: location.pathname.startsWith('/journey') },
+    { smText: <TelescopeIcon />, text: 'Explore Shows', link: '/explore', selected: location.pathname.startsWith('/explore') }
   ]
 
   const creatorMenuItems = [
     { text: 'Podcasts', link: '/creators/podcasts', selected: location.pathname.startsWith('/creators/podcasts')},
     { text: 'Earnings', link: '/creators/earnings', selected: location.pathname.startsWith('/creators/earnings') }
   ]
+  
 
   const isCreatorsMode = location.pathname.startsWith('/creators')
   const isCreatorsLanding = location.pathname === '/creators'
@@ -63,39 +64,43 @@ const MainTheme = () => {
   return (
     <>
       {(!!user?.isAdmin || user?.isCreator) && !isCreatorsMode && (
-        <div className="bg-slate-900 px-4 flex justify-between text-white">
-          <Menu forCreators items={[
-            ...((podcast && podcast.creatorId === user.id)
-              ? [{
-                text: 'Manage podcast',
-                link: `/creators/podcasts/${podcastId}/overview`,
-                icon: <PencilIcon size={18} />
-              }]
-              : []
-            ),
-            ...((episode && episode.podcast.creatorId === user.id)
-              ? [{
-                text: 'Manage episode',
-                link: `/creators/podcasts/${episode.podcast.id}/episodes/${episodeId}/overview`,
-                icon: <PencilIcon size={18} />
-              }]
-              : []
-            )
-          ]} />
-          <Menu forCreators items={[
-            {
-              text: 'Creators mode',
-              link: '/creators/podcasts',
-              icon: <MicIcon size={18} />
-            }
-          ]} />
+        <div className="bg-slate-900 text-white">
+          <div className="px-4 flex justify-center gap-2">
+            {((podcast && podcast.creatorId === user.id) || (episode && episode.podcast.creatorId === user.id)) && (
+              <Menu forCreators items={[
+                ...((podcast && podcast.creatorId === user.id)
+                  ? [{
+                    text: 'Manage podcast',
+                    link: `/creators/podcasts/${podcastId}/overview`,
+                    icon: <PencilIcon size={18} />
+                  }]
+                  : []
+                ),
+                ...((episode && episode.podcast.creatorId === user.id)
+                  ? [{
+                    text: 'Manage episode',
+                    link: `/creators/podcasts/${episode.podcast.id}/episodes/${episodeId}/overview`,
+                    icon: <PencilIcon size={18} />
+                  }]
+                  : []
+                )
+              ]} />
+            )}
+            <Menu forCreators items={[
+              {
+                text: 'Creators mode',
+                link: '/creators/podcasts',
+                icon: <MicIcon size={18} />
+              }
+            ]} />
+          </div>
         </div>
       )}
       <div className={cn('border-b-[1px]', isCreatorsMode ? 'border-b-slate-600' : 'border-b-slate-300')}>
-        <nav className={cn('px-6 flex justify-between flex-wrap py-4 items-center gap-4', isCreatorsMode ? 'bg-slate-900 text-white' : 'text-slate-800')}>
+        <nav className={cn('px-4 flex justify-between flex-wrap py-4 items-center gap-4', isCreatorsMode ? 'bg-slate-900 text-white' : 'text-slate-800')}>
           {isCreatorsMode
-            ? <img src={linguocastCreatorsLogo} className='w-40 md:w-40' />
-            : <img src={linguocastLogo} className='w-40 md:w-40' />}
+            ? <img src={linguocastCreatorsLogo} className='w-32 md:w-40' />
+            : <img src={linguocastLogo} className='w-32 md:w-40' />}
           {isLoggedIn
             ? <div className="flex items-center gap-5">
                 <BellIcon strokeWidth={2.5} className="text-slate-400" />
@@ -119,7 +124,7 @@ const MainTheme = () => {
           }
         </nav>
       </div>
-      <div className={cn('border-b-2 px-6 border-b-slate-200 flex justify-between items-center w-full flex-wrap', isCreatorsMode ? 'bg-slate-900' : '')}>
+      <div className={cn('border-b-2 px-4 flex justify-between items-center w-full flex-wrap', isCreatorsMode ? 'bg-slate-900' : '')}>
         {isCreatorsMode
           ? (
             <>
@@ -141,9 +146,14 @@ const MainTheme = () => {
               <Menu
                 items={[
                   {
-                    text: 'Try Premium',
+                    smText: <CrownIcon />,
+                    text: (
+                      <div className="flex gap-2 items-center">
+                        <CrownIcon />
+                        Try Premium
+                      </div>
+                    ),
                     link: '/premium',
-                    icon: <CrownIcon size={20} />,
                     selected: location.pathname.startsWith('/premium')
                   }
                 ]}

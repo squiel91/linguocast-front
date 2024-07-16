@@ -20,7 +20,7 @@ export const EpisodeTranscript = () => {
 
   const { mutate: mutateTranscript, isPending: isMutating } = useMutation({
     mutationKey: ['episodes', episodeId, 'transcript'],
-    mutationFn: () => axios.patch(`/api/episodes/${episodeId}`, { transcript }),
+    mutationFn: () => axios.patch(`/api/creators/episodes/${episodeId}`, { transcript }),
     onSuccess: () => alert('Transcript saved!'),
     onError: (error) => {
       console.error(error)

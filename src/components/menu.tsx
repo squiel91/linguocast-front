@@ -5,7 +5,8 @@ import { ClassNameValue } from "tailwind-merge"
 
 interface Props {
   items: {
-    text: string
+    smText?: ReactNode
+    text: ReactNode
     icon?: ReactNode
     link?: string
     selected?: boolean
@@ -51,14 +52,34 @@ export const Menu = ({ items, underline = false, forCreators, className }: Props
       className
     )}
   >
-    {items.map(({ text, icon, link, onClick: clickHandler, selected = false, disabled = false }, index) => (
+    {items.map(({ smText, text, icon, link, onClick: clickHandler, selected = false, disabled = false }, index) => (
       <li key={index} className={cn('py-1 border-y-4 border-transparent', selected ? 'border-b-4 border-b-primary' : '', disabled ? 'opacity-50 pointer-events-none' : '')}>
         {link ? (
           <Link to={link}>
-            <MenuButton icon={icon} onClick={clickHandler} forCreators={forCreators}>{text}</MenuButton>
+            <MenuButton icon={icon} onClick={clickHandler} forCreators={forCreators}>
+              {smText
+                ? (
+                  <>
+                    <div className="md:hidden">{smText}</div>
+                    <div className="hidden md:inline-block">{text}</div>
+                  </>
+                )
+                : text
+              }
+            </MenuButton>
           </Link>
         ) : (
-          <MenuButton icon={icon} onClick={clickHandler}>{text}</MenuButton>
+          <MenuButton icon={icon} onClick={clickHandler}>
+            {smText
+              ? (
+                <>
+                  <div className="md:hidden">{smText}</div>
+                  <div className="hidden md:inline-block">{text}</div>
+                </>
+              )
+              : text
+            }
+          </MenuButton>
         )}
       </li>
     ))}
