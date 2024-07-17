@@ -1,5 +1,5 @@
 import { Button } from "@/ui/button.ui"
-import { BookmarkIcon, SearchIcon, Trash2Icon } from "lucide-react"
+import { BookmarkIcon, GrabIcon, SearchIcon, Trash2Icon } from "lucide-react"
 import { Embedded, WordEmbedded } from "../types.embededs"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -87,11 +87,16 @@ export const EditWord = ({
           <div className="mt-4">
             <div className="text-sm mb-2">Preview</div>
             <div>
-              <div className="flex gap-2 items-baseline">
+              <div className="flex gap-2 items-baseline mb-4">
                 <div className="text-2xl font-bold">{selectedWordSearchResult.word}</div>
                 <div className="flex-grow">{selectedWordSearchResult.pronunciation}</div>
-                <button className="bg-orange-200 rounded-full px-4 py-2 text-sm font-bold opacity-50 " disabled
-                >Save emeddeds</button>
+                <button
+                  className="bg-orange-200 rounded-full flex gap-2 items-center px-4 py-2 text-sm font-bold opacity-50 "
+                  disabled
+                >
+                  <GrabIcon size={16} />
+                  Grab
+                </button>
               </div>
               <ul className="mt-2 flex gap-2 flex-wrap text-sm">
                 {selectedWordSearchResult.translations.map((sameMeaning, index) => (

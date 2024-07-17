@@ -1,16 +1,42 @@
 import { Word } from "@/types/types"
-import { HashIcon } from "lucide-react"
+import { Dropdown } from "@/ui/dropdown.ui"
+import axios from "axios"
+import { EllipsisVertical, HashIcon, TrashIcon } from "lucide-react"
 
 interface Props {
   word: Word
+  onOptimisticRemove?: () => void
+  onOptimisticRemoveFailed?: () => void
 }
 
-export const WordViewer = ({ word }: Props) => {
+export const WordViewer = ({ word, onOptimisticRemove, onOptimisticRemoveFailed }: Props) => {
   return (
-    <div className="min-w-60 max-w-md ">
+    <div>
       <div className="flex gap-2  mb-4 items-baseline">
         <div className="text-2xl font-bold">{word.word}</div>
         <div className="flex-grow">{word.pronunciation}</div>
+        <Dropdown
+          unformated
+          items={[
+            {
+              title: 'Remove',
+              onClick: async () => {
+                try {
+                  onOptimisticRemove?.()
+                  await axios.delete(`/api/user/words/${word.id}`)
+                } catch (error) {
+                  console.error(error)
+                  alert('There was an error removing the word. Please try again or contact support.')
+                  onOptimisticRemoveFailed?.()
+                }
+              },
+              icon: <TrashIcon size={16} />,
+              unformated: true
+            }
+          ]}
+        >
+          <EllipsisVertical size={18} />
+        </Dropdown>
       </div>
       <ul className="mt-2 flex gap-2 flex-wrap">
         {word.translations.map((sameMeaning, index) => (

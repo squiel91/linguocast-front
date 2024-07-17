@@ -16,6 +16,7 @@ export interface PrivateUser {
 export interface PublicUser extends PrivateUser {
   canOthersContact: boolean
   learning: string
+  variant: string | null
   level: typeof LEVELS[number]
   createdAt: string
 }

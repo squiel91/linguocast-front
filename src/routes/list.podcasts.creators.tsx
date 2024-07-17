@@ -33,7 +33,7 @@ export const CreatorsListPodcasts = () => {
       <div className="mt-8 mb-8 flex justify-between items-center flex-wrap gap-4">
         <h1 className="text-4xl">My Podcasts</h1>
         <Link to="/creators/podcasts/source">
-          <Button prepend={<PlusIcon size={20} strokeWidth={2.5} />} >New podcast</Button>
+          <Button prepend={<PlusIcon size={20} strokeWidth={2.5} />} >Add new</Button>
         </Link>
       </div>
       {isPending && (

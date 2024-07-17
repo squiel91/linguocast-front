@@ -1,6 +1,6 @@
 import { useAuth } from "@/auth/auth.context"
+import { LANGUAGES } from "@/constants/languages.constants"
 import { LEVELS } from "@/constants/levels.constants"
-import { Language } from "@/types/types"
 import { Button } from "@/ui/button.ui"
 import { ImageUploader } from "@/ui/image-uploader"
 import { Input } from "@/ui/input.ui"
@@ -10,7 +10,7 @@ import { Switch } from "@/ui/switch.ui"
 import { readableDate } from "@/utils/date.utils"
 import { capitalize } from "@/utils/text.utils"
 import { urlSafe } from "@/utils/url.utils"
-import { useMutation, useQuery } from "@tanstack/react-query"
+import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
 import { AlertCircleIcon, GlobeIcon, LogOut, RotateCcwIcon } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
@@ -24,12 +24,6 @@ const Profile = () => {
   useEffect(() => {
     if (!isLoggedIn && navigate) navigate('/explore')
   }, [isLoggedIn, navigate])
-
-
-  const { data: languages, isFetching: isFetchingLanguages } = useQuery({
-    queryKey: ['languages'],
-    queryFn: () => axios.get<Language[]>('/api/languages').then(res => res.data)
-  })
 
   const {
     mutate: mutateUser,
@@ -48,6 +42,7 @@ const Profile = () => {
   const [email, setEmail] = useState<string | null>(null)
   const [avatar, setAvatar] = useState<string | null>(null)
   const [learning, setLearning] = useState<string | null>(null)
+  const [variant, setVariant] = useState<string | null>(null)
   const [level, setLevel] = useState<string | null>(null)
   const [isProfilePrivate, setIsProfilePrivate] = useState<boolean | null>(null)
   const [canOthersContact, setCanOthersContact] = useState<boolean | null>(null)
@@ -60,6 +55,7 @@ const Profile = () => {
     setName(userProfile.name)
     setEmail(userProfile.email)
     setLearning(userProfile.learning)
+    setVariant(userProfile.variant)
     setLevel(userProfile.level ?? null)
     setIsProfilePrivate(!!userProfile.isProfilePrivate)
     setCanOthersContact(!!userProfile.canOthersContact)
@@ -84,6 +80,7 @@ const Profile = () => {
       avatar,
       level,
       learning,
+      variant,
       isProfilePrivate,
       canOthersContact
     })
@@ -136,15 +133,20 @@ const Profile = () => {
             <>
               <Select
                 label="Studying"
-                value={learning}
-                disabled={isFetchingLanguages || isSaving}
+                value={LANGUAGES.find(({ code, variant: v }) => code === learning && v === variant)?.id.toString() ?? null}
+                disabled={isSaving}
                 options={[
                   { value: null, text: '', selectable: false },
-                  ...(languages?.map(({ name }) => {
-                    return ({ value: name, text: capitalize(name), append: <img src={`/flags/${name}.svg`} /> })
+                  ...(LANGUAGES?.map(({ id, name, code }) => {
+                    return ({ value: `${id}`, text: name, append: <img src={`/flags/${code + (variant ? `-${variant}` : '')}.svg`} /> })
                   }) ?? [])
                 ]}
-                onChange={languageCode => setLearning(languageCode)}
+                onChange={languageId => {
+                  if (!languageId) return // this case wont happen
+                  const { code, variant } = LANGUAGES.find(({ id }) => id === +languageId)!
+                  setLearning(code)
+                  setVariant(variant)
+                }}
               />
               <Select
                 label="Current Level"

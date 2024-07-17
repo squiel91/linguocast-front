@@ -63,9 +63,9 @@ const MainTheme = () => {
 
   return (
     <>
-      {(!!user?.isAdmin || user?.isCreator) && !isCreatorsMode && (
+      {(!!user?.isAdmin || !!user?.isCreator) && !isCreatorsMode && (
         <div className="bg-slate-900 text-white">
-          <div className="px-4 flex justify-center gap-2">
+          <div className="px-4 md:px-8 flex justify-center gap-2">
             {((podcast && podcast.creatorId === user.id) || (episode && episode.podcast.creatorId === user.id)) && (
               <Menu forCreators items={[
                 ...((podcast && podcast.creatorId === user.id)
@@ -97,7 +97,7 @@ const MainTheme = () => {
         </div>
       )}
       <div className={cn('border-b-[1px]', isCreatorsMode ? 'border-b-slate-600' : 'border-b-slate-300')}>
-        <nav className={cn('px-4 flex justify-between flex-wrap py-4 items-center gap-4', isCreatorsMode ? 'bg-slate-900 text-white' : 'text-slate-800')}>
+        <nav className={cn('px-4 md:px-8 flex justify-between flex-wrap py-4 items-center gap-4', isCreatorsMode ? 'bg-slate-900 text-white' : 'text-slate-800')}>
           {isCreatorsMode
             ? <img src={linguocastCreatorsLogo} className='w-32 md:w-40' />
             : <img src={linguocastLogo} className='w-32 md:w-40' />}
@@ -124,7 +124,7 @@ const MainTheme = () => {
           }
         </nav>
       </div>
-      <div className={cn('border-b-2 px-4 flex justify-between items-center w-full flex-wrap', isCreatorsMode ? 'bg-slate-900' : '')}>
+      <div className={cn('border-b-2 px-4 md:px-8 flex justify-between items-center w-full flex-wrap', isCreatorsMode ? 'bg-slate-900' : '')}>
         {isCreatorsMode
           ? (
             <>
@@ -132,9 +132,14 @@ const MainTheme = () => {
               <Menu forCreators
                 items={[
                   {
-                    text: 'Learner mode',
-                    link: '/feed',
-                    icon: <GraduationCapIcon size={20} />
+                    smText: <GraduationCapIcon />,
+                    text: (
+                      <div className="flex gap-2 items-center">
+                        <GraduationCapIcon />
+                        Learner mode
+                      </div>
+                    ),
+                    link: '/feed'
                   }
                 ]}
               />

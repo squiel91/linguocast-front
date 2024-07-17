@@ -8,12 +8,12 @@ import { useAuth } from "@/auth/auth.context"
 import Dialog from "@/ui/dialog.ui"
 import { ArrowLeftIcon, ArrowRightIcon, EyeIcon, EyeOffIcon, MailIcon } from "lucide-react"
 import { Select } from "@/ui/select.ui"
-import { Language, Level, SelfUser } from "@/types/types"
-import { useQuery } from "@tanstack/react-query"
+import { Level, SelfUser } from "@/types/types"
 import { capitalize } from "@/utils/text.utils"
 import { useNavigate } from "react-router-dom"
 import { LEVELS } from "@/constants/levels.constants"
 import logo from '@/assets/logo.svg'
+import { LANGUAGES } from "@/constants/languages.constants"
 
 interface Props {
   isOpen: boolean
@@ -24,16 +24,12 @@ export const RegisterModal = ({ isOpen, onClose: closeHandlerExternal }: Props) 
   const navigate = useNavigate()
   const { openRegisterHandler, openLoginHandler, loginHandler: loginAuthHandler } = useAuth()
 
-  const { data: languages, isFetching: isFetchingLanguages } = useQuery({
-    queryKey: ['languages'],
-    queryFn: () => axios.get<Language[]>('/api/languages').then(res => res.data)
-  })
-
   const [stage, setStage] = useState(0)
   const [email, setEmail] = useState<string | null>(null)
   const [name, setName] = useState<string | null>(null)
   const [loginUserName, setLoginUserName] = useState<string | null>(null)
   const [learning, setLearning] = useState<string | null>(null)
+  const [variant, setVariant] = useState<string | null>(null)
   const [level, setLevel] = useState<Level | null>(null)
   const [password, setPassword] = useState<string | null>(null)
   const [revelePassword, setRevelePassword] = useState(false)
@@ -44,7 +40,7 @@ export const RegisterModal = ({ isOpen, onClose: closeHandlerExternal }: Props) 
     try {
       setIsLoading(true)
       const { data: { token, user } } = await axios.post<{ token: string, user: SelfUser }>('/api/users', {
-        email, name, password, learning
+        email, name, password, learning, variant, level
       })
       loginAuthHandler(user, token)
       openRegisterHandler(false)
@@ -186,15 +182,20 @@ export const RegisterModal = ({ isOpen, onClose: closeHandlerExternal }: Props) 
             <div className="flex flex-col gap-4 w-full">
               <Select
                 label="Studying"
-                value={learning}
-                disabled={isFetchingLanguages || isLoading}
+                value={LANGUAGES.find(({ code, variant: v }) => code === learning && v === variant)?.id.toString() ?? null}
+                disabled={isLoading}
                 options={[
-                  { value: null, text: '- Select a language -', selectable: false },
-                  ...(languages?.map(({ name }) => {
-                    return ({ value: name, text: capitalize(name), append: <img src={`/flags/${name}.svg`} /> })
+                  { value: null, text: '', selectable: false },
+                  ...(LANGUAGES?.map(({ id, name, code }) => {
+                    return ({ value: `${id}`, text: name, append: <img src={`/flags/${code + (variant ? `-${variant}` : '')}.svg`} /> })
                   }) ?? [])
                 ]}
-                onChange={setLearning}
+                onChange={languageId => {
+                  if (!languageId) return // this case wont happen
+                  const { code, variant } = LANGUAGES.find(({ id }) => id === +languageId)!
+                  setLearning(code)
+                  setVariant(variant)
+                }}
               />
               <Select
                 label="Level"

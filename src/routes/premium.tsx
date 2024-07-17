@@ -38,7 +38,7 @@ const Premium = () => {
 
   return (
     <div className="container py-8">
-      <div className="grid grid-cols-1 gap-4 items-center mb-16 w-1/2  mt-8">
+      <div className="mb-16 mt-8">
         <div>
           <h1 className="text-4xl mb-6">Elevate Your Learning with Linguocast Premium</h1>
           <p className="text-lg my-4">

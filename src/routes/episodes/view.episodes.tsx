@@ -130,7 +130,7 @@ const ViewEpisode = () => {
                     With Lingucast Premium you can request the transcription + exercises and it will be ready for you in less than 24 hours.
                   </p>
                   <Link to="/premium">
-                    <Button prepend={<CrownIcon size={18} />}>Start Your 7-Day Free Trial</Button>
+                    <Button prepend={<CrownIcon size={18} />}>Start Your Free Trial</Button>
                   </Link>
                 </Card>
               )

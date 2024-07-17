@@ -15,6 +15,7 @@ const WordCorner = () => {
   const [q, setQ] = useState<string | null>(null)
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [reviewedWordIds, setReviewedWordIds] = useState<number[]>([])
+  const [removedWordIds, setRemovedWordIds] = useState<number[]>([]) 
   const { data: savedWords, isPending } = useQuery({
     queryKey: ['saved-words'],
     queryFn: () => axios.get<Word[]>('/api/user/words').then(res => res.data)
@@ -70,13 +71,17 @@ const WordCorner = () => {
           {isPending
             ? <Loader />
             : filteredSavedWords!.length === 0
-              ? 'No words yet. Go listen and catch some challenging words.'
+              ? 'No words to show. Go listen and grabb some new words!'
               : (
                 <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                   {filteredSavedWords!.map(word => (
-                    <li>
+                    <li className={removedWordIds.includes(word.id) ? 'hidden' : ''}>
                       <Card>
-                        <WordViewer word={word} />
+                        <WordViewer
+                          word={word}
+                          onOptimisticRemove={() => setRemovedWordIds(r => [...r, word.id])}
+                          onOptimisticRemoveFailed={() => setRemovedWordIds(r => r.filter(id => id !== word.id))}
+                        />
                       </Card>
                     </li>
                   ))}
