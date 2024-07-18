@@ -3,16 +3,18 @@ import { ReactNode } from "react"
 import { Link } from "react-router-dom"
 import { ClassNameValue } from "tailwind-merge"
 
+export interface MenuItem {
+  smText?: ReactNode
+  text: ReactNode
+  icon?: ReactNode
+  link?: string
+  selected?: boolean
+  disabled?: boolean
+  onClick?: () => void
+}
+
 interface Props {
-  items: {
-    smText?: ReactNode
-    text: ReactNode
-    icon?: ReactNode
-    link?: string
-    selected?: boolean
-    disabled?: boolean
-    onClick?: () => void
-  }[]
+  items: MenuItem[]
   className?: ClassNameValue
   forCreators?: boolean
   underline?: boolean

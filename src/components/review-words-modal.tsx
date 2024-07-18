@@ -5,6 +5,7 @@ import { getRandomWholeNumber } from "@/utils/random.utils"
 import axios from "axios"
 import { EyeIcon, Maximize2Icon, PartyPopperIcon } from "lucide-react"
 import { useEffect, useState } from "react"
+import { ForwardLink } from "@/ui/forward-link.ui"
 
 interface Props {
   isOpen: boolean
@@ -103,17 +104,21 @@ export const ReviewWordsModal = ({
               <Button
                 prepend={<Maximize2Icon size={18} />}
                 onClick={() => setIsReveled(true)}
+                className="mt-4"
               >
                 Revele
               </Button>
             )}
             {canRate && (
-              <div className="grid grid-cols-3 gap-2">
+              <div className="grid grid-cols-3 gap-2 mt-4">
                 <Button onClick={() => scoreReviewHandler('easy')} isLoading={isLoading === 'easy'} disabled={!!isLoading}>Easy</Button>
                 <Button onClick={() => scoreReviewHandler('medium')} isLoading={isLoading === 'medium'} disabled={!!isLoading}>Medium</Button>
                 <Button onClick={() => scoreReviewHandler('hard')} isLoading={isLoading === 'hard'} disabled={!!isLoading}>Hard</Button>
               </div>
             )}
+            <ForwardLink to={`https://tatoeba.org/en/sentences/search?from=${{ mandarin: 'cmn', spanish: 'spa', english: 'spa' }[currentWord.language]}&query=${currentWord.word}`} target="_blank">
+              Search use examples in Tatoeba
+            </ForwardLink>
           </div>
         )
         : (

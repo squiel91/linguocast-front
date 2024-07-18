@@ -6,13 +6,16 @@ import { Card } from "@/ui/card.ui"
 import { Input } from "@/ui/input.ui"
 import { Loader } from "@/ui/loader.ui"
 import { daySinceEpoche } from "@/utils/date.utils"
+import { cn } from "@/utils/styles.utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
-import { BookOpenCheckIcon, PartyPopperIcon, SearchIcon } from "lucide-react"
-import { useState } from "react"
+import { BookOpenCheckIcon, BrushIcon, EraserIcon, PartyPopperIcon, SearchIcon, Undo2Icon, XIcon } from "lucide-react"
+import { useRef, useState } from "react"
+import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas"
 
 const WordCorner = () => {
   const [q, setQ] = useState<string | null>(null)
+  const [isSketchOpen, setIsSketchOpen] = useState(false)
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [reviewedWordIds, setReviewedWordIds] = useState<number[]>([])
   const [removedWordIds, setRemovedWordIds] = useState<number[]>([]) 
@@ -20,6 +23,8 @@ const WordCorner = () => {
     queryKey: ['saved-words'],
     queryFn: () => axios.get<Word[]>('/api/user/words').then(res => res.data)
   })
+
+  const sketchboard = useRef<ReactSketchCanvasRef>(null) 
 
   const currentDay = daySinceEpoche()
 
@@ -94,8 +99,27 @@ const WordCorner = () => {
         words={reviewDue}
         isOpen={isReviewModalOpen}
         onClose={() => setIsReviewModalOpen(false)}
-        onWordRevied={reviewedId => setReviewedWordIds(ids => [...ids, reviewedId])}
+        onWordRevied={reviewedId => {
+          sketchboard.current?.clearCanvas()
+          setReviewedWordIds(ids => [...ids, reviewedId])
+        }}
       />
+      <ReactSketchCanvas ref={sketchboard} canvasColor="#ffffff90" className={cn('fixed top-0 left-0 right-0 bottom-0 z-50', isSketchOpen ? '' : 'hidden')} style={{ border: 'none', backgroundColor: 'transparent' }} strokeWidth={4} strokeColor="black" />
+      <div className="fixed bottom-8 right-8 md:bottom-12 md:right-12 flex gap-2 items-center z-50">
+        {isSketchOpen && (
+          <>
+            <button onClick={() => sketchboard.current?.clearCanvas()} className="p-4">
+              <EraserIcon />
+            </button>
+            <button onClick={() => sketchboard.current?.undo()} className="p-4">
+              <Undo2Icon />
+            </button>
+          </>
+        )}
+        <button onClick={() => setIsSketchOpen(v => !v)} className="bg-red-300 p-4 rounded-full border-[3px] border-black">
+          {isSketchOpen ? <XIcon /> : <BrushIcon />}
+        </button>
+      </div>
     </div>
   )
 }

@@ -14,6 +14,7 @@ interface DropdownBase {
 
 interface DropwdownLinkItem extends DropdownBase {
   to: string
+  target?: string
 }
 interface DropwdownActionItem extends DropdownBase {
   onClick: () => void
@@ -24,10 +25,11 @@ type DropdownItem = DropwdownLinkItem | DropwdownActionItem
 interface Props {
   items: DropdownItem[]
   unformated?: boolean
+  className?: string
   children: ReactNode
 }
 
-export const Dropdown = ({ items, unformated = false, children }: Props) => {
+export const Dropdown = ({ items, unformated = false, className, children }: Props) => {
   const [isOpen, setIsOpen] = useState(false)
   const dropdownRef = useRef<HTMLDivElement>(null)
 
@@ -53,12 +55,12 @@ export const Dropdown = ({ items, unformated = false, children }: Props) => {
   return (
     <div className="relative" ref={dropdownRef}>
       {unformated
-        ? <button onClick={() => setIsOpen(o => !o)}>{children}</button>
-        : <Button onClick={() => setIsOpen(o => !o)} append={<ChevronDownIcon size={20} strokeWidth={2.5} />} >{children}</Button>
+        ? <button onClick={(event) => { event.preventDefault(); event.stopPropagation(); setIsOpen(o => !o) }} className={cn('px-2', className)}>{children}</button>
+        : <Button onClick={() => setIsOpen(o => !o)} className={className} append={<ChevronDownIcon size={20} strokeWidth={2.5} />} >{children}</Button>
       }
       
       {isOpen && (
-        <Card className={cn('flex flex-col gap-2 py-2 px-4 absolute right-0 top-full mt-2 shadow-md mb-4 z-10', unformated ? '' : 'p-2 w-72  mt-4')} >
+        <Card className={cn('flex flex-col gap-2 py-2 px-4 absolute w-48 right-0 top-full mt-2 shadow-md mb-4 z-10', unformated ? '' : 'p-2 w-72  mt-4')} >
           {items.map(({ title, description, icon, unformated = false, ...onClickOrLinkTo }) => {
             const button = (
               <button
@@ -76,7 +78,7 @@ export const Dropdown = ({ items, unformated = false, children }: Props) => {
               </button>
             )
             if ('onClick' in onClickOrLinkTo) return button
-            return <Link to={onClickOrLinkTo.to}>{button}</Link>
+            return <Link to={onClickOrLinkTo.to} target={onClickOrLinkTo.target}>{button}</Link>
           })}
         </Card>
       )}

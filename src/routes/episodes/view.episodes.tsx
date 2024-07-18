@@ -17,7 +17,7 @@ import { usePageTitle } from '@/utils/document.utils'
 import { Card } from '@/ui/card.ui'
 import { ListExercises } from './list.exercises.view.episode'
 import { Menu } from '@/components/menu'
-import { CrownIcon, MessageSquareTextIcon, NotebookPenIcon, ScrollIcon } from 'lucide-react'
+import { CalendarIcon, CrownIcon, MessageSquareTextIcon, NotebookPenIcon, ScrollIcon } from 'lucide-react'
 import { Button } from '@/ui/button.ui'
 
 const ViewEpisode = () => {
@@ -72,17 +72,23 @@ const ViewEpisode = () => {
           src={episode.image || episode.podcast.coverImage || noImage}
         />
         <div className='col-span-1 lg:col-span-2'>
-          <h2 className="text-xl md:text-2xl lg:text-4xl mb-4 mt-2 md:mt-4 lg:mt-0">
+          <h2 className="text-xl md:text-2xl lg:text-4xl mb-2 mt-2 md:mt-4 lg:mt-0">
             {episode.title}
           </h2>
-          <div className="flex items-center mt-2 text-sm gap-2">
+          <div className='mb-4 flex gap-2 items-center'>
+            <CalendarIcon size={16} />
+            {readableDate(episode.publishedAt)}
+          </div>
+
+          <div className="flex items-center mt-2 text-sm gap-4">
             <PlayButton
+              hero
               isPlaying={isPlaying}
               isLoading={isLoading}
               onTogglePlay={stateChangeHandler}
+              overWhite
             />
-            <span>{readableDate(episode.publishedAt)}</span>
-            <div className="w-1 h-1 rounded-full bg-black"/>
+            {/* <div className="w-1 h-1 rounded-full bg-black"/> */}
             {episode.leftOn && (episode.leftOn > 0)
               ? <ListeningProgressBar duration={episode.duration} leftOn={episode.leftOn} />
               : <span>{formatSeconds(episode.duration)}</span>

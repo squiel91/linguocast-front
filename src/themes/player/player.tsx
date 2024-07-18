@@ -178,18 +178,24 @@ export const PlayerContextWrapper = () => {
           <div className="fixed top-0 left-0 py-4 right-0 bottom-0 min-h-screen bg-primary text-white z-20">
             <div className="container py-4 grid auto-rows-auto grid-rows-[min-content_1fr_min-content_min-content] gap-4 h-full">
               {/* <div className="bg-red-500 ">hello</div> */}
-              <div className="flex gap-8 flex-col">
-                <div className="flex gap-8 items-center">
-                  <img
-                    className="w-14 h-14 aspect-square rounded-md border-2 border-slate-200"
-                    src={currentEpisode?.image || currentEpisode?.podcast.coverImage || noImage}
-                  />
-                  <div>
-                    <h1 className="text-xl font-bold line-clamp-1">{currentEpisode?.title}</h1>
-                    <h2 className="text-lg">{currentEpisode?.podcast.name}</h2>
-                  </div>
+              <div className="flex gap-8">
+                <img
+                  className="w-14 h-14 aspect-square rounded-md border-2 border-slate-200"
+                  src={currentEpisode?.image || currentEpisode?.podcast.coverImage || noImage}
+                />
+                <div>
+                  <h1 className="text-xl line-clamp-1">{currentEpisode?.title}</h1>
+                  <h2 className="text-lg">{currentEpisode?.podcast.name}</h2>
                 </div>
               </div>
+              {currentEpisode && !currentEpisode.transcript && (
+                <div className="flex flex-col items-center justify-center">
+                  <img
+                    className="w-10/12 md:w-96 aspect-square rounded-md border-2 border-slate-200"
+                    src={currentEpisode?.image || currentEpisode?.podcast.coverImage || noImage}
+                  />
+                </div>
+              )}
               {currentEpisode?.transcript && (
                 <ReadAlong
                   transcript={currentEpisode.transcript}
@@ -204,7 +210,6 @@ export const PlayerContextWrapper = () => {
                   isPlaying={isPlaying}
                   speed={playbackSpeed}
                   isLoading={isLoading}
-                    // onPlay,
                   onPlayToggle={() => setIsPlaying(v => !v)}
                   onRewind={() => changeTime(Math.max(currentTime - 10, 0))}
                   onForward={() => changeTime(currentTime + 10)}

@@ -9,7 +9,7 @@ import { Loader } from "./loader.ui"
 interface Props {
   image: string | null
   uploadUrl: string
-  className?: string;
+  className?: string
   cannotRemove?: boolean
   rounded?: boolean
   disabled?: boolean
@@ -29,7 +29,6 @@ export const ImageUploader = ({
 
   const uploadImageHandler = async (originalImageFile: File | null) => {
     if (!originalImageFile) return uploadedHandler(null)
-
     let processedImageFile: File | null = null 
     try {
       processedImageFile = await resizeAndCropSquareImage(originalImageFile)
@@ -87,5 +86,5 @@ export const ImageUploader = ({
           )
         }
     </Uploader>
-  );
-};
+  )
+}

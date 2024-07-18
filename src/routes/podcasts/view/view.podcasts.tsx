@@ -144,12 +144,6 @@ const ViewPodcast = () => {
                       <td>{podcast.isActive ? 'Yes' : 'No'}</td>
                     </tr>
                   )}
-                  {typeof podcast?.transcript && (
-                    <tr className='border-b-2 border-solid border-slate-100'>
-                      <th className='uppercase text-xs text-left pr-4 text-slate-500'>Trasncript</th>
-                      <td>{podcast?.isActive ? 'Yes' : 'No'}</td>
-                    </tr>
-                  )}
                 </tbody>
                 <ul className='flex flex-wrap gap-2 items-start mt-4'>
                   {podcast?.links?.map(link => (

@@ -5,7 +5,7 @@ import linguocastCreatorsLogo from '@/assets/linguocast--creators-logo.svg'
 import { useAuth } from "../../auth/auth.context"
 import { BellIcon, BookMarkedIcon, CrownIcon, DoorOpenIcon, GraduationCapIcon, HelpCircleIcon, MicIcon, NewspaperIcon, PencilIcon, PieChartIcon, TelescopeIcon } from "lucide-react"
 import { Avatar } from "@/ui/avatar.ui"
-import { Menu } from "@/components/menu"
+import { Menu, MenuItem } from "@/components/menu"
 import { cn } from "@/utils/styles.utils"
 import { useQueries } from "@tanstack/react-query"
 import axios from "axios"
@@ -43,14 +43,14 @@ const MainTheme = () => {
     ]
   })
 
-  const mainMenuItems = [
-    { smText: <NewspaperIcon />, text: 'Feed', link: '/feed', selected: location.pathname.startsWith('/feed')},
-    { smText: <BookMarkedIcon />, text: 'Vocabulary Corner', link: '/vocabulary', selected: location.pathname.startsWith('/vocabulary') },
-    { smText: <PieChartIcon />, text: 'Learning Journey', link: '/journey', selected: location.pathname.startsWith('/journey') },
+  const mainMenuItems: MenuItem[] = [
+    { smText: <NewspaperIcon />, text: 'Feed', link: '/feed', selected: location.pathname.startsWith('/feed') , disabled: !isLoggedIn },
+    { smText: <BookMarkedIcon />, text: 'Vocabulary Corner', link: '/vocabulary', selected: location.pathname.startsWith('/vocabulary'), disabled: !isLoggedIn },
+    { smText: <PieChartIcon />, text: 'Learning Journey', link: '/journey', selected: location.pathname.startsWith('/journey'), disabled: !isLoggedIn },
     { smText: <TelescopeIcon />, text: 'Explore Shows', link: '/explore', selected: location.pathname.startsWith('/explore') }
   ]
 
-  const creatorMenuItems = [
+  const creatorMenuItems: MenuItem[] = [
     { text: 'Podcasts', link: '/creators/podcasts', selected: location.pathname.startsWith('/creators/podcasts')},
     { text: 'Earnings', link: '/creators/earnings', selected: location.pathname.startsWith('/creators/earnings') }
   ]

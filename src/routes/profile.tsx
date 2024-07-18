@@ -2,24 +2,24 @@ import { useAuth } from "@/auth/auth.context"
 import { LANGUAGES } from "@/constants/languages.constants"
 import { LEVELS } from "@/constants/levels.constants"
 import { Button } from "@/ui/button.ui"
+import { Dropdown } from "@/ui/dropdown.ui"
 import { ImageUploader } from "@/ui/image-uploader"
 import { Input } from "@/ui/input.ui"
 import { Loader } from "@/ui/loader.ui"
 import { Select } from "@/ui/select.ui"
 import { Switch } from "@/ui/switch.ui"
-import { readableDate } from "@/utils/date.utils"
 import { capitalize } from "@/utils/text.utils"
 import { urlSafe } from "@/utils/url.utils"
 import { useMutation } from "@tanstack/react-query"
 import axios from "axios"
-import { AlertCircleIcon, GlobeIcon, LogOut, RotateCcwIcon } from "lucide-react"
+import { AlertCircleIcon, EllipsisVertical, GlobeIcon, LogOut, RotateCcwIcon, SaveIcon } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
-import { Link, useLocation, useNavigate } from "react-router-dom"
+import { useLocation, useNavigate } from "react-router-dom"
 
 const Profile = () => {
   const navigate = useNavigate()
   const location = useLocation()
-  const { isLoggedIn, logoutHandler, user: userProfile } = useAuth()
+  const { isLoggedIn, logoutHandler: authLogoutHandler, user: userProfile } = useAuth()
 
   useEffect(() => {
     if (!isLoggedIn && navigate) navigate('/explore')
@@ -86,6 +86,11 @@ const Profile = () => {
     })
   }
 
+  const logoutHandler = () => {
+    authLogoutHandler()
+    navigate('/explore')
+  }
+
   const isCreators = location.pathname.startsWith('/creators')
   return (
     <div className="container">
@@ -93,27 +98,29 @@ const Profile = () => {
         <h2 className="text-4xl grow">
           My Profile
         </h2>
-        <Link
-          to={`/users/${userProfile.id}/${urlSafe(userProfile.name)}`}
-          target="_blank"
+        <Dropdown
+          unformated
+          items={[
+            {
+              title: 'Public profile',
+              to: `/users/${userProfile.id}/${urlSafe(userProfile.name)}`,
+              target: '_blank',
+              icon: <GlobeIcon size={16} />,
+              unformated: true
+            },
+            {
+              title: 'Logout',
+              onClick: logoutHandler,
+              icon: <LogOut size={16} />,
+              unformated: true
+            }
+          ]}
         >
-          <Button variant="outline" prepend={<GlobeIcon size={16} />}>
-            Public profile
-          </Button>
-        </Link>
-        <Button
-          variant='outline'
-          prepend={<LogOut size={16} />}
-          onClick={() => {
-            logoutHandler()
-            navigate('/explore')
-          }}
-        >
-          Logout
-        </Button>
+          <EllipsisVertical />
+        </Dropdown>
       </div>
-      <div className="grid grid-cols-3 gap-8">
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 col-span-2 self-start">
+      <div className="flex flex-col-reverse md:grid md:grid-cols-3 gap-8">
+        <div className="grid col-span-full md:col-span-2 grid-cols-1 md:grid-cols-2 gap-x-8 gap-y-4 self-start">
           <Input
             label="Name"
             value={name}
@@ -180,9 +187,6 @@ const Profile = () => {
               {errorMessage}
             </div>
           )}
-          <div className="col-span-full italic text-sm">
-            You created your account on {readableDate(userProfile.createdAt)}
-          </div>
         </div>
         <ImageUploader
           image={avatar}
@@ -191,11 +195,11 @@ const Profile = () => {
           cannotRemove
         />
       </div>
-      <div className="flex gap-2 items-center mt-8">
-        <Button onClick={saveHandler} isLoading={isSaving}>
+      <div className="flex flex-col md:flex-row gap-x-2 gap-y-2 items-center mt-8">
+        <Button onClick={saveHandler} prepend={<SaveIcon size={20} />} isLoading={isSaving} wFullInMobile>
           Save changes
         </Button>
-        <Button onClick={resetValues} variant="discrete" prepend={<RotateCcwIcon size={20} />}>Discard changes</Button>
+        <Button onClick={resetValues} variant="discrete" wFullInMobile prepend={<RotateCcwIcon size={20} />}>Discard changes</Button>
       </div>
     </div>
   )

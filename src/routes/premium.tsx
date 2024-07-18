@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { CheckIcon, LockIcon, StarIcon, XIcon } from "lucide-react";
+import { CheckIcon, StarIcon, XIcon } from "lucide-react";
 import { Card } from "@/ui/card.ui";
 import { Switch } from "@/ui/switch.ui";
 import { Button } from "@/ui/button.ui";
@@ -40,9 +40,9 @@ const Premium = () => {
     <div className="container py-8">
       <div className="mb-16 mt-8">
         <div>
-          <h1 className="text-4xl mb-6">Elevate Your Learning with Linguocast Premium</h1>
+          <h1 className="text-6xl mb-6">Elevate Your Learning with Linguocast Premium</h1>
           <p className="text-lg my-4">
-            Your Premium subscription financially supports top content creators while unlocking powerful learning tools for you.
+            Your Premium subscription financially supports top content creators while unlocking you powerful learning tools.
           </p>
         </div>
           <div>
@@ -52,20 +52,16 @@ const Premium = () => {
                 checked={isAnnualPayment}
                 onChange={setIsAnnualPayment}
               />
-              <span className={`text-lg ${isAnnualPayment && 'font-bold'}`}>Annually (Save 25%)</span>
+              <span className={`text-lg ${isAnnualPayment && 'font-bold'}`}>Annually (Save 35%)</span>
             </div>
             <div className="mb-4">
               <span className="text-4xl font-bold">${isAnnualPayment ? '9.99' : '13.50'}</span>
               <span className="text-xl">/month</span>
             </div>
-            <Button className="py-3 rounded-lg text-lg font-semibold">
+            <Button className="mt-4 py-3 rounded-lg text-lg font-semibold">
               Start Your 7-Day Free Trial
             </Button>
             <p className="text-sm mt-2">Cancel anytime before the trial ends - no charge.</p>
-            <p className="text-sm mt-1 flex items-center gap-1">
-              <LockIcon size={14} />
-              Secure payments processed by Stripe
-            </p>
           </div>
       </div>
       

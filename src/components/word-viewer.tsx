@@ -2,6 +2,7 @@ import { Word } from "@/types/types"
 import { Dropdown } from "@/ui/dropdown.ui"
 import axios from "axios"
 import { EllipsisVertical, HashIcon, TrashIcon } from "lucide-react"
+import tatoebaLogo from '@/assets/tatoeba.svg'
 
 interface Props {
   word: Word
@@ -18,6 +19,13 @@ export const WordViewer = ({ word, onOptimisticRemove, onOptimisticRemoveFailed 
         <Dropdown
           unformated
           items={[
+            {
+              title: 'Search examples',
+              to: `https://tatoeba.org/en/sentences/search?from=${{ mandarin: 'cmn', spanish: 'spa', english: 'spa' }[word.language]}&query=${word.word}`,
+              target: '_blank',
+              icon: <img src={tatoebaLogo} alt="Tatoeba logo" width={16} />,
+              unformated: true
+            },
             {
               title: 'Remove',
               onClick: async () => {
@@ -57,7 +65,6 @@ export const WordViewer = ({ word, onOptimisticRemove, onOptimisticRemoveFailed 
           </div>
         )
       }
-
     </div>
   )
 }

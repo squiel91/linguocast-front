@@ -14,7 +14,7 @@ export const ListeningProgressBar = ({
   onlyBar = false,
   className
 }: Props) => (
-    <div className={cn('flex gap-4 items-center', className)}>
+    <div className={cn('flex gap-4 items-center w-full', className)}>
       <div className="bg-slate-200 flex-grow h-1 rounded-full">
         <div
           className="h-full bg-primary rounded-full"
