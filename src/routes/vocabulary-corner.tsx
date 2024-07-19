@@ -10,7 +10,7 @@ import { cn } from "@/utils/styles.utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { BookOpenCheckIcon, BrushIcon, EraserIcon, PartyPopperIcon, SearchIcon, Undo2Icon, XIcon } from "lucide-react"
-import { useRef, useState } from "react"
+import { useCallback, useMemo, useRef, useState } from "react"
 import { ReactSketchCanvas, ReactSketchCanvasRef } from "react-sketch-canvas"
 
 const WordCorner = () => {
@@ -26,15 +26,29 @@ const WordCorner = () => {
 
   const sketchboard = useRef<ReactSketchCanvasRef>(null) 
 
-  const currentDay = daySinceEpoche()
-
-  const reviewDue = savedWords?.filter(
-      ({ id, reviewScheduledFor }) => ((reviewScheduledFor <= currentDay) && (!reviewedWordIds.includes(id)))
-  ) ?? []
+  const reviewDue = useMemo(() => {
+    const currentDay = daySinceEpoche()
+    return savedWords?.filter(
+        ({ id, reviewScheduledFor }) => ((reviewScheduledFor <= currentDay) && (!reviewedWordIds.includes(id)))
+    ) ?? []
+  }
+  , [savedWords, reviewedWordIds])
 
   const filteredSavedWords = q
     ? savedWords?.filter(word => (word.word.includes(q.toLowerCase()) || word.translations.flat().join('|').toLowerCase().includes(q.toLowerCase())))
     : savedWords
+
+  const ReviewWordsModalMemorized = useCallback(() => (
+    <ReviewWordsModal
+      words={reviewDue}
+      isOpen={isReviewModalOpen}
+      onClose={() => setIsReviewModalOpen(false)}
+      onWordRevied={(reviewedId: number) => {
+        sketchboard.current?.clearCanvas()
+        setReviewedWordIds(ids => [...ids, reviewedId])
+      }}
+    />
+  ), [reviewDue, isReviewModalOpen, sketchboard])
 
   return (
     <div className='mt-8 px-4 lg:px-8'>
@@ -81,7 +95,7 @@ const WordCorner = () => {
                 <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
                   {filteredSavedWords!.map(word => (
                     <li className={removedWordIds.includes(word.id) ? 'hidden' : ''}>
-                      <Card>
+                      <Card className="overflow-visible">
                         <WordViewer
                           word={word}
                           onOptimisticRemove={() => setRemovedWordIds(r => [...r, word.id])}
@@ -95,15 +109,7 @@ const WordCorner = () => {
           }
         </div>
       </div>
-      <ReviewWordsModal
-        words={reviewDue}
-        isOpen={isReviewModalOpen}
-        onClose={() => setIsReviewModalOpen(false)}
-        onWordRevied={reviewedId => {
-          sketchboard.current?.clearCanvas()
-          setReviewedWordIds(ids => [...ids, reviewedId])
-        }}
-      />
+      <ReviewWordsModalMemorized />
       <ReactSketchCanvas ref={sketchboard} canvasColor="#ffffff90" className={cn('fixed top-0 left-0 right-0 bottom-0 z-50', isSketchOpen ? '' : 'hidden')} style={{ border: 'none', backgroundColor: 'transparent' }} strokeWidth={4} strokeColor="black" />
       <div className="fixed bottom-8 right-8 md:bottom-12 md:right-12 flex gap-2 items-center z-50">
         {isSketchOpen && (
