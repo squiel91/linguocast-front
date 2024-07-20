@@ -32,7 +32,11 @@ const Feed = () => {
     }>('/api/user/feed').then(res => res.data)
   })
   
-  if (!feedData) return <Loader />
+  if (!feedData) return (
+    <div className="flex items-center justify-center p-24">
+      <Loader big />
+    </div>
+  )
 
   const {
     newEpisodes,

@@ -88,7 +88,11 @@ const WordCorner = () => {
         </div>
         <div className='lg:col-span-3'>
           {isPending
-            ? <Loader />
+            ? (
+              <div className="flex items-center justify-center p-24">
+                <Loader big />
+              </div>
+            )
             : filteredSavedWords!.length === 0
               ? 'No words to show. Go listen and grabb some new words!'
               : (

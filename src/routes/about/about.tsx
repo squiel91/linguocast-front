@@ -2,24 +2,24 @@ import { ForwardLink } from "@/ui/forward-link.ui"
 
 import { usePageTitle } from "@/utils/document.utils"
 import { CollapsableInfo } from "@/ui/collapsable-info.ui"
-import { BookOpenCheckIcon, BrushIcon, InfoIcon, Maximize2Icon } from "lucide-react"
+import { BookOpenCheckIcon, BrushIcon, HandIcon, InfoIcon, Maximize2Icon, PlayIcon, RepeatIcon } from "lucide-react"
 
 const About = () => {
   usePageTitle('About')
   return (
     <div className="container">
       <h1 className="text-3xl mb-8 mt-8">FAQ</h1>
-      <div className='space-y-8 md:space-y-8'>
+      <div className='space-y-4 md:space-y-8'>
         <CollapsableInfo
           top="What is Linguocast?"
         >
           <p className="mb-4">
-            We are the podcast platform tailored to language learners.
+            We are the podcast platform for language learners.
             Our mission is to turn every podcast episode into an engaging and effective language lesson.
-            We partner with awesome content creators to distribute their language learning content in a more impactful way.
+            We partner with awesome content creators to distribute their language learning content in the most impactful way.
           </p>
           <p>
-            Prepare to dive deep into each episode, and dicover why Linguocast is the best platform to learn a language.
+            Prepare to dive deep into each episode, and dicover why Linguocast is the best platform around to learn a language by listening to podcasts.
           </p>
         </CollapsableInfo>
         <CollapsableInfo
@@ -36,7 +36,7 @@ const About = () => {
               Browse the shows and click the ones that catch your eye.
             </li>
             <li>
-              Click on "Follow" button to never miss-out new epsiodes and comments.
+              Click on "<RepeatIcon className="inline" size={16} /> Follow" button to never miss-out new epsiodes and comments.
             </li>
           </ol>
         </CollapsableInfo>
@@ -47,18 +47,21 @@ const About = () => {
             <li>
               Start by listening episodes with transcript.
               <div className="border-[1px] p-4 rounded-md text-sm flex gap-4 items-center mt-2">
-                <InfoIcon  size={16} className="flex-shrink-0" />
+                <InfoIcon size={16} className="inline" />
                 If the episode doesn't have a transcript, you can request it with a Linguocast Premium account.
               </div>
             </li>
             <li>
-              Press on "Play", and while listening the epsiode, maximize the player touching on the bottom player bar.
+              Press on "<PlayIcon size={16} className="inline" />", and while listening the epsiode, maximize the player touching on the bottom player bar.
             </li>
             <li>
               Click on the challenging words, and the info will show in the screen.
             </li>
             <li>
-              Click on "grab" to add it to your vocabulary corner.
+              Click on "<HandIcon size={16} className="inline" /> Grab" to add it to your vocabulary corner.
+            </li>
+            <li>
+              It will now appear at the <ForwardLink to="/vocabulary" target="_blank">"Vocabulary Corner" tab </ForwardLink>.
             </li>
           </ol>
         </CollapsableInfo>
@@ -67,7 +70,7 @@ const About = () => {
         >
           <ol className="list-decimal ml-4 flex flex-col gap-2">
             <li>
-              Visit the Vocabulary corner tab (or <ForwardLink to="/vocabulary" target="_blank">click here</ForwardLink>).
+              Visit the "Vocabulary Corner" tab (or <ForwardLink to="/vocabulary" target="_blank">click here</ForwardLink>).
             </li>
             <li>
               If you have words to review click on the "<BookOpenCheckIcon className="inline" size={18} /> Review" button.

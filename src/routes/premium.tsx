@@ -37,10 +37,10 @@ const Premium = () => {
   ]
 
   return (
-    <div className="container py-8">
-      <div className="mb-16 mt-8">
+    <div className="container py-8 md:py-16">
+      <div className="mb-16">
         <div>
-          <h1 className="text-6xl mb-6">Elevate Your Learning with Linguocast Premium</h1>
+          <h1 className="text-3xl md:text-5xl lg:text-6xl mb-6">Elevate Your Learning with Linguocast Premium</h1>
           <p className="text-lg my-4">
             Your Premium subscription financially supports top content creators while unlocking you powerful learning tools.
           </p>
