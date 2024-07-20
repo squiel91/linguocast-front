@@ -24,6 +24,11 @@ export const CreatorsLanding = () => {
     <div className="container">
       <section className="my-16">
         <h1 className="text-6xl">Become a creator</h1>
+        <ol>
+          <li>Expand your audience</li>
+          <li>Make your episodes more engaging and effective for language learners</li>
+          <li>Monetize for subscriptions</li>
+        </ol>
         <p>The space for your language learning podcast</p>
         {!user && <Button>Sign-up as a creator</Button>}
         {user && !user.isCreator && (

@@ -3,7 +3,7 @@ import { Card } from '@/ui/card.ui'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
 import { AudioWaveformIcon } from 'lucide-react'
-import { ReactNode, useEffect, useRef, useState } from 'react'
+import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import useRefsCollection from 'react-refs-collection'
 import { ViewEmbeddedMinimized } from './minimized/view.embedded.minimized.player'
 import { removePunctuation } from '@/utils/text.utils'
@@ -126,6 +126,19 @@ export const ReadAlong = ({
     }
   }, [transcriptContainerElem, isOutOfSync])
 
+  const WordDetailsMemorized = useCallback(() => (
+    <ViewEmbeddedMinimized
+      embedded={{
+        start: 0,
+        duration: 10,
+        type: 'word',
+        wordId: null,
+        word: wordResults![0]
+      }}
+      showCountdown
+    />
+  ), [wordResults])
+
   return (
     <div className="read-transcript-along text-4xl md:text-5xl lg:text-6xl overflow-y-hidden relative">
       <div className="scrollbar font-bold overflow-y-auto py-16 h-full" ref={transcriptContainerElem}>
@@ -172,16 +185,7 @@ export const ReadAlong = ({
               </Card>
             )
             : (
-              <ViewEmbeddedMinimized
-                embedded={{
-                  start: 0,
-                  duration: 10,
-                  type: 'word',
-                  wordId: null,
-                  word: wordResults![0]
-                }}
-                showCountdown
-              />
+              <WordDetailsMemorized />
             )
           : embedded}
       </div>
