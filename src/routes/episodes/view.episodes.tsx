@@ -17,11 +17,14 @@ import { usePageTitle } from '@/utils/document.utils'
 import { Card } from '@/ui/card.ui'
 import { ListExercises } from './list.exercises.view.episode'
 import { Menu } from '@/components/menu'
-import { CalendarIcon, CrownIcon, MessageSquareTextIcon, NotebookPenIcon, ScrollIcon } from 'lucide-react'
+import { CalendarIcon, CrownIcon, MessageSquareTextIcon, NotebookPenIcon, ScrollIcon, Share2Icon } from 'lucide-react'
 import { Button } from '@/ui/button.ui'
+import { useAuth } from '@/auth/auth.context'
+import ShareOnSocial from 'react-share-on-social'
 
 const ViewEpisode = () => {
   const { episodeId: episodeIdRaw } = useParams()
+  const { user } = useAuth()
 
   const { reproduce, currentEpisode, isPlaying, pause, play } = usePlayer()
 
@@ -38,7 +41,11 @@ const ViewEpisode = () => {
 
   usePageTitle(episode?.title)
 
-  if (isLoading || !episode) return <Loader />
+  if (isLoading || !episode) return (
+    <div className="flex justify-center p-16">
+      <Loader big />
+    </div>
+  )
 
   const episodeIsSelected = currentEpisode === episode
   const episodeIsPlaying = episodeIsSelected && isPlaying
@@ -97,11 +104,26 @@ const ViewEpisode = () => {
           <SafeHtmlRenderer
             htmlContent={episode?.description}
             maxHeight={150}
-            className="mt-4 mb-8"
+            className="mt-4 mb-4"
           />
+          <ShareOnSocial
+            textToShare="Check out this this podcast episode at Linguocast!"
+            link={location.href}
+            linkTitle={episode?.title ?? 'Episode title'}
+            linkMetaDesc={episode?.description.slice(0, 100) ?? 'Podcast description'}
+            linkFavicon={episode?.image || episode.podcast.coverImage ? `https://linguocast.com${episode?.image || episode.podcast.coverImage}` : 'https://linguocast.com/favicon.png'}
+            noReferer
+          >
+            <Button
+              variant="outline"
+              prepend={<Share2Icon size={18} />}
+            >
+              Share
+            </Button>
+          </ShareOnSocial>
           <Menu
             underline
-            className='mb-4'
+            className='mt-4 mb-4'
             items={[
               { text: 'Transcript', icon: <ScrollIcon size={14} />, onClick: () => setSelectedTabKey('transcript'), selected: selectedTabKey === 'transcript' },
               { text: 'Exercises', icon: <NotebookPenIcon size={14} /> , onClick: () => setSelectedTabKey('exercises'), selected: selectedTabKey === 'exercises' },
@@ -112,18 +134,32 @@ const ViewEpisode = () => {
             episode.transcript
               ? (
                 <Card>
-                  {episode.transcript
-                  ?.split('\n')
-                    .map((rawTimeAnnotatedWord) => {
-                      if (rawTimeAnnotatedWord.trim() === '') return '\n'
-                      const text = rawTimeAnnotatedWord.split('\t')[2]
-                      return text
-                    })
-                    .join('')
-                    .split('\n')
-                    .map(paragraphText => (
-                      <p className="mb-2">{paragraphText}</p>
-                    ))}
+                  <div className='relative leading-loose text-lg'>
+                    {episode.transcript
+                    ?.split('\n')
+                      .map((rawTimeAnnotatedWord) => {
+                        if (rawTimeAnnotatedWord.trim() === '') return '\n'
+                        const text = rawTimeAnnotatedWord.split('\t')[2]
+                        return text
+                      })
+                      .join('')
+                      .split('\n')
+                      .map(paragraphText => (
+                        <p className="mb-2">{paragraphText}</p>
+                      ))}
+                      {(!user || !user.isPremium) && <div className="gradient-overlay" />}
+                  </div>
+                    {(!user || !user.isPremium) && (
+                      <div className="my-8">
+                        <h1 className="text-2xl mb-2">Ouch! You've Hit a Language Barrier!</h1>
+                        <p className="text-lg mb-4">
+                          Upgrade to Premium to support your favorite creators and unlock the full transcript!
+                        </p>
+                        <Link to="/premium">
+                          <Button prepend={<CrownIcon size={18} />}>Start Your Free Trial</Button>
+                        </Link>
+                      </div>
+                    )}
                 </Card>
               )
               : (

@@ -61,7 +61,7 @@ export const PodcastEdit = () => {
   }, [podcast])
   
   const MIN_DESCRIPTION_CHARS = 50
-  const MAX_DESCRIPTION_CHARS = 1000
+  const MAX_DESCRIPTION_CHARS = 2000
   
   const submitHandler = async () => {
     

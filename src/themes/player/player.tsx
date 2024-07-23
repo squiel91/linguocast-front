@@ -56,7 +56,7 @@ export const PlayerContextWrapper = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { isLoggedIn } = useAuth()
+  const { user, isLoggedIn } = useAuth()
 
   const [currentEpisode, setCurrentEpisode] = useState<PopulatedEpisode | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -177,7 +177,6 @@ export const PlayerContextWrapper = () => {
         {isPlayerExpaned && (
           <div className="fixed top-0 left-0 py-4 right-0 bottom-0 min-h-screen bg-primary text-white z-20">
             <div className="container py-4 grid auto-rows-auto grid-rows-[min-content_1fr_min-content_min-content] gap-4 h-full">
-              {/* <div className="bg-red-500 ">hello</div> */}
               <div className="flex gap-8">
                 <img
                   className="w-14 h-14 aspect-square rounded-md border-2 border-slate-200"
@@ -198,10 +197,12 @@ export const PlayerContextWrapper = () => {
               )}
               {currentEpisode?.transcript && (
                 <ReadAlong
+                  isPremium={!!user?.isPremium}
                   transcript={currentEpisode.transcript}
                   currentTime={currentTime}
                   onTimeChangeRequest={changeTime}
                   language={currentEpisode.podcast.targetLanguage}
+                  onMinimizeRequest={() => setIsPlayerExpanded(false)}
                   embedded={<ViewEmbeddedMinimized onExpectedNavigation={() => setIsPlayerExpanded(false)} embedded={currentEmbedded} />}
                 />
               )}

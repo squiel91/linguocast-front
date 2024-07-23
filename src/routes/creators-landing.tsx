@@ -49,11 +49,11 @@ export const CreatorsLanding = () => {
           </p>
           {!user && (
             <>
-              <Button onClick={() => openRegisterHandler(true)} className="text-xl px-8 py-3">Sign-up as a creator</Button>
-              <p className='mt-2 text-sm'>Completely free for creators.</p>
+              <Button onClick={() => openRegisterHandler(true, true)} className="text-xl px-8 py-3">Sign-up/in as a creator</Button>
+              <p className='mt-2 text-sm'>100% free for creators.</p>
             </>
           )}
-          {user && !user.isCreator && (
+          {!!user && !user.isCreator && (
             <Button
               isLoading={isActivatingCreatorsMode}
               onClick={activateCreatorModeHandler}
@@ -62,7 +62,7 @@ export const CreatorsLanding = () => {
               Activate creator mode
             </Button>
           )}
-          {user && user.isCreator && (
+          {!!user && !!user.isCreator && (
             <Link to="/creators/podcasts">
               <Button className="text-xl px-8 py-3">Manage my podcasts</Button>
             </Link>
@@ -70,7 +70,9 @@ export const CreatorsLanding = () => {
         </section>
 
         <Section icon={Users} title="Tap into a Thriving Community of Language Enthusiasts">
-          <p className="text-lg">Linguocast has cultivated a vibrant ecosystem of eager learners, ready to devour your content!</p>
+          <p className="text-lg">
+            Get discovered by a motivated language learning community and expand your audience in an organic way.
+          </p>
         </Section>
 
         <Section icon={Rocket} title="Skyrocket Engagement with Dedicated Language Learning Tools">

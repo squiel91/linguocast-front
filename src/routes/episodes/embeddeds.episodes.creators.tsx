@@ -72,7 +72,7 @@ export const EpisodeEmbeddeds = () => {
             description: 'Display an image',
             onClick: () => setEmbeddeds(embeddeds => [
               ...embeddeds,
-              { type: 'word', wordId: null, start: 0, duration: 15 }
+              { type: 'image', image: '', start: 0, duration: 15 }
             ])
           },
           {

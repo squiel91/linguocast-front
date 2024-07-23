@@ -42,7 +42,7 @@ const EditPodcast = () => {
             <h2 className="text-lg">
               The podcast isn't listed yet
             </h2>
-            Publish the podcast in the "Settings" tab when you feel it's ready for prime time!
+            Publish the podcast in the "Settings" tab when it's ready for prime-time!
           </div>
           <ChevronRightIcon className="self-center" />
         </Link>

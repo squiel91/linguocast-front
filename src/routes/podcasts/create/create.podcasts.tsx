@@ -49,7 +49,7 @@ const CreatePodcast = () => {
         mediumLanguage,
         levels
       })
-      navigate(`/creators/podcasts/${podcastId}/overview`)
+      navigate(`/creators/podcasts/${podcastId}/edit`)
     } catch (error) {
       console.error(error)
       alert('There was an error creating the podcast from the RSS Feed. Please revise that it is a valid RSS link and try again.\n\nIf the error persists please contact support.')

@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 
 import { ChevronsUpDownIcon, GlobeIcon, MessageSquarePlusIcon, MicIcon, SearchIcon } from 'lucide-react'
 import { LEVELS } from '@/constants/levels.constants'
-import { Language, Level, MinifiedPodcast } from '@/types/types'
+import { Level, MinifiedPodcast } from '@/types/types'
 import { Input } from '@/ui/input.ui'
 import { Select } from '@/ui/select.ui'
 import { cn } from '@/utils/styles.utils'
@@ -10,24 +10,18 @@ import { Checkbox } from '@/ui/checkbox.ui'
 import axios from 'axios'
 import { useAuth } from '@/auth/auth.context'
 import { useLocation } from 'react-router-dom'
-import { useQueries } from '@tanstack/react-query'
+import { useQuery } from '@tanstack/react-query'
 import { PodcastSummary } from '@/ui/podcast-summary.ui'
 import { PodcastSummaryPlaceholder } from '@/ui/podcast-summary-placeholder.ui'
-import { capitalize } from '@/utils/text.utils'
 import { SuggestMissingPodcastModal } from '@/components/suggest-missing-podcasts-modal'
 import { Dropdown } from '@/ui/dropdown.ui'
+import { LANGUAGES } from '@/constants/languages.constants'
 
 const ListPodcast = () => {
   const { user } = useAuth() 
 
-  const [
-    { data: podcasts, isFetching: podcastsIsFetching },
-    { data: languages }
-  ] = useQueries({
-    queries: [
-      { queryKey: ['minified-podcasts'], queryFn: () => axios.get<MinifiedPodcast[]>('/api/podcasts').then(res => res.data) },
-      { queryKey: ['languages'], queryFn: () => axios.get<Language[]>('/api/languages').then(res => res.data) }
-    ]
+  const { data: podcasts, isFetching: podcastsIsFetching } = useQuery({
+    queryKey: ['minified-podcasts'], queryFn: () => axios.get<MinifiedPodcast[]>('/api/podcasts').then(res => res.data)
   })
 
   const location = useLocation()
@@ -88,15 +82,15 @@ const ListPodcast = () => {
           <div className='flex flex-col gap-4 sticky top-4'>
             <label>
               <Select
-                value={targetLanguage}
+                label="Studying"
+                value={LANGUAGES.find(({ code }) => code === targetLanguage)?.code ?? null}
                 options={[
                   { value: null, text: 'All languages', append: <GlobeIcon size={20} className='text-gray-400' /> },
-                  ...(
-                    languages?.map(
-                      ({ name }) => ({ value: name, text: capitalize(name), append: <img src={`/flags/${name}.svg`} /> })
-                  ) ?? [])
+                  ...LANGUAGES.map(({ name, code }) => {
+                    return ({ value: code, text: name, append: <img src={`/flags/${code}.svg`} /> })
+                  })
                 ]}
-                onChange={languageCode => setTargetLanguage(languageCode)}
+                onChange={setTargetLanguage}
               />
             </label>
             <label className={cn(isFiltersExpanded ? 'block' : 'hidden', 'lg:block')}>

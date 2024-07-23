@@ -140,17 +140,30 @@ const Profile = () => {
             <>
               <Select
                 label="Studying"
-                value={LANGUAGES.find(({ code, variant: v }) => code === learning && v === variant)?.id.toString() ?? null}
+                value={learning ? learning + (variant ? `/${variant}` : '') : null}
                 disabled={isSaving}
                 options={[
                   { value: null, text: '', selectable: false },
-                  ...(LANGUAGES?.map(({ id, name, code }) => {
-                    return ({ value: `${id}`, text: name, append: <img src={`/flags/${code + (variant ? `-${variant}` : '')}.svg`} /> })
-                  }) ?? [])
+                  ...LANGUAGES.flatMap(
+                    ({ code, name, variants }) => {
+                      if (variants && variants.length > 0) {
+                        return variants.map(variant => ({
+                          value: code + '/' + variant,
+                          text: `${name} (${capitalize(variant)})`,
+                          append: <img src={`/flags/${code}-${variant}.svg`} />
+                        }))
+                      }
+                      return ({
+                        value: code,
+                        text: name,
+                        append: <img src={`/flags/${code}.svg`} />
+                      })
+                    }
+                  )
                 ]}
-                onChange={languageId => {
-                  if (!languageId) return // this case wont happen
-                  const { code, variant } = LANGUAGES.find(({ id }) => id === +languageId)!
+                onChange={codePossiblyWithVariant => {
+                  if (!codePossiblyWithVariant) return // this case wont happen
+                  const [code, variant] = codePossiblyWithVariant.split('/')
                   setLearning(code)
                   setVariant(variant)
                 }}

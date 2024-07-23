@@ -32,7 +32,7 @@ export const Button = ({
     className={cn(
       'relative font-[600]',
       variant === 'primary'
-        ? 'bg-red-300 border-[3px] border-slate-800'
+        ? 'bg-red-300 border-2 border-slate-800'
         : variant === 'outline'
           ?'text-slate-800 border-slate-800 border-2 border-solid'
           : 'text-slate-800',

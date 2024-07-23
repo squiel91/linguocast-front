@@ -8,10 +8,10 @@ import { GrabIcon, HandIcon, InfoIcon, Link2Icon } from "lucide-react"
 import noImage from '@/assets/no-image.svg'
 import { Link } from "react-router-dom"
 import { urlSafe } from "@/utils/url.utils"
-import { useEffect, useState } from "react"
 import { ViewExercise } from "@/routes/episodes/exercises/view.exercises.view.episode"
 import { IViewExercise } from "@/routes/episodes/exercises/types.exercises"
 import { ProgressBar } from "@/ui/progress-bar.ui"
+import { useEffect, useState } from "react"
 
 interface Props {
   embedded: Embedded | null
@@ -36,13 +36,17 @@ export const ViewEmbeddedMinimized = ({
   })
 
   const { data: word } = useQuery({
-    enabled: !!embedded && embedded.type === 'word' && !embedded.word,
-    queryKey: ['word', (embedded?.type === 'word' && embedded.wordId) ?? null ],
-    queryFn: () => {
-      if (embedded?.type !== 'word') return null
-      return axios.get<Word>(`/api/words/${embedded.wordId}`).then(res => res.data)
-    }
+    // enabled: !!embedded && embedded.type === 'word' && !embedded.word,
+    queryKey: ['word', (embedded?.type === 'word' && ('word' in embedded ? embedded.word?.id : embedded.wordId)) ?? null ],
+    queryFn: () => axios.get<Word>(`/api/words/${embedded?.type === 'word' && embedded.wordId}`).then(res => res.data)
   })
+
+  const [catchedWord, setCatchedWord] = useState<Word | null>(null)
+
+  useEffect(() => {
+    if (catchedWord || !embedded || embedded?.type !== 'word') return
+    setCatchedWord('word' in embedded ? embedded.word! : word ?? null)
+  }, [catchedWord, embedded, word])
 
   const { data: exercise } = useQuery({
     enabled: !!embedded && embedded.type === 'exercise',
@@ -53,62 +57,49 @@ export const ViewEmbeddedMinimized = ({
     }
   })
 
-  const [isGrabbedSaving, setIsGrabbedSaving] = useState(false)
-  const [isGrabbed, setIsGrabbed] = useState(false)
+  interface MutationVariables {
+    wordId: number;
+    initialSaveStatus: boolean;
+  }
 
-  useEffect(() => {
-    console.log('embedded changed', embedded)
-  }, [embedded])
-
-  useEffect(() => {
-    console.log('word changed', word)
-  }, [word])
-
-  useEffect(() => {
-    if (!embedded || embedded.type !== 'word' || (!embedded.word && !word)) return
-    setIsGrabbed(((embedded.word || word) as Word).saved)
-  }, [word, embedded])
-
-  // const { mutate: saveWordMutation } = useMutation({
-  //   mutationKey: ['save-word'],
-  //   mutationFn: (wordId: number) => axios.post(`/api/user/words/${wordId}`),
-  //   onError: (error) => {
-  //     setIsGrabbed(false)
-  //     console.error(error)
-  //   },
-  //   onMutate: () => {
-  //     setIsGrabbed(true)
-  //     setIsGrabbedSaving(true)
-  //   },
-  //   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  //   onSuccess: (_, wordId) => {
-  //     // queryClient.invalidateQueries({ queryKey: ['word', wordId] })
-  //     // queryClient.invalidateQueries({ queryKey: ['saved-words'] })
-  //   },
-  //   onSettled: () => setIsGrabbedSaving(false)
-  // })
-
-  const { mutate: removeSavedWordMutation } = useMutation({
-    mutationKey: ['remove-saved-word'],
-    mutationFn: (wordId: number) => axios.delete(`/api/user/words/${wordId}`),
-    onMutate: () => {
-      setIsGrabbed(true)
-      setIsGrabbedSaving(true)
+  const toggleWordGrab = useMutation<void, Error, MutationVariables>({
+    mutationFn: async ({ wordId, initialSaveStatus }) => {
+      return initialSaveStatus
+        ? axios.delete(`/api/user/words/${wordId}`)
+        : axios.post(`/api/user/words/${wordId}`);
     },
-    onError: (error) => {
-      // means that the word was already removed
-      setIsGrabbed(false)
-      console.error(error)
+    onMutate: async ({ wordId, initialSaveStatus }) => {
+      await queryClient.cancelQueries({ queryKey: ['word', wordId] });
+
+      console.log({ whatIdLookup: wordId })
+      
+      const previousWord = queryClient.getQueryData<Word>(['word', wordId]);
+      console.log({ previousWord })
+      const updatedWord: Word = {
+        ...(previousWord as Word),
+        saved: !initialSaveStatus
+      };
+      queryClient.setQueryData<Word>(['word', wordId], updatedWord);
+      setCatchedWord(w => ({ ...w!, saved: !initialSaveStatus }))
+
+      return { previousWord }
     },
-    onSuccess: (_, wordId) => {
-      queryClient.invalidateQueries({ queryKey: ['word', wordId] })
+    onError: (err, { initialSaveStatus }) => {
+      // if (context?.previousWord) {
+      //   queryClient.setQueryData<Word>(['word', wordId], context.previousWord)
+      // }
+      setCatchedWord(w => ({ ...w!, saved: initialSaveStatus }))
+      console.error("Failed to update word grab status:", err)
+    },
+    onSettled: (_, __) => {
+      // queryClient.invalidateQueries({ queryKey: ['word', wordId] })
       queryClient.invalidateQueries({ queryKey: ['saved-words'] })
-    },
-    onSettled: () => setIsGrabbedSaving(false)
+    }
   })
 
 
-  if (!embedded) return <></>
+  if (!embedded) return null
+
   return (
     <div className="container flex justify-end">
       <Card className={embedded.type === 'image' ? 'p-0' : embedded.type === 'word' || embedded.type === 'exercise' ? 'p-4' : 'relative px-3 py-2'}>
@@ -128,11 +119,11 @@ export const ViewEmbeddedMinimized = ({
           </div>
         )}
         {embedded.type === 'image' && (
-          <img src={embedded.image as string} className="w-[12rem] h-[12rem] rounded-md hover:h-72 hover:w-72 transition-all cursor-zoom-in" />
+          <img src={embedded.image as string} className="w-[12rem] h-[12rem] rounded-md hover:h-72 hover:w-72 transition-all cursor-zoom-in" alt="Embedded image" />
         )}
         {embedded.type === 'episode' && episode && (
           <Link to={`/episodes/${embedded.episodeId}/${urlSafe(episode.title)}`} className="flex gap-4 items-center" onClick={expectedNavigationHandler}>
-            <img src={episode.image ?? noImage} className="w-12 h-12 rounded-md border-slate-200 border-[1px]" />
+            <img src={episode.image ?? noImage} className="w-12 h-12 rounded-md border-slate-200 border-[1px]" alt={episode.title} />
             <div className="line-clamp-2">
               {episode.title}
             </div>
@@ -141,38 +132,22 @@ export const ViewEmbeddedMinimized = ({
         {embedded.type === 'exercise' && exercise && (
           <ViewExercise exercise={exercise} />
         )}
-        {embedded.type === 'word' && (word || embedded.word) && (
+        {embedded.type === 'word' && catchedWord && (
           <div className="min-w-60 max-w-md ">
             <div className="flex gap-2 items-baseline">
-              <div className="text-2xl font-bold">{((word || embedded.word) as Word).word}</div>
-              <div className="flex-grow">{((word || embedded.word) as Word).pronunciation}</div>
+              <div className="text-2xl font-bold">{catchedWord.word}</div>
+              <div className="flex-grow">{catchedWord.pronunciation}</div>
               <button
                 className="bg-orange-200 ml-4 rounded-full px-4 py-2 text-sm font-bold flex gap-2 items-center"
-                onClick={async () => {
-                  if (isGrabbed) removeSavedWordMutation(((word || embedded.word) as Word).id)
-                  else {
-                    const wordId = ((word || embedded.word) as Word).id
-                    try {
-                      setIsGrabbed(true)
-                      setIsGrabbedSaving(true)
-                      await axios.post(`/api/user/words/${wordId}`)
-                    } catch (error) {
-                      console.error(error)
-                      setIsGrabbed(false)
-                    } finally {
-                      setIsGrabbedSaving(true)
-                    }
-                    // saveWordMutation(((word || embedded.word) as Word).id)
-                  }
-                }}
-                disabled={isGrabbedSaving}
+                onClick={() => toggleWordGrab.mutate({ wordId: catchedWord.id, initialSaveStatus: catchedWord.saved })}
+                disabled={toggleWordGrab.isPending}
               >
-                {isGrabbed ? <GrabIcon size={16} /> : <HandIcon size={16} />}
-                {isGrabbed ? 'Grabbed' : 'Grab'}
+                {catchedWord.saved ? <GrabIcon size={16} /> : <HandIcon size={16} />}
+                {catchedWord.saved ? 'Grabbed' : 'Grab'}
               </button>
             </div>
             <ul className="mt-2 flex gap-2 flex-wrap text-sm">
-              {((word || embedded.word) as Word).translations.map((sameMeaning, index) => (
+              {catchedWord.translations.map((sameMeaning, index) => (
                 <li key={index} className=" bg-slate-200 py-0.5 px-2 rounded-md">{sameMeaning.join('; ')}</li>
               ))}
             </ul>

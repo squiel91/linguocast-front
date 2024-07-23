@@ -101,7 +101,7 @@ export const ViewChoicesExercise = ({ exercise }: Props) => {
             {correction.score === 0 && (
               <div className="text-sm">
                 The correct answers {correction.feedback.length === 1 ? 'is' : 'are'} the {
-                  readableJoin((correction.feedback).map(index => getReadablePosition(index)))} one.
+                  readableJoin((correction.feedback.sort((a, b) => a -b)).map(index => getReadablePosition(index)))} one.
               </div>
             )}
           </div>

@@ -4,6 +4,10 @@ import { CheckIcon, StarIcon, XIcon } from "lucide-react";
 import { Card } from "@/ui/card.ui";
 import { Switch } from "@/ui/switch.ui";
 import { Button } from "@/ui/button.ui";
+import michaelAvatar from '@/assets/avatars/michael.jpg'
+import petterAvatar from '@/assets/avatars/petter.jpg'
+import sahraAvatar from '@/assets/avatars/sahra.jpg'
+import { Avatar } from "@/ui/avatar.ui";
 
 const Premium = () => {
   const [isAnnualPayment, setIsAnnualPayment] = useState(true);
@@ -23,16 +27,19 @@ const Premium = () => {
       name: "Sarah L.",
       review: "The synchronized transcript feature is a game-changer! I can follow along with the audio, improving my listening and reading skills simultaneously. It's like having subtitles for podcasts!",
       feature: "Read along (synchronized transcript)",
+      avatar: sahraAvatar
     },
     {
       name: "Michael T.",
       review: "Being able to save and revise 'catch' words has dramatically expanded my vocabulary. I love how I can quickly mark words during listening and review them later. It's made learning new terms so much more efficient!",
       feature: "Save words and revise later",
+      avatar: michaelAvatar
     },
     {
-      name: "Elena R.",
+      name: "Petter R.",
       review: "The exercises after each podcast are fantastic for reinforcing what I've learned. They help me evaluate my understanding and really solidify the new language concepts. My comprehension has improved significantly!",
       feature: "Exercises for understanding",
+      avatar: petterAvatar
     }
   ]
 
@@ -106,12 +113,8 @@ const Premium = () => {
         {reviews.map((review, index) => (
           <Card key={index}>
             <div className="flex items-center mb-4">
-              <img 
-                src={`/api/placeholder/60/60`} 
-                alt={`${review.name}'s avatar`} 
-                className="w-12 h-12 rounded-full mr-4"
-              />
-              <div>
+              <Avatar avatarUrl={review.avatar} />
+              <div className="ml-4">
                 <h3 className="font-semibold">{review.name}</h3>
                 <div className="flex">
                   {[...Array(5)].map((_, i) => (

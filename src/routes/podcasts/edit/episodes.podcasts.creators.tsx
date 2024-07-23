@@ -73,7 +73,7 @@ export const CreatorsListPodcastEpisodes = () => {
             <li>
               <Link to={`/creators/podcasts/${podcastId}/episodes/${episode.id}/overview`} >
                 <Card className="p-0 flex flex-col items-center md:flex-row">
-                  <div className="relative w-full md:w-[220px] shrink-0 bg-red-500">
+                  <div className="relative w-full md:w-[220px] shrink-0 bg-slate-300">
                     <img src={episode.image || episode.podcastImage || noImage} className="w-full min-h-full md:aspect-square content-center object-cover" />
                     {!episode.isListed && <div className="rounded-md px-3 py-1 bg-slate-800 text-white text-sm absolute left-2 top-2">
                       Unlisted

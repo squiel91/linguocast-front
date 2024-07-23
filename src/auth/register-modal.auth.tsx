@@ -17,10 +17,11 @@ import { LANGUAGES } from "@/constants/languages.constants"
 
 interface Props {
   isOpen: boolean
+  isCreator: boolean,
   onClose: () => void
 }
 
-export const RegisterModal = ({ isOpen, onClose: closeHandlerExternal }: Props) => {
+export const RegisterModal = ({ isOpen, isCreator, onClose: closeHandlerExternal }: Props) => {
   const navigate = useNavigate()
   const { openRegisterHandler, openLoginHandler, loginHandler: loginAuthHandler } = useAuth()
 
@@ -40,11 +41,15 @@ export const RegisterModal = ({ isOpen, onClose: closeHandlerExternal }: Props) 
     try {
       setIsLoading(true)
       const { data: { token, user } } = await axios.post<{ token: string, user: SelfUser }>('/api/users', {
-        email, name, password, learning, variant, level
+        email, name, password, learning, variant, level: isCreator ? 'advanced' : level
       })
       loginAuthHandler(user, token)
       openRegisterHandler(false)
-      if (location.pathname === '/explore') navigate('/feed')
+      if (isCreator) {
+        navigate('/creators/podcasts/source')
+      } else {
+        if (location.pathname === '/explore') navigate('/feed')
+      }
     } catch (error) {
       console.error(error)
       alert('There was an unexpected error! Please try again.')
@@ -67,7 +72,11 @@ export const RegisterModal = ({ isOpen, onClose: closeHandlerExternal }: Props) 
       )
       loginAuthHandler(user, token)
       openRegisterHandler(false)
-      if (location.pathname === '/explore') navigate('/feed')
+      if (isCreator) {
+        navigate('/creators/podcasts')
+      } else {
+        if (location.pathname === '/explore') navigate('/feed')
+      }
     } catch (error) {
       if (isAxiosError(error) && error.response && error.response.status === 401) {
         alert('The password is incorrect.')
@@ -105,8 +114,8 @@ export const RegisterModal = ({ isOpen, onClose: closeHandlerExternal }: Props) 
         setStage(2)
         break
       case 2:
-        if (!learning) return alert('You need to choose the language you are learning.')
-        if (!level) return alert('You need to choose your current level.')
+        if (!learning) return alert(isCreator ? 'You need to choose the primary language you will teach.' : 'You need to choose the language you are learning.')
+        if (!isCreator && !level) return alert('You need to choose your current level.')
         registerHandler()
     }
   }
@@ -124,7 +133,12 @@ export const RegisterModal = ({ isOpen, onClose: closeHandlerExternal }: Props) 
           <h2 className="text-3xl mb-2">
             {loginUserName ? `Welcome back ${loginUserName}!` : stage > 0 ? 'Sign up' : 'Sign in/up'}
           </h2>
-          <p>Save your progress, take quizzes, make comments, save and review word, etc.</p>
+          <p>
+            {isCreator
+              ? 'Create captivating language content and inspire global learners.'
+              : 'Immerse yourself in languages through podcasts and interactive learning.'
+            }
+          </p>
         </div>
         <div className="flex items-center h-full w-full">
           {stage === 0 && (
@@ -181,34 +195,49 @@ export const RegisterModal = ({ isOpen, onClose: closeHandlerExternal }: Props) 
           {stage === 2 && (
             <div className="flex flex-col gap-4 w-full">
               <Select
-                label="Studying"
-                value={LANGUAGES.find(({ code, variant: v }) => code === learning && v === variant)?.id.toString() ?? null}
+                label={isCreator ? 'Teaching' : 'Studying'}
+                value={learning ? learning + (variant ? `/${variant}` : '') : null}
                 disabled={isLoading}
                 options={[
                   { value: null, text: '', selectable: false },
-                  ...(LANGUAGES?.map(({ id, name, code }) => {
-                    return ({ value: `${id}`, text: name, append: <img src={`/flags/${code + (variant ? `-${variant}` : '')}.svg`} /> })
-                  }) ?? [])
+                  ...LANGUAGES.flatMap(
+                    ({ code, name, variants }) => {
+                      if (variants && variants.length > 0) {
+                        return variants.map(variant => ({
+                          value: code + '/' + variant,
+                          text: `${name} (${capitalize(variant)})`,
+                          append: <img src={`/flags/${code}-${variant}.svg`} />
+                        }))
+                      }
+                      return ({
+                        value: code,
+                        text: name,
+                        append: <img src={`/flags/${code}.svg`} />
+                      })
+                    }
+                  )
                 ]}
-                onChange={languageId => {
-                  if (!languageId) return // this case wont happen
-                  const { code, variant } = LANGUAGES.find(({ id }) => id === +languageId)!
+                onChange={codePossiblyWithVariant => {
+                  if (!codePossiblyWithVariant) return // this case wont happen
+                  const [code, variant] = codePossiblyWithVariant.split('/')
                   setLearning(code)
                   setVariant(variant)
                 }}
               />
-              <Select
-                label="Level"
-                value={level}
-                disabled={isLoading}
-                options={[
-                  { value: null, text: '- Select a level -', selectable: false },
-                  ...(LEVELS?.map(level => {
-                    return ({ value: level, text: capitalize(level) })
-                  }) ?? [])
-                ]}
-                onChange={level => setLevel(level as Level)}
-              />
+              {!isCreator && (
+                <Select
+                  label="Level"
+                  value={level}
+                  disabled={isLoading}
+                  options={[
+                    { value: null, text: '- Select a level -', selectable: false },
+                    ...(LEVELS?.map(level => {
+                      return ({ value: level, text: capitalize(level) })
+                    }) ?? [])
+                  ]}
+                  onChange={level => setLevel(level as Level)}
+                />
+              )}
             </div>
           )}
         </div>

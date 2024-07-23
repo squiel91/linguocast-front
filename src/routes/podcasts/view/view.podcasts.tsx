@@ -1,9 +1,9 @@
 import { Podcast } from '@/types/types'
-import { getMainDomain, urlSafe } from '@/utils/url.utils'
+import { getMainDomain } from '@/utils/url.utils'
 import axios from 'axios'
-import { ArrowUpRightIcon, CheckIcon, InfoIcon, LibraryIcon, MessageSquareTextIcon, PenLineIcon, PlusIcon, Share2Icon } from 'lucide-react'
+import { ArrowUpRightIcon, CheckIcon, InfoIcon, LibraryIcon, MessageSquareTextIcon, PlusIcon, Share2Icon } from 'lucide-react'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { Link, useParams } from 'react-router-dom'
+import { useParams } from 'react-router-dom'
 import { useEffect, useState } from 'react'
 import { PlatformIcon } from '@/ui/platform-icon/platform-icon.ui'
 import { useAuth } from '@/auth/auth.context'
@@ -15,10 +15,11 @@ import { Card } from '@/ui/card.ui'
 import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
 import { usePageTitle } from '@/utils/document.utils'
 import { Menu } from '@/components/menu'
+import ShareOnSocial from 'react-share-on-social';
 
 const ViewPodcast = () => {
   const { podcastId } = useParams()
-  const { isLoggedIn, openLoginHandler } = useAuth()
+  const { isLoggedIn, openRegisterHandler } = useAuth()
   const [hasSaved, setHasSaved] = useState<boolean>(false)
 
   const [selectedTabKey, setSelectedTabKey] = useState('episodes')
@@ -50,7 +51,7 @@ const ViewPodcast = () => {
   }, [podcast])
 
   const toggleSaveHandler = () => {
-    if (!isLoggedIn) return openLoginHandler(true)
+    if (!isLoggedIn) return openRegisterHandler(true)
     setHasSaved(saved => {
       if (saved) mutateRemoveSavePodcast()
       else mutateSavePodcast()
@@ -60,7 +61,7 @@ const ViewPodcast = () => {
 
   // const updatedSaveCount = (podcast?.savedCount ?? 0) + (hasSaved ? 1 : 0)
   return (
-    <div className='px-4 lg:px-8'>
+    <div className='px-4 lg:px-12'>
       <Breadcrumb crumbs={[ { to: '/explore', name: 'Explore shows'} ]} current={podcast?.name ?? ''} />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-12 gap-y-4">
         <img
@@ -82,12 +83,21 @@ const ViewPodcast = () => {
             >
               {hasSaved ? 'Following' : 'Follow'}
             </Button>
-            <Button
-              variant="outline"
-              prepend={<Share2Icon size={18} />}
+            <ShareOnSocial
+              textToShare="Check out this this podcast at Linguocast!"
+              link={location.href}
+              linkTitle={podcast?.name ?? 'Podcast name'}
+              linkMetaDesc={podcast?.description.slice(0, 100) ?? 'Podcast description'}
+              linkFavicon={podcast?.coverImage ? `https://linguocast.com${podcast?.coverImage}` : 'https://linguocast.com/favicon.png'}
+              noReferer
             >
-              Share
-            </Button>
+              <Button
+                variant="outline"
+                prepend={<Share2Icon size={18} />}
+              >
+                Share
+              </Button>
+            </ShareOnSocial>
           </div>
           <Menu
             underline
@@ -159,14 +169,6 @@ const ViewPodcast = () => {
               </table>
             </Card>
           )}
-          <Link
-            to={`/podcasts/${podcast?.id}/${urlSafe(podcast?.name)}/edit`}
-            className='block mt-4'
-          >
-            <Button variant="discrete" prepend={<PenLineIcon size={16} />}>
-              Suggest an edit
-            </Button>
-          </Link>
         </div>
       </div>
     </div>

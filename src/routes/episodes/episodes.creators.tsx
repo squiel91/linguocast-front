@@ -53,7 +53,7 @@ export const ManageEpisode = () => {
             <h2 className="text-lg">
               The episode isn't listed yet
             </h2>
-            Publish the episode in the "Settings" tab when you feel it's ready for prime time!
+            Publish the episode in the "Settings" tab when it's ready for prime-time!
           </div>
           <ChevronRightIcon className="self-center" />
         </Link>

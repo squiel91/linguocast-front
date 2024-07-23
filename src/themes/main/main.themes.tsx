@@ -118,7 +118,7 @@ const MainTheme = () => {
                 prepend={<DoorOpenIcon size={18} />}
                 onClick={() => openRegisterHandler(true)}
               >
-                Access
+                Sign-up/in
               </Button>
             )
           }

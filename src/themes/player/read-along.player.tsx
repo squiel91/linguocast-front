@@ -2,18 +2,22 @@ import { Word } from '@/types/types'
 import { Card } from '@/ui/card.ui'
 import { useQuery } from '@tanstack/react-query'
 import axios from 'axios'
-import { AudioWaveformIcon } from 'lucide-react'
+import { AudioWaveformIcon, CrownIcon, DotIcon } from 'lucide-react'
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
 import useRefsCollection from 'react-refs-collection'
 import { ViewEmbeddedMinimized } from './minimized/view.embedded.minimized.player'
 import { removePunctuation } from '@/utils/text.utils'
 import { ProgressBar } from '@/ui/progress-bar.ui'
+import { Button } from '@/ui/button.ui'
+import { Link } from 'react-router-dom'
 
 interface Props {
   transcript: string
   currentTime: number
   embedded: ReactNode
   language: string
+  isPremium: boolean
+  onMinimizeRequest: () => void
   onTimeChangeRequest: (time: number) => void
 }
 
@@ -22,7 +26,9 @@ export const ReadAlong = ({
   currentTime,
   language,
   embedded,
-  onTimeChangeRequest: timeChangeRequestHandler
+  isPremium,
+  onTimeChangeRequest: timeChangeRequestHandler,
+  onMinimizeRequest: minimizeRequestHandler
 }: Props) => {
   const timedTranscript = useRef<({
     start: number,
@@ -34,6 +40,7 @@ export const ReadAlong = ({
     getRefHandler: getTokenRefHandler,
     getRef: getTokensRef
   } = useRefsCollection()
+  const premiumAdvertisement = useRef(null)
   const [isOutOfSync,setIsOutOfSync] = useState(false)
   const isAutomaticScroll = useRef(false)
 
@@ -43,7 +50,7 @@ export const ReadAlong = ({
 
   const { data: wordResults, isPending: isFetchingWord, isError: wordLookupFailed } = useQuery({
     enabled: !!selectedWord,
-    queryKey: ['word', selectedWord ?? null ],
+    queryKey: ['word-lookup', selectedWord ?? null ],
     queryFn: () => {
       if (!selectedWord) return null
       return axios.get<Word[]>(`/api/words`, { params: { q: selectedWord, language } }).then(res => res.data)
@@ -101,12 +108,17 @@ export const ReadAlong = ({
 
   useEffect(() => {
     if (timedTranscript.current.length > 0 && !isOutOfSync && !isAutomaticScroll.current) {
-      for (const timedToken of timedTranscript.current) {
-        if (!timedToken) continue
-        if (timedToken.start > currentTime) {
-          const currentToken = getTokensRef(timedToken.index)
-          scrollToCenterChild(currentToken)
-          break
+      for (let i = 0; i < timedTranscript.current.length; i++) {
+        const timedToken = timedTranscript.current[i];
+        if (!timedToken) continue;
+        if (timedToken.start > currentTime || i === timedTranscript.current.length - 1) {
+          if (i === timedTranscript.current.length - 1 && premiumAdvertisement.current) {
+            scrollToCenterChild(premiumAdvertisement.current);
+          } else {
+            const currentToken = getTokensRef(timedToken.index);
+            scrollToCenterChild(currentToken);
+          }
+          break;
         }
       }
     }
@@ -163,6 +175,22 @@ export const ReadAlong = ({
             </span>
           )
         })}
+        {!isPremium && (
+          <>
+            <span className='ml-2'><DotIcon strokeWidth={6} className='inline' /><DotIcon strokeWidth={6}  className='inline' /><DotIcon strokeWidth={6} className='inline' /></span>
+            <div className="my-8 font-normal" ref={premiumAdvertisement} >
+              <h1 className="text-4xl mb-2">Ouch! You've Hit a Language Barrier!</h1>
+              <p className="text-lg">
+                Upgrade to Premium to support your favorite creators and unlock the full transcript!
+              </p>
+              <Link to="/premium" onClick={minimizeRequestHandler}>
+                <Button variant='outline' className='border-white text-white' prepend={<CrownIcon size={18} />}>
+                  Start Your Free Trial
+                </Button>
+              </Link>
+            </div>
+          </>
+        )}
       </div>
       {isOutOfSync && (
         <button

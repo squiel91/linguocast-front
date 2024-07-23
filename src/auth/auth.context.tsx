@@ -13,7 +13,7 @@ interface Auth {
   loginHandler: (user: SelfUser, token: string) => void
   logoutHandler: () => void 
   openLoginHandler: (isOpen: boolean) => void
-  openRegisterHandler: (isOpen: boolean) => void
+  openRegisterHandler: (isOpen: boolean, isCreator?: boolean) => void
   modifyUser: (newUser: SelfUser) => void
 }
 
@@ -38,6 +38,7 @@ export const AuthContextWrapper = ({ children }: Props) => {
   const [user, setUser] = useState<SelfUser | null>(null)
   const [isLoginOpen, setIsLoginOpen] = useState(false)
   const [isRegisterOpen, setIsRegisterOpen] = useState(false)
+  const [isCreator, setIsCreator] = useState(false)
 
   const { data: retrivedUser } = useQuery({
     queryKey: ['user'],
@@ -64,13 +65,17 @@ export const AuthContextWrapper = ({ children }: Props) => {
         setToken(null)
       },
       openLoginHandler: (isOpen) => setIsLoginOpen(isOpen),
-      openRegisterHandler: (isOpen) => setIsRegisterOpen(isOpen),
+      openRegisterHandler: (isOpen, isCreator = false) => {
+        setIsRegisterOpen(isOpen)
+        setIsCreator(isCreator)
+      },
       modifyUser: (newUser) => setUser(newUser)
     }}>
       {children}
       <LoginModal isOpen={isLoginOpen} onClose={() => setIsLoginOpen(false)} />
       <RegisterModal
         isOpen={isRegisterOpen}
+        isCreator={isCreator}
         onClose={() => setIsRegisterOpen(false)}
       />
     </AuthContext.Provider>
