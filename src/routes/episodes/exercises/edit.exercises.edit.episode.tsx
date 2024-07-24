@@ -33,8 +33,8 @@ export const EditExercise = ({
           {exercise.responsesCount} response{exercise.responsesCount === 1 ? '' : 's'}
         </button>
       )}
-      {exercise.responsesCount === 0 && (
-        <button onClick={removeHandler} disabled={exercise.responsesCount > 0} className="p-2 rounded-md text-primary hover:bg-slate-100">
+      {(exercise.responsesCount ?? 0) === 0 && (
+        <button onClick={removeHandler} className="p-2 rounded-md text-primary hover:bg-slate-100">
           <Trash2Icon size={20} />
         </button>
       )}

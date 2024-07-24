@@ -10,13 +10,15 @@ import { Select } from "@/ui/select.ui"
 import { Switch } from "@/ui/switch.ui"
 import { capitalize } from "@/utils/text.utils"
 import { urlSafe } from "@/utils/url.utils"
-import { useMutation } from "@tanstack/react-query"
+import { useMutation, useQueryClient } from "@tanstack/react-query"
 import axios from "axios"
 import { AlertCircleIcon, EllipsisVertical, GlobeIcon, LogOut, RotateCcwIcon, SaveIcon } from "lucide-react"
 import { useCallback, useEffect, useState } from "react"
 import { useLocation, useNavigate } from "react-router-dom"
 
 const Profile = () => {
+  const queryClient = useQueryClient()
+
   const navigate = useNavigate()
   const location = useLocation()
   const { isLoggedIn, logoutHandler: authLogoutHandler, user: userProfile } = useAuth()
@@ -34,7 +36,10 @@ const Profile = () => {
       console.error(error)
       alert('There was an error saving changes. Please try again.')
     },
-    onSuccess: () => alert('Changes saved!'),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['user'] })
+      alert('Changes saved!')
+    },
     mutationKey: ['user']
   })
 
@@ -66,7 +71,11 @@ const Profile = () => {
     resetValues()
   }, [userProfile, resetValues])
 
-  if (!userProfile) return <Loader />
+  if (!userProfile) return (
+    <div className="flex items-center justify-center p-24">
+      <Loader big />
+    </div>
+  )
 
   const saveHandler = () => {
     setErrorMessage(null)

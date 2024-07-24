@@ -68,9 +68,9 @@ const MainTheme = () => {
         </div>
       ),
       text: (
-        <div className="flex gap-1 items-center">
+        <div className="flex items-start">
           Vocabulary Corner
-          {reviewDueCount > 0 && <div className="bg-primary text-[0.6rem] rounded-full w-4 h-4 text-white flex items-center justify-center">{reviewDueCount}</div>}
+          {reviewDueCount > 0 && <div className="bg-primary rounded-full w-2 h-2 text-white" />}
         </div>
       ),
       link: '/vocabulary',
