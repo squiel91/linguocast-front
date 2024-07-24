@@ -9,7 +9,9 @@ import { Menu, MenuItem } from "@/components/menu"
 import { cn } from "@/utils/styles.utils"
 import { useQueries } from "@tanstack/react-query"
 import axios from "axios"
-import { Podcast, PopulatedEpisode } from "@/types/types"
+import { Podcast, PopulatedEpisode, Word } from "@/types/types"
+import { useMemo } from "react"
+import { daySinceEpoche } from "@/utils/date.utils"
 
 const MainTheme = () => {
   const {
@@ -24,10 +26,15 @@ const MainTheme = () => {
   const { episodeId, podcastId } = useParams()
 
   const [
+    { data: savedWords },
     { data: podcast },
     { data: episode }
   ] = useQueries({
     queries: [
+      {
+        queryKey: ['saved-words'],
+        queryFn: () => axios.get<Word[]>('/api/user/words').then(res => res.data)
+      },
       {
         enabled: !!podcastId,
         queryKey: ['podcasts', podcastId ? +podcastId : null],
@@ -43,9 +50,33 @@ const MainTheme = () => {
     ]
   })
 
+  const reviewDueCount = useMemo(() => {
+    if (!savedWords) return 0
+    const currentDay = daySinceEpoche()
+    return savedWords.filter(
+        ({ reviewScheduledFor }) => ((reviewScheduledFor <= currentDay))
+    ).length
+  }, [savedWords])
+
   const mainMenuItems: MenuItem[] = [
     { smText: <NewspaperIcon />, text: 'Feed', link: '/feed', selected: location.pathname.startsWith('/feed') , disabled: !isLoggedIn },
-    { smText: <BookMarkedIcon />, text: 'Vocabulary Corner', link: '/vocabulary', selected: location.pathname.startsWith('/vocabulary'), disabled: !isLoggedIn },
+    {
+      smText: (
+        <div className="relative">
+          <BookMarkedIcon />
+          {reviewDueCount > 0 && <div className="bg-primary absolute top-0 right-0 rounded-full w-2 h-2" />}
+        </div>
+      ),
+      text: (
+        <div className="flex gap-1 items-center">
+          Vocabulary Corner
+          {reviewDueCount > 0 && <div className="bg-primary text-[0.6rem] rounded-full w-4 h-4 text-white flex items-center justify-center">{reviewDueCount}</div>}
+        </div>
+      ),
+      link: '/vocabulary',
+      selected: location.pathname.startsWith('/vocabulary'),
+      disabled: !isLoggedIn
+    },
     { smText: <PieChartIcon />, text: 'Learning Journey', link: '/journey', selected: location.pathname.startsWith('/journey'), disabled: !isLoggedIn },
     { smText: <TelescopeIcon />, text: 'Explore Shows', link: '/explore', selected: location.pathname.startsWith('/explore') }
   ]
@@ -124,7 +155,7 @@ const MainTheme = () => {
           }
         </nav>
       </div>
-      <div className={cn('border-b-2 px-4 md:px-8 flex justify-between items-center w-full flex-wrap', isCreatorsMode ? 'bg-slate-900' : '')}>
+      <div className={cn('sticky top-0 bg-white z-10 border-b-2 px-4 md:px-8 flex justify-between items-center w-full flex-wrap', isCreatorsMode ? 'bg-slate-900' : '')}>
         {isCreatorsMode
           ? (
             <>
@@ -148,21 +179,23 @@ const MainTheme = () => {
           : (
             <>
               <Menu items={mainMenuItems} />
-              <Menu
-                items={[
-                  {
-                    smText: <CrownIcon />,
-                    text: (
-                      <div className="flex gap-2 items-center">
-                        <CrownIcon />
-                        Try Premium
-                      </div>
-                    ),
-                    link: '/premium',
-                    selected: location.pathname.startsWith('/premium')
-                  }
-                ]}
-              />
+              {!!user && !user.isPremium && (
+                <Menu
+                  items={[
+                    {
+                      smText: <CrownIcon />,
+                      text: (
+                        <div className="flex gap-2 items-center">
+                          <CrownIcon />
+                          Try Premium
+                        </div>
+                      ),
+                      link: '/premium',
+                      selected: location.pathname.startsWith('/premium')
+                    }
+                  ]}
+                />
+              )}
             </>
           )}
       </div>

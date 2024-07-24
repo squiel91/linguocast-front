@@ -43,6 +43,7 @@ export interface MinifiedPodcast extends MicroPodcast {
   levels: Level[]
   savedCount: number
   commentsCount: number
+  episodesCount: number
 }
 
 export interface EpisodeSuccint {

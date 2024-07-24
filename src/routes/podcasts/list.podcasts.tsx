@@ -60,6 +60,11 @@ const ListPodcast = () => {
     (!name || p.name.toLowerCase().includes(name.toLowerCase())) 
   )) ?? []
 
+  useEffect(() => {
+    if (!user) return
+    setTargetLanguage(user.learning)
+  }, [user])
+
   const appliedHiddenFiltersCount = (name ? 1 : 0) + (levels.length > 0 ? 1 : 0) 
 
   return (
@@ -79,7 +84,7 @@ const ListPodcast = () => {
       </div>
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-4 lg:gap-8">
         <div>
-          <div className='flex flex-col gap-4 sticky top-4'>
+          <div className='flex flex-col gap-4 sticky top-20'>
             <label>
               <Select
                 label="Studying"

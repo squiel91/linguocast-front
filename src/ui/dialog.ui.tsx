@@ -26,10 +26,10 @@ export const Dialog = ({ isOpen, onClose: closeHandler, className, children }: P
   return ReactDOM.createPortal(
     (
       <>
-        <div className="fixed left-0 right-0 top-0 bottom-0 bg-black opacity-25" />
-        <div className="flex justify-center items-center fixed left-0 right-0 top-0 bottom-0">
+        <div className="fixed z-10 left-0 right-0 top-0 bottom-0 bg-black opacity-25" />
+        <div className="flex z-20 justify-center items-center fixed left-0 right-0 top-0 bottom-0">
           <Card
-            className={cn('m-4 md:p-8 lg:p-12 max-h-screen overflow-y-auto', className)}
+            className={cn('m-4 z-30 relative md:p-8 lg:p-12 max-h-screen overflow-y-auto', className)}
           >
             {children}
             {closeHandler && (

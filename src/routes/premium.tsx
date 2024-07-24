@@ -1,6 +1,6 @@
 import { useState } from "react";
 
-import { CheckIcon, StarIcon, XIcon } from "lucide-react";
+import { CheckIcon, GiftIcon, StarIcon, XIcon } from "lucide-react";
 import { Card } from "@/ui/card.ui";
 import { Switch } from "@/ui/switch.ui";
 import { Button } from "@/ui/button.ui";
@@ -8,9 +8,27 @@ import michaelAvatar from '@/assets/avatars/michael.jpg'
 import petterAvatar from '@/assets/avatars/petter.jpg'
 import sahraAvatar from '@/assets/avatars/sahra.jpg'
 import { Avatar } from "@/ui/avatar.ui";
+import { useMutation } from "@tanstack/react-query";
+import axios from "axios";
+import Dialog from "@/ui/dialog.ui"
+import discordIcon from '@/themes/main/assets/discord.svg'
 
 const Premium = () => {
-  const [isAnnualPayment, setIsAnnualPayment] = useState(true);
+  const [isAnnualPayment, setIsAnnualPayment] = useState(true)
+  const [isUserBecomePremiumOpen, setIsUserBecomePremiumOpen] = useState(false)
+
+  const {
+    mutate: turnUserBetaPremium,
+    isPending: isSaving
+  } = useMutation({
+    mutationFn: () => axios.patch('/api/user', { isPremium: true }),
+    onError: (error) => {
+      console.error(error)
+      alert('There was an error proceeding to payment. Please try again.')
+    },
+    onSuccess: () => setIsUserBecomePremiumOpen(true),
+    mutationKey: ['user-premium']
+  })
 
   const features = [
     { name: "Listen to episodes", free: "Unlimited", premium: "Unlimited" },
@@ -65,7 +83,7 @@ const Premium = () => {
               <span className="text-4xl font-bold">${isAnnualPayment ? '9.99' : '13.50'}</span>
               <span className="text-xl">/month</span>
             </div>
-            <Button className="mt-4 py-3 rounded-lg text-lg font-semibold">
+            <Button className="mt-4 py-3 rounded-lg text-lg font-semibold" onClick={turnUserBetaPremium} isLoading={isSaving}>
               Start Your 7-Day Free Trial
             </Button>
             <p className="text-sm mt-2">Cancel anytime before the trial ends - no charge.</p>
@@ -131,11 +149,30 @@ const Premium = () => {
 
       {/* Final CTA */}
       <div className="text-center mt-12">
-        <Button>
+        <Button onClick={turnUserBetaPremium} isLoading={isSaving}>
           Start Your 7-Day Free Trial Now
         </Button>
         <p className="mt-2 text-sm text-gray-600">Risk-free trial. Cancel anytime.</p>
       </div>
+
+      <Dialog isOpen={isUserBecomePremiumOpen} className="flex flex-col items-center justify-center text-center gap-4 p-8 w-[600px]">
+        <GiftIcon size={60} />
+        <h1 className="text-3xl">We greately appreciate your interest!</h1>
+        <p className="text-lg">
+          We are not offering premium subscriptions yet.
+        </p>
+        <p className="text-lg">
+          However, as a reward, we turned you into a Premium user for the rest of the Beta-testing phase.  
+        </p>
+        <div className="mt-8 flex flex-col md:flex-row gap-2">
+          <a href="/feed">
+            <Button>Back to my Feed</Button>
+          </a>
+          <a href="https://discord.gg/p74Bzxng" target="_blank">
+            <Button variant="outline" prepend={<img src={discordIcon} width={20} />}>Join our Discord</Button>
+          </a>
+        </div>
+      </Dialog>
     </div>
   );
 };

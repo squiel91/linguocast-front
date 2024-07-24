@@ -114,7 +114,7 @@ const WordCorner = () => {
         </div>
       </div>
       <ReviewWordsModalMemorized />
-      <ReactSketchCanvas ref={sketchboard} canvasColor="#ffffff90" className={cn('fixed top-0 left-0 right-0 bottom-0 z-50', isSketchOpen ? '' : 'hidden')} style={{ border: 'none', backgroundColor: 'transparent' }} strokeWidth={4} strokeColor="black" />
+      <ReactSketchCanvas ref={sketchboard} canvasColor="#ffffffde" className={cn('fixed top-0 left-0 right-0 bottom-0 z-50', isSketchOpen ? '' : 'hidden')} style={{ border: 'none', backgroundColor: 'transparent' }} strokeWidth={4} strokeColor="black" />
       <div className="fixed bottom-8 right-8 md:bottom-12 md:right-12 flex gap-2 items-center z-50">
         {isSketchOpen && (
           <>

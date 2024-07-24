@@ -75,7 +75,7 @@ export const RegisterModal = ({ isOpen, isCreator, onClose: closeHandlerExternal
       if (isCreator) {
         navigate('/creators/podcasts')
       } else {
-        if (location.pathname === '/explore') navigate('/feed')
+        navigate('/explore')
       }
     } catch (error) {
       if (isAxiosError(error) && error.response && error.response.status === 401) {
@@ -140,7 +140,7 @@ export const RegisterModal = ({ isOpen, isCreator, onClose: closeHandlerExternal
             }
           </p>
         </div>
-        <div className="flex items-center h-full w-full">
+        <div className="flex items-center w-full">
           {stage === 0 && (
             <>
               <Input

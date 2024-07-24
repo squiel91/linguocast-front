@@ -42,7 +42,7 @@ const LearningJourney = () => {
   return (
     <div className="container mt-8">
       <h2 className="text-3xl mb-8">Learning Journey</h2>
-      <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-8">
+      <div className="grid grid-cols-2 md:grid-cols-3 gap-4 md:gap-8">
         <div className="col-span-full h-40 flex flex-col">
           <BarGraph
             data={journey?.wordsWeeklyHistory.map(({ day, added, reviewed }) => ({ label: day, value: [added, reviewed] })) ?? []}

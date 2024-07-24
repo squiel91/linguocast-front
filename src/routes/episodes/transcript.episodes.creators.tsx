@@ -81,8 +81,8 @@ export const EpisodeTranscript = () => {
         />
         <div className="mt-8 flex gap-2">
           <Button
-            isLoading={isMutating || isAutogenerating}
-            disabled={!transcript}
+            isLoading={isMutating}
+            disabled={!transcript || isAutogenerating || isMutating}
             prepend={<SaveIcon size={16} />}
             onClick={saveTranscriptHandler}
           >

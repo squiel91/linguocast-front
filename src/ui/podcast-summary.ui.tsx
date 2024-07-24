@@ -2,7 +2,7 @@ import { MicroPodcast, MinifiedPodcast } from "@/types/types"
 import { urlSafe } from "@/utils/url.utils"
 import { Link } from "react-router-dom"
 import noImage from '@/assets/no-image.svg'
-import { MessageCircleIcon, RepeatIcon } from "lucide-react"
+import { LibraryIcon, MessageCircleIcon, RepeatIcon } from "lucide-react"
 
 export const PodcastSummary = ({ podcast }: { podcast: MinifiedPodcast | MicroPodcast}) => (
   <Link
@@ -17,13 +17,17 @@ export const PodcastSummary = ({ podcast }: { podcast: MinifiedPodcast | MicroPo
       />
       {'savedCount' in podcast && (
         <div className="flex gap-4 mt-2 text-slate-400">
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center" title="Followers">
             <RepeatIcon size={18} />
             {podcast.savedCount}
           </div>
-          <div className="flex gap-2 items-center">
+          <div className="flex gap-2 items-center" title="Reviews">
             <MessageCircleIcon size={20} />
             {podcast.commentsCount}
+          </div>
+          <div className="flex gap-2 items-center" title="Episodes">
+            <LibraryIcon size={20} />
+            {podcast.episodesCount}
           </div>
         </div>
       )}

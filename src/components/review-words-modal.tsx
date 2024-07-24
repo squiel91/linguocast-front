@@ -6,6 +6,7 @@ import axios from "axios"
 import { EyeIcon, Maximize2Icon, PartyPopperIcon } from "lucide-react"
 import { useEffect, useState } from "react"
 import { ForwardLink } from "@/ui/forward-link.ui"
+import { useQueryClient } from "@tanstack/react-query"
 
 interface Props {
   isOpen: boolean
@@ -27,6 +28,8 @@ export const ReviewWordsModal = ({
   const [isLoading, setIsLoading] = useState<'easy' | 'medium' | 'hard' | null>(null)
   
   const currentWord = words.at(0)
+
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const randomNumber = getRandomWholeNumber(2)
@@ -51,6 +54,7 @@ export const ReviewWordsModal = ({
     try {
       setIsLoading(difficulty)
       await axios.patch(`/api/user/words/${currentWord!.id}`, { difficulty })
+      queryClient.invalidateQueries({ queryKey: ['saved-words'] })
       wordReviedHandler(currentWord!.id)
     } catch (error) {
       console.error(error)
