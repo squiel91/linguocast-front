@@ -68,7 +68,7 @@ export const PodcastEdit = () => {
     try {
       setErrorMessage(null)
       // validation
-      if (!name) return setErrorMessage('The show name is required.')
+      if (!name) return setErrorMessage('The show title is required.')
       if (!targetLanguage) return setErrorMessage('The targer language is required.')
       if (!description || description.length < MIN_DESCRIPTION_CHARS || description.length > MAX_DESCRIPTION_CHARS) return setErrorMessage('The show description is required and need to be between 50 and 1000 characters.')
       if (levels.length === 0) return setErrorMessage('At least one level is required.')
@@ -135,7 +135,7 @@ export const PodcastEdit = () => {
           <Input
             label={(
               <div className='flex gap-1 items-center'>
-                Podcast name
+                Podcast title
                 {isFromRss && <LockIcon size={12} />}
               </div>
             )}
@@ -205,7 +205,7 @@ export const PodcastEdit = () => {
           </div>
           <label className='flex flex-col gap-2 md:col-span-2'>
             <div className='flex gap-1 items-center text-sm'>
-              Podcast name
+              Description
               {isFromRss && <LockIcon size={12} />}
             </div>
             <Textarea
