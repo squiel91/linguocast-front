@@ -20,11 +20,11 @@ export const CreatorsListPodcastEpisodes = () => {
     queries: [
       {
         queryKey: ['creators', 'podcasts', podcastId],
-        queryFn: () => axios.get<ICompletePodcast>(`/api/user/podcasts/${podcastId}`).then(res => res.data)
+        queryFn: () => axios.get<ICompletePodcast>(`/api/creators/podcasts/${podcastId}`).then(res => res.data)
       },
       {
         queryKey: ['creator', 'episodes', podcastId],
-        queryFn: () => axios.get<ICompleteEpisode[]>(`/api/user/podcasts/${podcastId}/episodes`, { params: { size: 10 }}).then(res => res.data)
+        queryFn: () => axios.get<ICompleteEpisode[]>(`/api/creators/podcasts/${podcastId}/episodes`, { params: { size: 10 }}).then(res => res.data)
       }
     ]
   })

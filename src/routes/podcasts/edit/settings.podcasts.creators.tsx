@@ -18,7 +18,7 @@ export const PodcastSettings = () => {
 
   const { data: podcast, isPending: isLoading } = useQuery({
     queryKey: ['creators', 'podcasts', podcastId],
-    queryFn: () => axios.get<ICompletePodcast>(`/api/user/podcasts/${podcastId}`).then(res => res.data)
+    queryFn: () => axios.get<ICompletePodcast>(`/api/creators/podcasts/${podcastId}`).then(res => res.data)
   })
 
   const { mutate: mutateEpisode, isPending: isSaving } = useMutation({

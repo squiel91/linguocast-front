@@ -27,7 +27,7 @@ const EditPodcast = () => {
   const { data: podcast } = useQuery({
     enabled: isEdit,
     queryKey: ['creators', 'podcasts', podcastId],
-    queryFn: () => axios.get<ICompletePodcast>(`/api/user/podcasts/${podcastId}`).then(res => res.data)
+    queryFn: () => axios.get<ICompletePodcast>(`/api/creators/podcasts/${podcastId}`).then(res => res.data)
   })
 
   useTitle(podcast?.name)

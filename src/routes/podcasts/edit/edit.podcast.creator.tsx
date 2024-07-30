@@ -31,7 +31,7 @@ export const PodcastEdit = () => {
     queries: [
       {
         queryKey: ['creators', 'podcasts', podcastId],
-        queryFn: () => axios.get<ICompletePodcast>(`/api/user/podcasts/${podcastId}`).then(res => res.data)
+        queryFn: () => axios.get<ICompletePodcast>(`/api/creators/podcasts/${podcastId}`).then(res => res.data)
       },
       { queryKey: ['languages'], queryFn: () => axios.get<Language[]>('/api/languages').then(res => res.data) }
     ]

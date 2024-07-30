@@ -28,7 +28,7 @@ export const ManageEpisode = () => {
         enabled: isCreate,
         queryKey: ['podcasts', +podcastId!],
         queryFn: () => axios.get<ICompletePodcast>(
-          `/api/user/podcasts/${+podcastId!}`
+          `/api/creators/podcasts/${+podcastId!}`
         ).then(res => res.data)
       }
     ]

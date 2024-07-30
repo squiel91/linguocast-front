@@ -5,6 +5,7 @@ import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { RouterProvider } from 'react-router-dom'
 import { router } from './router.tsx'
 import axios from 'axios'
+import { StrictMode } from 'react'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -21,7 +22,7 @@ axios.interceptors.request.use(config => {
 })
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
-  // <React.StrictMode>
+  <StrictMode>
     <QueryClientProvider client={queryClient}>
       <RouterProvider router={router} />
       {import.meta.env.DEV && (
@@ -31,5 +32,5 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
         />
       )}
     </QueryClientProvider>
-  // </React.StrictMode>
+  </StrictMode>
 )

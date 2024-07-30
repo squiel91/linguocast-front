@@ -31,7 +31,10 @@ export const ReviewWordsModal = ({
 
   const queryClient = useQueryClient()
 
+  console.log("rerender")
+
   useEffect(() => {
+    console.log("random")
     const randomNumber = getRandomWholeNumber(2)
 
     setIsReveled(false) 

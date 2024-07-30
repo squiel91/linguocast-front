@@ -11,7 +11,7 @@ export const CreatorsPayouts = () => {
 
   const { data: userPodcasts } = useQuery({
     queryKey: ['creator-podcasts'],
-    queryFn: () => axios.get<ICompletePodcast[]>('/api/user/podcasts').then(res => res.data)
+    queryFn: () => axios.get<ICompletePodcast[]>('/api/creators/podcasts').then(res => res.data)
   })
 
   useTitle('My Earnings')

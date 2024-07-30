@@ -19,7 +19,7 @@ export const PodcastOverview = () => {
 
   const { data: podcast } = useQuery({
     queryKey: ['creators', 'podcasts', podcastId],
-    queryFn: () => axios.get<ICompletePodcast>(`/api/user/podcasts/${podcastId}`).then(res => res.data)
+    queryFn: () => axios.get<ICompletePodcast>(`/api/creators/podcasts/${podcastId}`).then(res => res.data)
   })
 
   const { data: latestComments } = useQuery({
