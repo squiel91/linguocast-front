@@ -135,7 +135,7 @@ const MainTheme = () => {
           {isLoggedIn
             ? <div className="flex items-center gap-5">
                 <BellIcon strokeWidth={2.5} className="text-slate-400" />
-                <Link to={isCreatorsMode ? '/creators/help' : '/about'}>
+                <Link to={isCreatorsMode ? '/creators/help' : '/help'}>
                   <HelpCircleIcon strokeWidth={2.5} />
                 </Link>
                 <Link to={isCreatorsMode ? '/creators/profile' : '/profile'}>

@@ -1,11 +1,11 @@
 import { ForwardLink } from "@/ui/forward-link.ui"
 
-import { usePageTitle } from "@/utils/document.utils"
+import { useTitle } from "@/utils/document.utils"
 import { CollapsableInfo } from "@/ui/collapsable-info.ui"
 import { BookOpenCheckIcon, BrushIcon, HandIcon, InfoIcon, Maximize2Icon, PlayIcon, RepeatIcon } from "lucide-react"
 
 const About = () => {
-  usePageTitle('About')
+  useTitle('Help')
   return (
     <div className="container">
       <h1 className="text-3xl mb-8 mt-8">FAQ</h1>

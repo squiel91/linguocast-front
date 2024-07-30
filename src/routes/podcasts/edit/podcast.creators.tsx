@@ -7,6 +7,7 @@ import { Breadcrumb } from '@/ui/breadcrumb.ui'
 import { Menu } from '@/components/menu'
 import { useAuth } from '@/auth/auth.context'
 import { Button } from '@/ui/button.ui'
+import { useTitle } from '@/utils/document.utils'
 
 const EditPodcast = () => {
   const { isLoggedIn } = useAuth()
@@ -28,6 +29,8 @@ const EditPodcast = () => {
     queryKey: ['creators', 'podcasts', podcastId],
     queryFn: () => axios.get<ICompletePodcast>(`/api/user/podcasts/${podcastId}`).then(res => res.data)
   })
+
+  useTitle(podcast?.name)
 
   return (
     <div className='container'>

@@ -7,6 +7,7 @@ import { Link, Outlet, useParams } from "react-router-dom"
 import { BetweenHorizontalEndIcon, ChevronRightIcon, GlobeIcon, GlobeLockIcon, MicIcon, PencilLineIcon, PieChart, ScrollIcon, SettingsIcon } from "lucide-react"
 import { Menu } from "@/components/menu"
 import { Breadcrumb } from "@/ui/breadcrumb.ui"
+import { useTitle } from "@/utils/document.utils"
 
 export const ManageEpisode = () => {
   const { podcastId, episodeId } = useParams()
@@ -33,7 +34,13 @@ export const ManageEpisode = () => {
     ]
   })
 
-  if (isEdit && isPending) return <Loader />
+  useTitle(episode?.title)
+
+  if (isEdit && isPending) return (
+    <div className="flex justify-center p-16">
+      <Loader big />
+    </div>
+  )
 
   return (
     <div className="container">

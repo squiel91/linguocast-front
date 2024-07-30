@@ -41,14 +41,12 @@ export const RegisterModal = ({ isOpen, isCreator, onClose: closeHandlerExternal
     try {
       setIsLoading(true)
       const { data: { token, user } } = await axios.post<{ token: string, user: SelfUser }>('/api/users', {
-        email, name, password, learning, variant, level: isCreator ? 'advanced' : level
+        email, name, password, learning, variant, level: isCreator ? 'advanced' : level, isCreator
       })
       loginAuthHandler(user, token)
       openRegisterHandler(false)
       if (isCreator) {
         navigate('/creators/podcasts/source')
-      } else {
-        if (location.pathname === '/explore') navigate('/feed')
       }
     } catch (error) {
       console.error(error)

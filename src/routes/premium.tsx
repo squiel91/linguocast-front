@@ -12,6 +12,7 @@ import { useMutation } from "@tanstack/react-query";
 import axios from "axios";
 import Dialog from "@/ui/dialog.ui"
 import discordIcon from '@/themes/main/assets/discord.svg'
+import { useTitle } from "@/utils/document.utils";
 
 const Premium = () => {
   const [isAnnualPayment, setIsAnnualPayment] = useState(true)
@@ -60,6 +61,8 @@ const Premium = () => {
       avatar: petterAvatar
     }
   ]
+
+  useTitle('Premium')
 
   return (
     <div className="container py-8 md:py-16">

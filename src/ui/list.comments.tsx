@@ -89,7 +89,7 @@ export const ListComments = ({ resourceType, resourceId }: Props) => {
             Submit
           </Button>
           <p className='text-sm'>
-            Remember to follow the <ForwardLink to="/contributions" target='_blank'>code of conduct</ForwardLink>
+            Remember to follow the <ForwardLink to="/terms" target='_blank'>code of conduct</ForwardLink>
           </p>
         </div>
       </Card>

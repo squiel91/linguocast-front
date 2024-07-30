@@ -21,7 +21,7 @@ export const Footer = () => (
         <ul className='mt-8 flex flex-col gap-1'>
           <li>Get to know <ForwardLink to="about">this project</ForwardLink></li>
           <li>Have a sneak peek of the <ForwardLink to="https://docs.google.com/spreadsheets/d/1BYnQQWPUC16IfRmMpgWziL6rMOwVcxzWhaXBHa1rKtY" target='_blank'>coming features</ForwardLink></li>
-          <li>Check the <ForwardLink to="/contributions">contribution terms</ForwardLink></li>
+          <li>Check the <ForwardLink to="/terms">Terms</ForwardLink></li>
         </ul>
       </div>
       <div>

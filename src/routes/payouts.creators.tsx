@@ -5,6 +5,7 @@ import { CoinsIcon, InfoIcon, LandmarkIcon, WalletIcon } from "lucide-react"
 import axios from "axios"
 import { ICompletePodcast } from "@/types/types"
 import noImage from '@/assets/no-image.svg'
+import { useTitle } from "@/utils/document.utils"
 
 export const CreatorsPayouts = () => {
 
@@ -13,6 +14,7 @@ export const CreatorsPayouts = () => {
     queryFn: () => axios.get<ICompletePodcast[]>('/api/user/podcasts').then(res => res.data)
   })
 
+  useTitle('My Earnings')
 
   return (
     <div className="container">

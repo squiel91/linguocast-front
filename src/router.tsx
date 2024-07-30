@@ -148,11 +148,11 @@ export const router = createBrowserRouter([
             element: <ViewEpisode />
           },
           {
-            path: '/about',
+            path: '/help',
             element: <About />
           },
           {
-            path: '/contributions',
+            path: '/terms',
             element: <Contributions />
           }
         ],

@@ -8,6 +8,7 @@ import { Input } from "@/ui/input.ui"
 import { Loader } from "@/ui/loader.ui"
 import { Select } from "@/ui/select.ui"
 import { Switch } from "@/ui/switch.ui"
+import { useTitle } from "@/utils/document.utils"
 import { capitalize } from "@/utils/text.utils"
 import { urlSafe } from "@/utils/url.utils"
 import { useMutation, useQueryClient } from "@tanstack/react-query"
@@ -70,6 +71,8 @@ const Profile = () => {
   useEffect(() => {
     resetValues()
   }, [userProfile, resetValues])
+
+  useTitle('My profile')
 
   if (!userProfile) return (
     <div className="flex items-center justify-center p-24">

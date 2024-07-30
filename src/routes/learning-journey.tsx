@@ -2,6 +2,7 @@ import { BarGraph } from "@/components/bar-graph"
 import { HeroContent } from "@/components/hero-content"
 import { Loader } from "@/ui/loader.ui"
 import { formatSeconds } from "@/utils/date.utils"
+import { useTitle } from "@/utils/document.utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { AudioLinesIcon, BookmarkIcon, BrainIcon, MessageSquareTextIcon, NotebookPenIcon, RssIcon, SquareCheckBigIcon } from "lucide-react"
@@ -33,11 +34,14 @@ const LearningJourney = () => {
     queryFn: () => axios.get<LearningJourneyDto>('/api/user/journey').then(res => res.data)
   })
 
+  useTitle('Learning Journey')
+
   if (!journey) return (
     <div className="flex items-center justify-center p-24">
       <Loader big />
     </div>
   )
+
 
   return (
     <div className="container mt-8">

@@ -11,13 +11,11 @@ import { urlSafe } from "@/utils/url.utils"
 import { Avatar } from "@/ui/avatar.ui"
 import { readableDate } from "@/utils/date.utils"
 import { Card } from "@/ui/card.ui"
-import { usePageTitle } from "@/utils/document.utils"
+import { useTitle } from "@/utils/document.utils"
 
 const Feed = () => {
   const { isLoggedIn } = useAuth()
   const navigate = useNavigate()
-
-  usePageTitle('Feed')
 
   if (!isLoggedIn) navigate('/', { replace: true })
 
@@ -31,6 +29,9 @@ const Feed = () => {
       recommendedPodcasts: MicroPodcast[]
     }>('/api/user/feed').then(res => res.data)
   })
+
+  useTitle('My Feed')
+
   
   if (!feedData) return (
     <div className="flex items-center justify-center p-24">

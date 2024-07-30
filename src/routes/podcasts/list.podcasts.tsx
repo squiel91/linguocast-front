@@ -16,6 +16,7 @@ import { PodcastSummaryPlaceholder } from '@/ui/podcast-summary-placeholder.ui'
 import { SuggestMissingPodcastModal } from '@/components/suggest-missing-podcasts-modal'
 import { Dropdown } from '@/ui/dropdown.ui'
 import { LANGUAGES } from '@/constants/languages.constants'
+import { useTitle } from '@/utils/document.utils'
 
 const ListPodcast = () => {
   const { user } = useAuth() 
@@ -64,6 +65,8 @@ const ListPodcast = () => {
     if (!user) return
     setTargetLanguage(user.learning)
   }, [user])
+
+  useTitle()
 
   const appliedHiddenFiltersCount = (name ? 1 : 0) + (levels.length > 0 ? 1 : 0) 
 

@@ -13,7 +13,7 @@ import { usePlayer } from '@/themes/player/player'
 import { ListeningProgressBar } from '@/ui/listening-progress-bar.ui'
 import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
 import { ListComments } from '@/ui/list.comments'
-import { usePageTitle } from '@/utils/document.utils'
+import { useTitle } from '@/utils/document.utils'
 import { Card } from '@/ui/card.ui'
 import { ListExercises } from './list.exercises.view.episode'
 import { Menu } from '@/components/menu'
@@ -39,7 +39,7 @@ const ViewEpisode = () => {
 
   const [selectedTabKey, setSelectedTabKey] = useState('transcript')
 
-  usePageTitle(episode?.title)
+  useTitle(episode?.title)
 
   if (isLoading || !episode) return (
     <div className="flex justify-center p-16">

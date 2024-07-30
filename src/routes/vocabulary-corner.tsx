@@ -6,6 +6,7 @@ import { Card } from "@/ui/card.ui"
 import { Input } from "@/ui/input.ui"
 import { Loader } from "@/ui/loader.ui"
 import { daySinceEpoche } from "@/utils/date.utils"
+import { useTitle } from "@/utils/document.utils"
 import { cn } from "@/utils/styles.utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -49,6 +50,8 @@ const WordCorner = () => {
       }}
     />
   ), [reviewDue, isReviewModalOpen, sketchboard])
+
+  useTitle('Vocabulary Corner')
 
   return (
     <div className='mt-8 px-4 lg:px-8'>

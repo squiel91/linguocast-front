@@ -12,6 +12,7 @@ import noImage from '@/assets/no-image.svg'
 import { useAuth } from '@/auth/auth.context'
 import { useNavigate } from "react-router-dom"
 import { useEffect } from "react"
+import { useTitle } from "@/utils/document.utils"
 
 export const CreatorsListPodcasts = () => {
   const { isLoggedIn } = useAuth()
@@ -26,7 +27,13 @@ export const CreatorsListPodcasts = () => {
     queryFn: () => axios.get<ICompletePodcast[]>('/api/user/podcasts').then(res => res.data)
   })
 
-  if (!isLoggedIn) return <></>
+  useTitle('My Podcasts')
+
+  if (!isLoggedIn) return (
+    <div className="flex justify-center p-16">
+      <Loader big />
+    </div>
+  )
 
   return (
     <div className="container">

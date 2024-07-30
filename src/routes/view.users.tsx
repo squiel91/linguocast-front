@@ -3,21 +3,33 @@ import { Avatar } from "@/ui/avatar.ui"
 import { Button } from "@/ui/button.ui"
 import { Loader } from "@/ui/loader.ui"
 import { readableDate } from "@/utils/date.utils"
+import { useTitle } from "@/utils/document.utils"
 import { capitalize } from "@/utils/text.utils"
 import { useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { GlobeLockIcon, MailIcon } from "lucide-react"
-import { useParams } from "react-router-dom"
+import { useNavigate, useParams } from "react-router-dom"
 
 const ViewUser = () => {
   const { userId } = useParams()
+  const navigate = useNavigate()
 
-  const { data: user } = useQuery({
+  const { data: user, error } = useQuery({
     queryKey: ['users', userId],
     queryFn: () => axios.get<PrivateUser | PublicUser>(`/api/users/${userId}`).then(res => res.data)
   })
 
-  if (!user) return <Loader />
+  if (axios.isAxiosError(error) && error.response?.status === 404) {
+    navigate('/error?m=User not found', { replace: true })
+  }
+
+  useTitle(user?.name)
+  
+  if (!user) return (
+    <div className="flex items-center justify-center p-24">
+      <Loader big />
+    </div>
+  )
   
   return (
     <div className="container">

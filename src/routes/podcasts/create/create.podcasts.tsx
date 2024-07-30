@@ -14,6 +14,7 @@ import Dialog from '@/ui/dialog.ui'
 import { Breadcrumb } from '@/ui/breadcrumb.ui'
 import { Select } from '@/ui/select.ui'
 import { ForwardLink } from '@/ui/forward-link.ui'
+import { useTitle } from '@/utils/document.utils'
 
 const CreatePodcast = () => {
   const navigate = useNavigate()
@@ -34,6 +35,8 @@ const CreatePodcast = () => {
   useEffect(() => {
     setMediumLanguage('english')
   }, [targetLanguage])
+
+  useTitle()
   
   const creteFromRssHandler = async () => {
     if (!rss) return alert('Start by pasting your RSS Feed URL.')

@@ -2,7 +2,7 @@ import { useAuth } from "@/auth/auth.context"
 import { Button } from "@/ui/button.ui"
 import axios from "axios"
 import { ReactNode, useState } from "react"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 import { Zap, Users, Rocket, Heart, Rss, WalletIcon, LucideIcon } from 'lucide-react'
 import linguocastLogo from '@/assets/linguocast-logo.svg'
 
@@ -17,6 +17,7 @@ const Section = ({ icon: Icon, title, children }: { icon: LucideIcon, title: str
 )
 
 export const CreatorsLanding = () => {
+  const navigate = useNavigate()
   const { user, modifyUser, openRegisterHandler } = useAuth()
   const [isActivatingCreatorsMode, setIsActivatingCreatorsMode] = useState(false)
 
@@ -25,6 +26,7 @@ export const CreatorsLanding = () => {
       setIsActivatingCreatorsMode(true)
       await axios.patch('/api/user', { isCreator: true })
       modifyUser({ ...user!, isCreator: true })
+      navigate('/creators/podcasts/source')
     } catch (error) {
       console.error(error)
       alert('There was an error while trying to activate the creator mode. Please try again or contact support.')

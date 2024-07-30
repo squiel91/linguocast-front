@@ -13,7 +13,7 @@ import { ListEpisodes } from './episodes.view.podcsats'
 import { Breadcrumb } from '@/ui/breadcrumb.ui'
 import { Card } from '@/ui/card.ui'
 import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
-import { usePageTitle } from '@/utils/document.utils'
+import { useTitle } from '@/utils/document.utils'
 import { Menu } from '@/components/menu'
 import ShareOnSocial from 'react-share-on-social';
 
@@ -34,7 +34,7 @@ const ViewPodcast = () => {
       ))
   })
 
-  usePageTitle(podcast?.name)
+  useTitle(podcast?.name)
 
   const { mutate: mutateSavePodcast } = useMutation({
     mutationFn: () => axios.post(`/api/podcasts/${podcastId!}/saves`),
