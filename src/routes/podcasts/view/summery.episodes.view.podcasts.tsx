@@ -1,7 +1,7 @@
-import { PopulatedEpisode } from "@/types/types"
+import { MinifiedEpisode } from "@/types/types"
 import { formatSeconds, readableDate } from "@/utils/date.utils"
 import noImage from '@/assets/no-image.svg'
-import { BookOpenCheckIcon, CheckIcon, EllipsisVertical } from "lucide-react"
+import { BookOpenCheckIcon, CheckIcon, EllipsisVertical, ScrollIcon } from "lucide-react"
 // import { usePlayer } from "@/themes/player/player"
 import axios from "axios"
 import { useState } from "react"
@@ -12,7 +12,7 @@ import { Card } from "@/ui/card.ui"
 import { Dropdown } from "@/ui/dropdown.ui"
 
 interface Props {
-  episode: PopulatedEpisode
+  episode: MinifiedEpisode
 }
 
 export const EpisodeSummary = ({ episode }: Props) => {
@@ -55,7 +55,7 @@ export const EpisodeSummary = ({ episode }: Props) => {
           <div className="flex md:block justify-between flex-shrink-0 items-center">
             <img
               className="w-14 h-14 rounded-md border-2 border-slate-200"
-              src={episode.image || episode.podcast.coverImage || noImage}
+              src={episode.image || episode.podcastImage || noImage}
             />
             <Dropdown
               className="md:hidden"
@@ -73,10 +73,16 @@ export const EpisodeSummary = ({ episode }: Props) => {
               <EllipsisVertical size={18} />
             </Dropdown>
           </div>
-          <div className="flex-grow break-words overflow-hidden">
+          <div className="flex-grow flex flex-col break-words overflow-hidden">
             <div className="font-bold line-clamp-2">{episode.title}</div>
-            <div className="text-sm text-slate-400 line-clamp-2">{episode.description.replace(/<[^>]+>/ig, '')}</div>
-            <div className="flex items-center mt-2 text-sm gap-2 flex-wrap">
+            <div className="text-sm text-slate-400 line-clamp-2 mb-1">{episode.truncatedDescription.replace(/<[^>]+>/ig, '')}</div>
+            {episode.hasTranscript && (
+              <div className="bg-slate-200 rounded-full text-slate-900 my-1 px-2 text-sm flex gap-2 items-center self-start">
+                <ScrollIcon size={12} />
+                With transcript
+              </div>
+            )}
+            <div className="flex items-center mt-1 text-sm gap-2 flex-wrap">
               <span>{readableDate(episode.publishedAt)}</span>
               {episode.completedAt || hasMarkedCompleted
                 ? (
@@ -101,7 +107,7 @@ export const EpisodeSummary = ({ episode }: Props) => {
                       )
                       : <span>{formatSeconds(episode.duration)}</span>
                     }
-                    <div className="w-1 h-1 rounded-full bg-black"/>
+                    <div className="hidden md:block w-1 h-1 rounded-full bg-black"/>
                     <button
                       onClick={(event) => {
                         event.preventDefault()

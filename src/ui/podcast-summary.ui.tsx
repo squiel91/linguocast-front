@@ -3,6 +3,16 @@ import { urlSafe } from "@/utils/url.utils"
 import { Link } from "react-router-dom"
 import noImage from '@/assets/no-image.svg'
 import { LibraryIcon, MessageCircleIcon, RepeatIcon } from "lucide-react"
+import { relativeTime } from "@/utils/date.utils"
+
+function isPodcastInactive(lastEpisodeDate?: string | Date): boolean {
+  if (!lastEpisodeDate) return false
+  const lastEpisode = new Date(lastEpisodeDate);
+  const threeMonthsAgo = new Date();
+  threeMonthsAgo.setMonth(threeMonthsAgo.getMonth() - 3);
+  
+  return lastEpisode < threeMonthsAgo;
+}
 
 export const PodcastSummary = ({ podcast }: { podcast: MinifiedPodcast | MicroPodcast}) => (
   <Link
@@ -11,10 +21,15 @@ export const PodcastSummary = ({ podcast }: { podcast: MinifiedPodcast | MicroPo
     className='text-left w-full self-start'
   >
     <article>
-      <img
-        src={podcast.coverImage ?? noImage}
-        className='w-full border-solid border-2 object-cover object-center aspect-square border-slate-200 rounded-md'
-      />
+      <div className="relative">
+        <img
+          src={podcast.coverImage ?? noImage}
+          className='w-full border-solid border-2 object-cover object-center aspect-square border-slate-200 rounded-md'
+        />
+        {'lastEpisodeDate' in podcast && isPodcastInactive(podcast.lastEpisodeDate) && (
+          <div className="absolute bottom-4 right-4 bg-slate-300 rounded-md px-2 flex gap-1 items-center text-sm" title="This means that the podcast has not realeased an episode for the past 3 months.">Inactive</div>
+        )}
+      </div>
       {'savedCount' in podcast && (
         <div className="flex gap-4 mt-2 text-slate-400">
           <div className="flex gap-2 items-center" title="Followers">
@@ -36,6 +51,9 @@ export const PodcastSummary = ({ podcast }: { podcast: MinifiedPodcast | MicroPo
         <div className='text-slate-400 text-sm mt-1 line-clamp-2 break-words w-full'>
           {podcast.description}
         </div>
+      )}
+      {'lastEpisodeDate' in podcast && podcast.lastEpisodeDate && (
+        <div className="mt-2">Last episode: {relativeTime(podcast.lastEpisodeDate)}</div>
       )}
       {'levels' in podcast && (
         <div className='flex gap-2 flex-wrap text-sm mt-3'>

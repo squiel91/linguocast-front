@@ -1,4 +1,4 @@
-import { PopulatedEpisode } from "@/types/types";
+import { DetailedEpisode } from "@/types/types";
 import { RotateCcwIcon, RotateCwIcon, SquareIcon } from "lucide-react";
 import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { Outlet, ScrollRestoration, useLocation } from "react-router-dom";
@@ -18,9 +18,9 @@ import { ExpandedPlayerControls } from "./expanded-controls.player";
 const COMPLETED_THRESHOLD = 30 // seconds
 
 interface Player {
-  currentEpisode: PopulatedEpisode | null
+  currentEpisode: DetailedEpisode | null
   isPlaying: boolean
-  reproduce: (episode: PopulatedEpisode) => void
+  reproduce: (episode: DetailedEpisode) => void
   play: () => void
   pause: () => void
 }
@@ -58,7 +58,8 @@ export const PlayerContextWrapper = () => {
 
   const { user, isLoggedIn } = useAuth()
 
-  const [currentEpisode, setCurrentEpisode] = useState<PopulatedEpisode | null>(null)
+  console.log({ user })
+  const [currentEpisode, setCurrentEpisode] = useState<DetailedEpisode | null>(null)
   const [isPlaying, setIsPlaying] = useState(false)
   const [currentTime, setCurrentTime] = useState(0)
   const [duration, setDuration] = useState(0)
@@ -180,28 +181,29 @@ export const PlayerContextWrapper = () => {
               <div className="flex gap-8">
                 <img
                   className="w-14 h-14 aspect-square rounded-md border-2 border-slate-200"
-                  src={currentEpisode?.image || currentEpisode?.podcast.coverImage || noImage}
+                  src={currentEpisode?.image || currentEpisode?.podcastImage || noImage}
                 />
                 <div>
                   <h1 className="text-xl line-clamp-1">{currentEpisode?.title}</h1>
-                  <h2 className="text-lg">{currentEpisode?.podcast.name}</h2>
+                  <h2 className="text-lg">{currentEpisode?.podcastName}</h2>
                 </div>
               </div>
               {currentEpisode && !currentEpisode.transcript && (
                 <div className="flex flex-col items-center justify-center">
                   <img
                     className="w-10/12 md:w-96 aspect-square rounded-md border-2 border-slate-200"
-                    src={currentEpisode?.image || currentEpisode?.podcast.coverImage || noImage}
+                    src={currentEpisode?.image || currentEpisode?.podcastImage || noImage}
                   />
                 </div>
               )}
+              {!!user?.isPremium ? 'IS PREMIUM' : 'NOT IS PREMIUM'}
               {currentEpisode?.transcript && (
                 <ReadAlong
                   isPremium={!!user?.isPremium}
                   transcript={currentEpisode.transcript}
                   currentTime={currentTime}
                   onTimeChangeRequest={changeTime}
-                  language={currentEpisode.podcast.targetLanguage}
+                  language={currentEpisode.targetLanguage}
                   onMinimizeRequest={() => setIsPlayerExpanded(false)}
                   embedded={<ViewEmbeddedMinimized onExpectedNavigation={() => setIsPlayerExpanded(false)} embedded={currentEmbedded} />}
                 />
@@ -244,11 +246,11 @@ export const PlayerContextWrapper = () => {
                     <div className="flex gap-4 flex-grow">
                       <img
                         className="w-12 h-12 rounded-md border-2 border-slate-200"
-                        src={currentEpisode.image|| currentEpisode.podcast.coverImage || noImage}
+                        src={currentEpisode.image|| currentEpisode.podcastImage || noImage}
                       />
                       <div>
                         <div className="font-bold line-clamp-1">{currentEpisode?.title}</div>
-                        <div className="text-sm line-clamp-1">{currentEpisode.podcast.name}</div>
+                        <div className="text-sm line-clamp-1">{currentEpisode.podcastName}</div>
                       </div>
                     </div>
                     <div className="flex gap-2 items-center">

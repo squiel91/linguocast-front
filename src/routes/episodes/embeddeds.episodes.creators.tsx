@@ -8,7 +8,7 @@ import { EditEmbedded } from "./embeddeds/edit.embeddeds.edit.episodes"
 import { BookmarkIcon, ImageIcon, InfoIcon, LibraryIcon, Link2Icon, RotateCcw, SaveIcon, SquarePenIcon } from "lucide-react"
 import { Button } from "@/ui/button.ui"
 import { Dropdown } from "@/ui/dropdown.ui"
-import { PopulatedEpisode } from "@/types/types"
+import { MinifiedEpisode } from "@/types/types"
 
 export const EpisodeEmbeddeds = () => {
   const { episodeId: rawEpisodeId } = useParams()
@@ -18,7 +18,7 @@ export const EpisodeEmbeddeds = () => {
   
   const { data: episode } = useQuery({
     queryKey: ['episodes', episodeId],
-    queryFn: () => axios.get<PopulatedEpisode>(
+    queryFn: () => axios.get<MinifiedEpisode>(
       `/api/episodes/${episodeId}`
     ).then(res => res.data)
   })
@@ -133,9 +133,9 @@ export const EpisodeEmbeddeds = () => {
           {embeddeds.map((embedded, index) => (
             <li key={index}>
               <EditEmbedded
-                podcastId={episode?.podcast.id}
-                podcastImage={episode?.podcast.coverImage}
-                language={episode?.podcast.targetLanguage}
+                podcastId={episode?.podcastId}
+                podcastImage={episode?.podcastImage}
+                language={episode?.targetLanguage}
                 embedded={embedded}
                 onChange={handleEmbeddedChange(index)}
                 onRemove={() => setEmbeddeds(embeddeds => embeddeds.filter((_, i) => i !== index))}

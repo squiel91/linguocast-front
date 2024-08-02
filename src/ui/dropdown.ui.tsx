@@ -60,7 +60,7 @@ export const Dropdown = ({ items, unformated = false, className, children }: Pro
       }
       
       {isOpen && (
-        <Card className={cn('flex flex-col gap-2 py-2 px-4 absolute w-48 right-0 top-full mt-2 shadow-md mb-4 z-10', unformated ? '' : 'p-2 w-72  mt-4')} >
+        <Card stopPropagation className={cn('flex flex-col gap-2 py-2 px-4 absolute w-48 right-0 top-full mt-2 shadow-md mb-4 z-10', unformated ? '' : 'p-2 w-72  mt-4')} >
           {items.map(({ title, description, icon, unformated = false, ...onClickOrLinkTo }) => {
             const button = (
               <button

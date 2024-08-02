@@ -1,4 +1,4 @@
-import { PopulatedEpisode } from "@/types/types"
+import { MinifiedEpisode } from "@/types/types"
 import { EpisodeSummary } from "./summery.episodes.view.podcasts"
 import { useInfiniteQuery } from "@tanstack/react-query"
 import axios from "axios"
@@ -19,11 +19,11 @@ export const ListEpisodes = ({ podcastId, totalEpisodes }: Props) => {
     isFetchingNextPage
   } = useInfiniteQuery({
     queryKey: ['podcasts', podcastId, 'episodes'],
-    queryFn: ({ pageParam }: { pageParam?: number | null }) => axios.get<PopulatedEpisode[]>(
+    queryFn: ({ pageParam }: { pageParam?: number | null }) => axios.get<MinifiedEpisode[]>(
       `/api/podcasts/${podcastId}/episodes`, { params: { size: 5, from: pageParam ?? undefined }}
     ).then(res => {
       return {
-        data:  res.data,
+        data:  res.data, // TODO: just need to resturn res.data
         // currentPage: null,
         nextPage: res.data.at(-1)?.id
       }
@@ -44,7 +44,7 @@ export const ListEpisodes = ({ podcastId, totalEpisodes }: Props) => {
     <>
       <ul className="flex flex-col gap-4 mt-4">
         {totalEpisodes === 0
-          ? <li className="mt-4">Add an RSS Feed to show the episodes</li>
+          ? <li className="mt-4">The podcast does not have any episodes.</li>
           : (fetchedPages?.pages.map(page => page.data).flat() ?? []).map(episode => (
             <EpisodeSummary key={episode.id} episode={episode} />
           ))

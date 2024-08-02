@@ -2,32 +2,52 @@ import { ICompleteEpisode, ICompletePodcast } from "@/types/types"
 import { Button } from "@/ui/button.ui"
 import { Card } from "@/ui/card.ui"
 import { Loader } from "@/ui/loader.ui"
-import { useQueries } from "@tanstack/react-query"
+import { useInfiniteQuery, useQuery } from "@tanstack/react-query"
 import axios from "axios"
 import { BetweenHorizonalEndIcon, HeadphonesIcon, MessagesSquareIcon, PencilLineIcon, PlusIcon, RefreshCwIcon } from "lucide-react"
 import { Link, useParams } from "react-router-dom"
 import noImage from '@/assets/no-image.svg'
 import { readableDate } from "@/utils/date.utils"
+import { useInView } from "react-intersection-observer"
+import { useEffect } from "react"
+
+const PAGE_SIZE = 50 // ATTENTION: this value needs to be in sync with the backend page size.
 
 export const CreatorsListPodcastEpisodes = () => {
   const { podcastId: rawPodcastId } = useParams()
   const podcastId = +(rawPodcastId!)
 
-  const [
-    { data: podcast },
-    { data: userEpisodes, isPending, isError }
-  ] = useQueries({
-    queries: [
-      {
-        queryKey: ['creators', 'podcasts', podcastId],
-        queryFn: () => axios.get<ICompletePodcast>(`/api/creators/podcasts/${podcastId}`).then(res => res.data)
-      },
-      {
-        queryKey: ['creator', 'episodes', podcastId],
-        queryFn: () => axios.get<ICompleteEpisode[]>(`/api/creators/podcasts/${podcastId}/episodes`, { params: { size: 10 }}).then(res => res.data)
-      }
-    ]
+  const { ref: loadMoreElem, inView: loadMoreInView } = useInView()
+ 
+  const { data: podcast } = useQuery({
+    queryKey: ['creators', 'podcasts', podcastId],
+    queryFn: () => axios.get<ICompletePodcast>(
+      `/api/creators/podcasts/${podcastId}`
+    ).then(res => res.data)
   })
+
+  const {
+    data: episodesPages,
+    fetchNextPage,
+    hasNextPage,
+    isFetchingNextPage
+  } = useInfiniteQuery({
+    queryKey: ['creator', 'episodes', podcastId],
+    queryFn: ({ pageParam: lastEpisodeId }: { pageParam: number | null }) => axios.get<ICompleteEpisode[]>(
+      `/api/creators/podcasts/${podcastId}/episodes`,
+      { params: { size: PAGE_SIZE, ...(lastEpisodeId ? { from: lastEpisodeId } : {})} }
+    ).then(res => res.data),
+    initialPageParam: null,
+    getNextPageParam: lastEpisodesPage => lastEpisodesPage.length < PAGE_SIZE ? null : lastEpisodesPage.at(-1)!.id
+  })
+
+  useEffect(() => {
+    if (!isFetchingNextPage && loadMoreInView) {
+      fetchNextPage()
+    }
+  }, [fetchNextPage, isFetchingNextPage, loadMoreInView])
+
+  const episodes = episodesPages?.pages.flat() ?? []
 
   return (
     <>
@@ -44,33 +64,11 @@ export const CreatorsListPodcastEpisodes = () => {
           </Link>
         </div>
       </div>
-      {/* <div className="flex items-center justify-between p-6 bg-orange-200 border-2 border-black rounded-md mb-8">
-        <div>
-          <h2 className="text-xl">
-            + Add a new episode
-          </h2>
-        </div>
-        <ChevronRightIcon />
-      </div> */}
-      {isPending && (
-        <div className="flex justify-center p-16">
-          <Loader big />
-        </div>
-      )}
-      {!isPending && isError && (
-        <div>
-          There was an error fetching your podcast. Please try again. 
-        </div>
-      )}
-      {!isPending && !isError && userEpisodes.length === 0 && (
-        <div>
-          You don't have any episode yet. Start by creating one! 
-        </div>
-      )}
-      {!isPending && !isError && userEpisodes.length > 0 && (
-        <ul className="grid grid-cols-1 gap-16 lg:gap-8">
-          {userEpisodes.map(episode => (
-            <li>
+      {episodes.length === 0 && isFetchingNextPage && <li className="mt-4">The podcast does not have any episodes yet.</li>}
+      {episodes.length > 0 && (
+        <ul className="flex flex-col gap-4 mt-4">
+          {episodes.map(episode => (
+            <li key={episode.id}>
               <Link to={`/creators/podcasts/${podcastId}/episodes/${episode.id}/overview`} >
                 <Card className="p-0 flex flex-col items-center md:flex-row">
                   <div className="relative w-full md:w-[220px] shrink-0 bg-slate-300">
@@ -120,6 +118,12 @@ export const CreatorsListPodcastEpisodes = () => {
           ))}
         </ul>
       )}
+      {hasNextPage && (
+        <div ref={loadMoreElem} className="flex justify-center py-8">
+          <Loader big />
+        </div>
+      )}
+   
     </>
   )
 }

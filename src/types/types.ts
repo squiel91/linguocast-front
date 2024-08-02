@@ -44,6 +44,7 @@ export interface MinifiedPodcast extends MicroPodcast {
   savedCount: number
   commentsCount: number
   episodesCount: number
+  lastEpisodeDate?: string
 }
 
 export interface EpisodeSuccint {
@@ -82,21 +83,30 @@ export interface CreatorsEpisodeDto {
   }
 }
 
-export interface PopulatedEpisode {
+export interface MinifiedEpisode {
   id: number
   title: string
   duration: number
   contentUrl: string
   image?: string
+  podcastName: string
+  podcastId: number
+  podcastImage?: string
+  targetLanguage: string
+  creatorId: number
   publishedAt: string
-  description: string
-  transcript?: string
+  truncatedDescription: string
+  hasTranscript: boolean
   leftOn: number
   isListed: boolean
   isPremium: boolean
   commentsCount: number,
   completedAt: string
-  podcast: MicroPodcast
+}
+
+export interface DetailedEpisode extends Omit<MinifiedEpisode, 'truncatedDescription' | 'hasTranscript'> {
+  description: string
+  transcript: string
 }
 
 export interface RawReproduction {

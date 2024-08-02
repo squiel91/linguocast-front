@@ -9,7 +9,7 @@ import { Menu, MenuItem } from "@/components/menu"
 import { cn } from "@/utils/styles.utils"
 import { useQueries } from "@tanstack/react-query"
 import axios from "axios"
-import { Podcast, PopulatedEpisode, Word } from "@/types/types"
+import { Podcast, MinifiedEpisode, Word } from "@/types/types"
 import { useMemo } from "react"
 import { daySinceEpoche } from "@/utils/date.utils"
 
@@ -44,7 +44,7 @@ const MainTheme = () => {
       {
         enabled: !!episodeId,
         queryKey: ['episodes', episodeId ? +episodeId : null],
-        queryFn: () => axios.get<PopulatedEpisode>(`/api/episodes/${episodeId}`)
+        queryFn: () => axios.get<MinifiedEpisode>(`/api/episodes/${episodeId}`)
           .then(res => res.data)
       }
     ]
@@ -97,7 +97,7 @@ const MainTheme = () => {
       {(!!user?.isAdmin || !!user?.isCreator) && !isCreatorsMode && (
         <div className="bg-slate-900 text-white">
           <div className="px-4 md:px-8 flex justify-center gap-2">
-            {((podcast && podcast.creatorId === user.id) || (episode && episode.podcast.creatorId === user.id)) && (
+            {((podcast && podcast.creatorId === user.id) || (episode && episode.creatorId === user.id)) && (
               <Menu forCreators items={[
                 ...((podcast && podcast.creatorId === user.id)
                   ? [{
@@ -107,10 +107,10 @@ const MainTheme = () => {
                   }]
                   : []
                 ),
-                ...((episode && episode.podcast.creatorId === user.id)
+                ...((episode && episode.creatorId === user.id)
                   ? [{
                     text: 'Manage episode',
-                    link: `/creators/podcasts/${episode.podcast.id}/episodes/${episodeId}/overview`,
+                    link: `/creators/podcasts/${episode.podcastId}/episodes/${episodeId}/overview`,
                     icon: <PencilIcon size={18} />
                   }]
                   : []

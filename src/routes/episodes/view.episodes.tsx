@@ -1,4 +1,4 @@
-import { PopulatedEpisode } from '@/types/types'
+import { DetailedEpisode } from '@/types/types'
 import { Breadcrumb } from '@/ui/breadcrumb.ui'
 import { Loader } from '@/ui/loader.ui'
 import { urlSafe } from '@/utils/url.utils'
@@ -34,7 +34,7 @@ const ViewEpisode = () => {
     isLoading
   } = useQuery({
     queryKey: ['episodes', episodeId],
-    queryFn: () => axios.get<PopulatedEpisode>(`/api/episodes/${episodeId}`).then(res => res.data)
+    queryFn: () => axios.get<DetailedEpisode>(`/api/episodes/${episodeId}`).then(res => res.data)
   })
 
   const [selectedTabKey, setSelectedTabKey] = useState('transcript')
@@ -47,7 +47,7 @@ const ViewEpisode = () => {
     </div>
   )
 
-  const episodeIsSelected = currentEpisode === episode
+  const episodeIsSelected = currentEpisode?.id === episode.id
   const episodeIsPlaying = episodeIsSelected && isPlaying
 
   const stateChangeHandler: MouseEventHandler<HTMLButtonElement> = (event) => {
@@ -68,15 +68,15 @@ const ViewEpisode = () => {
             to: '/explore'
           },
           {
-            name: episode.podcast.name,
-            to: `/podcasts/${episode.podcast.id}/${urlSafe(episode.podcast.name)}`
+            name: episode.podcastName,
+            to: `/podcasts/${episode.podcastId}/${urlSafe(episode.podcastName)}`
           }
         ]}
       />
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-x-16 gap-y-4">
         <img
           className="'w-full border-[1px] drop-shadow-sm border-solid border-slate-200 rounded-md aspect-square bg-cover"
-          src={episode.image || episode.podcast.coverImage || noImage}
+          src={episode.image || episode.podcastImage || noImage}
         />
         <div className='col-span-1 lg:col-span-2'>
           <h2 className="text-xl md:text-2xl lg:text-4xl mb-2 mt-2 md:mt-4 lg:mt-0">
@@ -111,7 +111,7 @@ const ViewEpisode = () => {
             link={location.href}
             linkTitle={episode?.title ?? 'Episode title'}
             linkMetaDesc={episode?.description.slice(0, 100) ?? 'Podcast description'}
-            linkFavicon={episode?.image || episode.podcast.coverImage ? `https://linguocast.com${episode?.image || episode.podcast.coverImage}` : 'https://linguocast.com/favicon.png'}
+            linkFavicon={episode?.image || episode.podcastImage ? `https://linguocast.com${episode?.image || episode.podcastImage}` : 'https://linguocast.com/favicon.png'}
             noReferer
           >
             <Button

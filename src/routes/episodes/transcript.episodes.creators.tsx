@@ -1,4 +1,4 @@
-import { PopulatedEpisode } from "@/types/types"
+import { DetailedEpisode } from "@/types/types"
 import { Button } from "@/ui/button.ui"
 import { Textarea } from "@/ui/textarea.ui"
 import { useMutation, useQuery } from "@tanstack/react-query"
@@ -13,7 +13,7 @@ export const EpisodeTranscript = () => {
 
   const { data: episode } = useQuery({
     queryKey: ['episodes', episodeId],
-    queryFn: () => axios.get<PopulatedEpisode>(
+    queryFn: () => axios.get<DetailedEpisode>(
       `/api/episodes/${episodeId}`
     ).then(res => res.data)
   })
