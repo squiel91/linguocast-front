@@ -11,7 +11,7 @@ import { readableDate } from "@/utils/date.utils"
 import { useInView } from "react-intersection-observer"
 import { useEffect } from "react"
 
-const PAGE_SIZE = 50 // ATTENTION: this value needs to be in sync with the backend page size.
+const PAGE_SIZE = 5 // ATTENTION: this value needs to be in sync with the backend page size.
 
 export const CreatorsListPodcastEpisodes = () => {
   const { podcastId: rawPodcastId } = useParams()
