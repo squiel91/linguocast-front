@@ -9,7 +9,6 @@ import noImage from '@/assets/no-image.svg'
 import { formatSeconds, readableDate } from '@/utils/date.utils'
 import { MouseEventHandler, useState } from 'react'
 import { PlayButton } from '@/ui/play-button.ui'
-import { usePlayer } from '@/themes/player/player'
 import { ListeningProgressBar } from '@/ui/listening-progress-bar.ui'
 import SafeHtmlRenderer from '@/ui/safe-html-render.ui'
 import { ListComments } from '@/ui/list.comments'
@@ -21,12 +20,16 @@ import { CalendarIcon, CrownIcon, MessageSquareTextIcon, NotebookPenIcon, Scroll
 import { Button } from '@/ui/button.ui'
 import { useAuth } from '@/auth/auth.context'
 import ShareOnSocial from 'react-share-on-social'
+import { useDispatch, useSelector } from 'react-redux'
+import { AppDispatch, RootState } from '@/store/store'
+import { pause, play, reproduce } from '@/store/player.store'
 
 const ViewEpisode = () => {
   const { episodeId: episodeIdRaw } = useParams()
   const { user } = useAuth()
 
-  const { reproduce, currentEpisode, isPlaying, pause, play } = usePlayer()
+  const { episode: reproductingEpisode, isPlaying, time: reproductionTime } = useSelector((store: RootState) => store.player)
+  const dispatch = useDispatch<AppDispatch>()
 
   const episodeId = +episodeIdRaw!
   const {
@@ -47,15 +50,15 @@ const ViewEpisode = () => {
     </div>
   )
 
-  const episodeIsSelected = currentEpisode?.id === episode.id
+  const episodeIsSelected = reproductingEpisode?.id === episode.id
   const episodeIsPlaying = episodeIsSelected && isPlaying
 
   const stateChangeHandler: MouseEventHandler<HTMLButtonElement> = (event) => {
     event.preventDefault()
     event.stopPropagation()
-    if (episodeIsPlaying) return pause()
-    if (episodeIsSelected) return play()
-    reproduce(episode)
+    if (episodeIsPlaying) return dispatch(pause())
+    if (episodeIsSelected) return dispatch(play())
+    dispatch(reproduce(episode))
   }
 
   return (
@@ -90,14 +93,19 @@ const ViewEpisode = () => {
           <div className="flex items-center mt-2 text-sm gap-4">
             <PlayButton
               hero
-              isPlaying={isPlaying}
+              isPlaying={episodeIsPlaying}
               isLoading={isLoading}
               onTogglePlay={stateChangeHandler}
               overWhite
             />
             {/* <div className="w-1 h-1 rounded-full bg-black"/> */}
             {episode.leftOn && (episode.leftOn > 0)
-              ? <ListeningProgressBar duration={episode.duration} leftOn={episode.leftOn} />
+              ? (
+                <ListeningProgressBar
+                  duration={episode.duration}
+                  leftOn={episodeIsSelected ? reproductionTime : episode.leftOn}
+                />
+              )
               : <span>{formatSeconds(episode.duration)}</span>
             }
           </div>

@@ -27,7 +27,7 @@ export const PodcastSummary = ({ podcast }: { podcast: MinifiedPodcast | MicroPo
           className='w-full border-solid border-2 object-cover object-center aspect-square border-slate-200 rounded-md'
         />
         {'lastEpisodeDate' in podcast && isPodcastInactive(podcast.lastEpisodeDate) && (
-          <div className="absolute bottom-4 right-4 bg-slate-300 rounded-md px-2 flex gap-1 items-center text-sm" title="This means that the podcast has not realeased an episode for the past 3 months.">Inactive</div>
+          <div className="absolute bottom-4 right-4 bg-slate-300 rounded-md px-2 flex gap-1 items-center" title="This means that the podcast has not realeased an episode for the past 3 months.">Inactive</div>
         )}
       </div>
       {'savedCount' in podcast && (

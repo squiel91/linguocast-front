@@ -175,7 +175,6 @@ export const ReadAlong = ({
             </span>
           )
         })}
-        {isPremium ? 'IS PREMIUM' : 'NOT IS PREMIUM'}
         {!isPremium && (
           <>
             <span className='ml-2'><DotIcon strokeWidth={6} className='inline' /><DotIcon strokeWidth={6}  className='inline' /><DotIcon strokeWidth={6} className='inline' /></span>

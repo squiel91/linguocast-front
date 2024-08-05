@@ -2,7 +2,6 @@ import { MinifiedEpisode } from "@/types/types"
 import { formatSeconds, readableDate } from "@/utils/date.utils"
 import noImage from '@/assets/no-image.svg'
 import { BookOpenCheckIcon, CheckIcon, EllipsisVertical, ScrollIcon } from "lucide-react"
-// import { usePlayer } from "@/themes/player/player"
 import axios from "axios"
 import { useState } from "react"
 import { useAuth } from "@/auth/auth.context"
@@ -10,27 +9,19 @@ import { Link } from "react-router-dom"
 import { urlSafe } from "@/utils/url.utils"
 import { Card } from "@/ui/card.ui"
 import { Dropdown } from "@/ui/dropdown.ui"
+import { Soundwave } from "@/ui/soundwave/soundwave.ui"
+import { useSelector } from "react-redux"
+import { RootState } from "@/store/store"
 
 interface Props {
   episode: MinifiedEpisode
 }
 
 export const EpisodeSummary = ({ episode }: Props) => {
+  const { episode: reproducingEpisode, isPlaying  } = useSelector((store: RootState ) => store.player)
   const { isLoggedIn, openRegisterHandler } = useAuth()
 
   const [hasMarkedCompleted, setHasMarkedCompleted] = useState<boolean | null>(null)
-  // const { reproduce, currentEpisode, isPlaying, pause, play } = usePlayer()
-
-  // const episodeIsSelected = currentEpisode === episode
-  // const episodeIsPlaying = episodeIsSelected && isPlaying
-
-  // const stateChangeHandler: MouseEventHandler<HTMLButtonElement> = (event) => {
-  //   event.preventDefault()
-  //   event.stopPropagation()
-  //   if (episodeIsPlaying) return pause()
-  //   if (episodeIsSelected) return play()
-  //   reproduce(episode)
-  // }
 
   const markCompletedHandler = async () => {
     if (!isLoggedIn) return openRegisterHandler(true)
@@ -53,10 +44,15 @@ export const EpisodeSummary = ({ episode }: Props) => {
           className="flex flex-col md:flex-row gap-4"
         >
           <div className="flex md:block justify-between flex-shrink-0 items-center">
-            <img
-              className="w-14 h-14 rounded-md border-2 border-slate-200"
-              src={episode.image || episode.podcastImage || noImage}
-            />
+            <div className="relative">
+              <img
+                className="w-14 h-14 rounded-md border-2 border-slate-200"
+                src={episode.image || episode.podcastImage || noImage}
+              />
+              { isPlaying && reproducingEpisode && reproducingEpisode.id === episode.id && (
+                <Soundwave className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2" />
+              )}
+            </div>
             <Dropdown
               className="md:hidden"
               unformated

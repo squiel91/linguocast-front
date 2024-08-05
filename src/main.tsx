@@ -6,6 +6,8 @@ import { RouterProvider } from 'react-router-dom'
 import { router } from './router.tsx'
 import axios from 'axios'
 import { StrictMode } from 'react'
+import { Provider } from 'react-redux'
+import store from '@/store/store.ts'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -23,14 +25,16 @@ axios.interceptors.request.use(config => {
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <StrictMode>
-    <QueryClientProvider client={queryClient}>
-      <RouterProvider router={router} />
-      {import.meta.env.DEV && (
-        <ReactQueryDevtools
-          initialIsOpen={false}
-          buttonPosition="bottom-left"
-        />
-      )}
-    </QueryClientProvider>
+    <Provider store={store}>
+      <QueryClientProvider client={queryClient}>
+        <RouterProvider router={router} />
+        {import.meta.env.DEV && (
+          <ReactQueryDevtools
+            initialIsOpen={false}
+            buttonPosition="bottom-left"
+          />
+        )}
+      </QueryClientProvider>
+    </Provider>
   </StrictMode>
 )
