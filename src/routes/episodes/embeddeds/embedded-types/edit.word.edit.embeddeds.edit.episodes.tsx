@@ -19,6 +19,7 @@ export interface WordSearchResult {
   id: number
   word: string
   pronunciation: string
+  level: number | null
   translations: string[][]
 }
 
@@ -87,9 +88,10 @@ export const EditWord = ({
           <div className="mt-4">
             <div className="text-sm mb-2">Preview</div>
             <div>
-              <div className="flex gap-2 items-baseline mb-4">
+              <div className="flex gap-2 items-end mb-4">
                 <div className="text-2xl font-bold">{selectedWordSearchResult.word}</div>
                 <div className="flex-grow">{selectedWordSearchResult.pronunciation}</div>
+                {selectedWordSearchResult.level && <div className="bg-orange-200 text-sm rounded-md px-2 self-center inline-block mb-2">HSK {selectedWordSearchResult.level}</div>}
                 <button
                   className="bg-orange-200 rounded-full flex gap-2 items-center px-4 py-2 text-sm font-bold opacity-50 "
                   disabled

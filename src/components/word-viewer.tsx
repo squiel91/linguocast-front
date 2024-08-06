@@ -13,9 +13,10 @@ interface Props {
 export const WordViewer = ({ word, onOptimisticRemove, onOptimisticRemoveFailed }: Props) => {
   return (
     <>
-      <div className="flex gap-2  mb-4 items-baseline overflow-visible">
+      <div className="flex gap-2 mb-4 items-end overflow-visible">
         <div className="text-2xl font-bold">{word.word}</div>
         <div className="flex-grow">{word.pronunciation}</div>
+        {word.level && <div className="bg-orange-200 text-sm rounded-md px-2 self-center inline-block mb-2">HSK {word.level}</div>}
         <Dropdown
           unformated
           items={[

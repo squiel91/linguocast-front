@@ -134,9 +134,10 @@ export const ViewEmbeddedMinimized = ({
         )}
         {embedded.type === 'word' && catchedWord && (
           <div className="min-w-60 max-w-md ">
-            <div className="flex gap-2 items-baseline">
+            <div className="flex gap-2 items-end">
               <div className="text-2xl font-bold">{catchedWord.word}</div>
               <div className="flex-grow">{catchedWord.pronunciation}</div>
+              {catchedWord.level && <div className="bg-orange-200 text-sm rounded-md px-2 self-center inline-block mb-2">HSK {catchedWord.level}</div>}
               <button
                 className="bg-orange-200 ml-4 rounded-full px-4 py-2 text-sm font-bold flex gap-2 items-center"
                 onClick={() => toggleWordGrab.mutate({ wordId: catchedWord.id, initialSaveStatus: catchedWord.saved })}

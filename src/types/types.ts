@@ -234,6 +234,7 @@ export interface Word {
   word: string
   pronunciation: string
   translations: string[][]
+  level: number | null
   reviewScheduledFor: number
   lastReviewInterval: number
   saved: boolean

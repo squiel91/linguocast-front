@@ -142,7 +142,7 @@ const WordCorner = () => {
             : filteredSavedWords!.length === 0
               ? 'No words to show. Go listen and grabb some new words!'
               : (
-                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {filteredSavedWords!.map(word => (
                     <li className={removedWordIds.includes(word.id) ? 'hidden' : ''}>
                       <Card className="overflow-visible">
@@ -173,6 +173,7 @@ const WordCorner = () => {
                   <div className="text-4xl font-bold">{currentWord.word}</div>
                 )}
               </div>
+              {currentWord.level && <div className="bg-orange-200 text-sm rounded-md px-2 self-start -mt-2 inline-block">HSK {currentWord.level}</div>}
               <div className="flex flex-col gap-2">
                 {!isPronunciationShown && !isReveled && (
                   <button onClick={() => setIsPronunciationShown(true)} className="text-left flex items-center gap-2 text-slate-400">
@@ -214,7 +215,7 @@ const WordCorner = () => {
                 </div>
               )}
               <ForwardLink to={`https://tatoeba.org/en/sentences/search?from=${{ mandarin: 'cmn', spanish: 'spa', english: 'spa' }[currentWord.language]}&query=${currentWord.word}`} target="_blank">
-                Search use examples in Tatoeba
+                2Search use examples in Tatoeba
               </ForwardLink>
             </div>
           )
