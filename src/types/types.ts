@@ -238,5 +238,16 @@ export interface Word {
   reviewScheduledFor: number
   lastReviewInterval: number
   saved: boolean
+  examplesCount: number // CAREFUL, not for search or view word
   measureWords: MeasureWord[]
+  examples: {
+    id: number
+    episodeId: number
+    episodeTitle: string
+    episodeImage: string
+    podcastName: string
+    podcastImage: string
+    context: string
+    time: number
+  }[] // CAREFUL, not for all the request (not for user words)
 }

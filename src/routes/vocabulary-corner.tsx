@@ -1,3 +1,4 @@
+import { WordDetailsModal } from "@/components/word-details-modal"
 import { WordViewer } from "@/components/word-viewer"
 import { Word } from "@/types/types"
 import { Button } from "@/ui/button.ui"
@@ -21,7 +22,8 @@ const WordCorner = () => {
   const [isSketchOpen, setIsSketchOpen] = useState(false)
   const [isReviewModalOpen, setIsReviewModalOpen] = useState(false)
   const [reviewedWordIds, setReviewedWordIds] = useState<number[]>([])
-  const [removedWordIds, setRemovedWordIds] = useState<number[]>([]) 
+  const [removedWordIds, setRemovedWordIds] = useState<number[]>([])
+  const [expandedWordId, setExpandedWordId] = useState<number | null>(null)
   const { data: savedWords, isPending } = useQuery({
     queryKey: ['saved-words'],
     queryFn: () => axios.get<Word[]>('/api/user/words').then(res => res.data)
@@ -144,7 +146,7 @@ const WordCorner = () => {
               : (
                 <ul className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                   {filteredSavedWords!.map(word => (
-                    <li className={removedWordIds.includes(word.id) ? 'hidden' : ''}>
+                    <li key={word.id} className={removedWordIds.includes(word.id) ? 'hidden' : ''} onClick={() => setExpandedWordId(word.id)}>
                       <Card className="overflow-visible">
                         <WordViewer
                           word={word}
@@ -240,6 +242,7 @@ const WordCorner = () => {
             </button>
           </>
         )}
+        <WordDetailsModal wordId={expandedWordId} onClose={() => setExpandedWordId(null)} />
         <button onClick={() => setIsSketchOpen(v => !v)} className="bg-red-300 p-4 rounded-full border-[3px] border-black">
           {isSketchOpen ? <XIcon /> : <BrushIcon />}
         </button>
